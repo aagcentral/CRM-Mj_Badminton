@@ -29,11 +29,11 @@ use App\Http\Controllers\EnquiryController;
 //     return view('welcome');
 // });
 
-Route::get('/env-check', function () {
-    return 'Current environment: ' . env('APP_ENV');
-});
+// Route::get('/erp', function () {
+//     return 'Current environment: ' . env('APP_ENV');
+// });
 
-Route::get('/', [AuthController::class, 'index']);
+Route::get('/erp', [AuthController::class, 'index']);
 Route::post('/auth-login', [AuthController::class, 'auth_login'])->name('auth.login.post');
 
 Route::group(['middleware' => 'AuthLogin'], function () {
@@ -206,7 +206,7 @@ Route::group(['middleware' => 'AuthLogin'], function () {
         // Fee Management Routes
         Route::controller(FeeManagementController::class)->group(function () {
             Route::get('feemanagement', 'feemanagement_list')->name('feemanagement.list'); // Fee management list
-            Route::get('/registration/details/{registration_no}', 'getDetails')->name('registration.details'); // Fetch user details
+            // Route::get('/registration/details/{registration_no}', 'getDetails')->name('registration.details'); // Fetch user details
         });
 
 

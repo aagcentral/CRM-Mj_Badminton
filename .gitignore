@@ -21,3 +21,5 @@ yarn-error.log
 resources\views\pages\layouts\app.blade.php
 public\assets\costom.css
 public\assets\js\custom.js
+.env.example
+.htaccess
