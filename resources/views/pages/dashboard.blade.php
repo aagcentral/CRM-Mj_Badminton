@@ -20,7 +20,7 @@
 </style>
 @section('content')
 <div class="container-fluid py-3">
-    <h3 class="my-4">Dashboard</h3>
+    <h3 class="my-4">New Dashboard</h3>
     <div class="row">
         <div class="col-sm-2">
             <div class="wrapper count-title text-center">

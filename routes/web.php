@@ -29,6 +29,9 @@ use App\Http\Controllers\EnquiryController;
 //     return view('welcome');
 // });
 
+Route::get('/env-check', function () {
+    return 'Current environment: ' . env('APP_ENV');
+});
 
 Route::get('/', [AuthController::class, 'index']);
 Route::post('/auth-login', [AuthController::class, 'auth_login'])->name('auth.login.post');
