@@ -19,7 +19,6 @@ yarn-error.log
 /.idea
 /.vscode
 resources\views\pages\layouts\app.blade.php
-public\assets\costom.css
-public\assets\js\custom.js
+ 
 .env.example
 .htaccess

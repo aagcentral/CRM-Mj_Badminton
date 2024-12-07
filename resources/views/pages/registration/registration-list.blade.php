@@ -157,7 +157,7 @@ for ($i = 1; $i <= 12; $i++) {
                         <td>
                             <div class="d-flex">
                                 <div class="me-2">
-                                    <img src="{{ isset($row) && $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('images/noimages.PNG') }}"
+                                    <img src="{{ isset($row) && $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('images/noimages.png') }}"
                                         class="rounded-circle" style="height:35px;width:35px">
                                 </div>
 

@@ -62,7 +62,7 @@ Dashboard
                                 <td>
                                     <div class="d-flex">
                                         <div class="mr-2">
-                                            <img src="{{ $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('images/noimages.PNG') }}" class="rounded-circle" style="height:35px;width:35px">
+                                            <img src="{{ $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('images/noimages.png') }}" class="rounded-circle" style="height:35px;width:35px">
                                         </div>
                                         <div>
                                             <span><a href="#" class="d-block text-bold" style="color:#24ABF2">{{$row->name}}</a></span>
