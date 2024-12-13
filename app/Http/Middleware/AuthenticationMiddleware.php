@@ -20,7 +20,7 @@ class AuthenticationMiddleware
             return $next($request);
         } else {
             Auth::logout();
-            return redirect(url('/'));
+            return redirect(url('/erp'));
         }
 
         // Check if the user has permission for the route

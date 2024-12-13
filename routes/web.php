@@ -29,10 +29,10 @@ use App\Http\Controllers\EnquiryController;
 //     return view('welcome');
 // });
 
-// Route::get('/erp', function () {
-//     return 'Current environment: ' . env('APP_ENV');
-// });
 
+// Route::name("admin.")->prefix("admin")->group(function ($router) {
+
+Route::get('/', [AuthController::class, 'index']);
 Route::get('/erp', [AuthController::class, 'index']);
 Route::post('/auth-login', [AuthController::class, 'auth_login'])->name('auth.login.post');
 
@@ -205,7 +205,7 @@ Route::group(['middleware' => 'AuthLogin'], function () {
 
         // Fee Management Routes
         Route::controller(FeeManagementController::class)->group(function () {
-            Route::get('feemanagement', 'feemanagement_list')->name('feemanagement.list'); // Fee management list
+            Route::get('feemanagement', 'feemanagement_list')->name('feemanagement.list');
             // Route::get('/registration/details/{registration_no}', 'getDetails')->name('registration.details'); // Fetch user details
         });
 
@@ -229,14 +229,5 @@ Route::group(['middleware' => 'AuthLogin'], function () {
         Route::controller(StateCityController::class)->group(function () {
             Route::post('get-city', 'getCities')->name('get.city');
         });
-
-        // Route::post('get-city', [StateCityController::class, 'getCities'])->name('get.city');
-
-        // registration-list registration 
-        // Route::get('location', [LocationController::class, 'location_list'])->name('location.list');
-        // Route::post('add-location', [LocationController::class, 'add_location'])->name('location.add');
-        // Route::get('edit-location/{id}', [LocationController::class, 'edit_location'])->name('location.edit');
-        // Route::post('update-location', [LocationController::class, 'update_location'])->name('location.update');
-        // Route::post('delete-location', [LocationController::class, 'destroy_location'])->name('location.destroy');
     });
 });

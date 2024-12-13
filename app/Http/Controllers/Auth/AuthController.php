@@ -11,36 +11,39 @@ use Hash;
 class AuthController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
         // dd(hash::make('12345'));
-        if(!empty(Auth::check())){
+        if (!empty(Auth::check())) {
             return redirect()->route('panel.dashboard');
         }
         return view('auth.login');
     }
 
-    public function auth_login(Request $request){
+    public function auth_login(Request $request)
+    {
         $remember = !empty($request->rememeber) ? true : false;
-        if(Auth::attempt(['email' => $request->username, 'password' => $request->password], $remember)){
+        if (Auth::attempt(['email' => $request->username, 'password' => $request->password], $remember)) {
             return redirect()->route('panel.dashboard');
-        }else{
-            return back()->with('error','Please Enter correct email or password');
+        } else {
+            return back()->with('error', 'Please Enter correct email or password');
         }
     }
 
 
-    public function update_location(Request $request){
-        if($request->user_location){
-            User::where('id',Auth()->user()->id)->update(['locationID' => $request->user_location]);
+    public function update_location(Request $request)
+    {
+        if ($request->user_location) {
+            User::where('id', Auth()->user()->id)->update(['locationID' => $request->user_location]);
         }
-        return back()->with('success','Location Updated');
+        return back()->with('success', 'Location Updated');
     }
 
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
 
         return redirect(url(''));
     }
-
 }

@@ -67,23 +67,48 @@ class Enquiry extends Model
 
     // * Boot method for the model.
     //  */
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     // Automatically set 'locationID' when saving or updating
+    //     static::saving(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     static::updating(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     // Add global scope to filter by 'locationID'
+    //     static::addGlobalScope('locationID', function (Builder $builder) {
+    //         if (Auth::check()) {
+    //             $builder->where('locationID', Auth::user()->locationID);
+    //         }
+    //     });
+    // }
+
+
     protected static function boot()
     {
         parent::boot();
 
         // Automatically set 'locationID' when saving or updating
         static::saving(function ($model) {
-            $model->locationID = Auth::user()->locationID ?? null;
+            // Set locationID to current user's location or a fallback location ('L1')
+            $model->locationID = Auth::user()->locationID ?? 'L1';
         });
 
         static::updating(function ($model) {
-            $model->locationID = Auth::user()->locationID ?? null;
+            // Ensure locationID is set on update as well
+            $model->locationID = Auth::user()->locationID ?? 'L1';
         });
 
         // Add global scope to filter by 'locationID'
         static::addGlobalScope('locationID', function (Builder $builder) {
+            // Only apply the scope if the user is authenticated
             if (Auth::check()) {
-                $builder->where('locationID', Auth::user()->locationID);
+                $builder->where('locationID', Auth::user()->locationID ?? 'L1');
             }
         });
     }

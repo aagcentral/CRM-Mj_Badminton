@@ -68,7 +68,7 @@ Product
             @if(havePermission('product.add'))
             <button id="toggleButton" class="btn btn-info mb-3 ml-1"><i class="fas fa-plus-circle me-2"></i>Add Product</button>
             @endif
-            <button class="btn btn-primary mb-3 ml-1" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-arrow-up-from-bracket me-2"></i></i>Import</button>
+            <!-- <button class="btn btn-primary mb-3 ml-1" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-arrow-up-from-bracket me-2"></i></i>Import</button> -->
         </div>
         @if ($errors->any())
         <div class="text-danger small">
@@ -142,7 +142,6 @@ Product
                 <thead>
                     <tr class="">
                         <th>#</th>
-
                         <th>Category</th>
                         <th>Product </th>
                         <th>Added Date</th>

@@ -49,11 +49,30 @@ class EnquiryController extends Controller
 
 
 
+    // public function enquiry()
+    // {
+    //     $data = Enquiry::max('id');
+    //     return $data ? $data + 1 : 1;
+    // }
     public function enquiry()
     {
-        $data = Enquiry::max('id');
-        return $data ? $data + 1 : 1;
+        $locationID = Auth::user()->locationID ?? 'Default';
+        // Fetch the last enquiry for the specific location
+        $lastEnquiry = Enquiry::where('locationID', $locationID)
+            ->orderByDesc('id')
+            ->first();
+        // Extract the last sequence number from the `enquiry_Id`
+        if ($lastEnquiry) {
+            // Match the last 3 digits in the `enquiry_Id`
+            preg_match('/(\d{3})$/', $lastEnquiry->enquiry_Id, $matches);
+            $lastNumber = isset($matches[1]) ? (int)$matches[1] : 0;
+        } else {
+            $lastNumber = 0;
+        }
+        return $lastNumber;
     }
+
+
 
     // Add
     public function add_enquiry(Request $request)
@@ -75,12 +94,21 @@ class EnquiryController extends Controller
         ], [
             'email.unique' => 'This email address is already registered. Please use a different one.',
         ]);
+        // Dynamically get the current user's locationID
+        $locationID = Auth::user()->locationID ?? 'Default';
 
-        $enquiry_Id = 'ENQID' . date('dmy') . ($this->enquiry() + 1);
+        // Generate the enquiry ID with the locationID, current date, and sequence number
+        $datePart = date('dmy');
+        $nextNumber = str_pad(($this->enquiry() + 1), 3, '0', STR_PAD_LEFT);
+        $enquiry_Id = 'ENQID' . strtoupper($locationID) . $datePart . $nextNumber;
+
+        // convert camel case
+        $name = ucwords(strtolower($request->name));
+
         // Save the data
         $save = Enquiry::create([
             'enquiry_Id' =>  $enquiry_Id,
-            'name' => $request->name,
+            'name' => $name,
             'email' => $request->email,
             'mobile' => $request->mobile,
             'lead_source' => $request->lead_source,
@@ -94,6 +122,7 @@ class EnquiryController extends Controller
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
             'status' =>  $request->status == "active" ? '0' : '1',
+            'locationID' => $locationID,
         ]);
 
         // Check if save is successful

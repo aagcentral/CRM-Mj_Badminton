@@ -30,7 +30,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $data['getRecord'] = User::with(['role', 'locations'])->orderBy('id', 'desc')->get();
+        $data['getRecord'] = User::with(['role', 'Userlocations'])->orderBy('id', 'desc')->get();
         return view('pages.user.list', $data);
     }
 

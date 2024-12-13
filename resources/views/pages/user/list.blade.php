@@ -57,7 +57,7 @@ User
                                 <td>{{ $row->name }}</td>
                                 <td>{{ $row->email }}</td>
                                 <td>{{ $row->role->name ?? '' }}</td>
-                                <td>{{ $row->locations->location ?? '' }}</td>
+                                <td>{{ $row->Userlocations->location ?? '' }}</td>
                                 <th scope="col">
                                     @if ($row->role_id != 9) <!-- Check if the user is not a Super Admin -->
                                     @if(havePermission('user.edit'))
