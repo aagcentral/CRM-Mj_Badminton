@@ -100,24 +100,54 @@ class Registration extends Model
 
     // * Boot method for the model.
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     // Automatically set 'locationID' when saving or updating
+    //     static::saving(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     static::updating(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     // Add global scope to filter by 'locationID'
+    //     static::addGlobalScope('locationID', function (Builder $builder) {
+    //         if (Auth::check()) {
+    //             $builder->where('locationID', Auth::user()->locationID);
+    //         }
+    //     });
+    // }
+
+
     protected static function boot()
     {
         parent::boot();
 
-        // Automatically set 'locationID' when saving or updating
+        // Automatically apply the `locationID` to all saving operations
         static::saving(function ($model) {
             $model->locationID = Auth::user()->locationID ?? null;
-        });
 
-        static::updating(function ($model) {
-            $model->locationID = Auth::user()->locationID ?? null;
-        });
+            static::updating(function ($model) {
+                $model->locationID = Auth::user()->locationID ?? null;
+            });
 
-        // Add global scope to filter by 'locationID'
-        static::addGlobalScope('locationID', function (Builder $builder) {
-            if (Auth::check()) {
-                $builder->where('locationID', Auth::user()->locationID);
+            // Generate the `registration_no` if not already set
+            if (!$model->registration_no) {
+                $locationID = $model->locationID ?? 'DEFAULT';
+                $lastRegistration = Registration::where('locationID', $locationID)
+                    ->lockForUpdate()
+                    ->max('id');
+                $newNumber = $lastRegistration ? $lastRegistration + 1 : 1;
+                $model->registration_no = strtoupper($locationID) . '-RID' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
             }
+        });
+
+        // Automatically apply a global scope to filter by `locationID`
+        static::addGlobalScope('location', function ($builder) {
+            $builder->where('locationID', Auth::user()->locationID ?? null);
         });
     }
 }

@@ -213,7 +213,6 @@ Stock
                 <thead>
                     <tr class="">
                         <th>#</th>
-
                         <th>Category</th>
                         <th>Product </th>
                         <th>Stock </th>

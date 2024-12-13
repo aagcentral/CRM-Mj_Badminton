@@ -18,3 +18,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+resources\views\pages\layouts\app.blade.php
+ 
+.env.example
+.htaccess

@@ -1,0 +1,179 @@
+a{
+    text-decoration: none !important;
+    cursor: pointer;
+}
+.dark{
+    background-color: #000000 !important;
+}
+.dark:hover{
+    background-color: #000000 !important;
+}
+
+ 
+.content-header .breadcrumb {
+    background-color: transparent;
+    line-height: 1.8rem;
+    margin-bottom: 0;
+    padding: 0;
+}
+@media (min-width: 576px) {
+    .float-sm-right {
+        float: right !important;
+    }
+}
+.sidebar-nav .nav-link a{
+    text-decoration: none;
+} 
+.sidebar-nav .nav-content a:hover, .sidebar-nav .nav-content a.active {
+    color: #4154f1;
+    text-decoration: none;
+}
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-info {
+    background-color: #17a2b8 !important;
+    color: #ffff !important;
+    font-family: sans-serif;
+}
+
+.blue:hover {
+    background-color: #ffff !important;
+}
+
+.mjacademy .brand-text {
+    font-size: 18px;
+}
+
+.mjacademy {
+    background-color: #f4f6f9;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mjacademy .sidebar .nav-sidebar .nav-item a {
+    color: #000000;
+    font-size: 15px;
+}
+
+.mjacademy .sidebar .nav-sidebar .nav-item a i {
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.mjacademy .sidebar .nav-sidebar .nav-item a:hover {
+    background-color: #ffff;
+    color: #000000;
+}
+
+.main-footer ul {
+    display: flex;
+    gap: 2rem;
+}
+
+.main-footer ul li {
+    list-style: none;
+}
+
+.main-footer ul li a {
+    font-size: 16px;
+    color: #0000;
+}
+.card-comments {
+    background-color: #ffffff;
+}
+
+.card-header {
+    background-color: #ffffff;
+}
+
+/* copy btn or group btn for table */
+
+.btn-secondary {
+
+    background-color: rgba(164, 164, 164, 0.063);
+    color: rgba(0, 0, 0, 0.478);
+    border: 1px solid rgba(64, 63, 63, 0.066);
+    height:40px;
+}
+
+.btn-secondary:hover {
+
+    background-color: rgba(164, 164, 164, 0.063);
+    color: rgba(0, 0, 0, 0.478);
+    border: 1px solid rgba(64, 63, 63, 0.066);
+
+}
+
+.btn-group :active {
+    background-color: rgba(164, 164, 164, 0.063) !important;
+    color: rgba(0, 0, 0, 0.478) !important;
+    border: 1px solid rgba(64, 63, 63, 0.066) !important;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+    font-weight: 700;
+    color: #666;
+    font-family: sans-serif;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.form-control {
+    font-size: 15px;
+
+    color: #495057 !important;
+    font-family: sans-serif;
+}
+
+table.dataTable {
+    border-collapse: collapse !important;
+    border-radius: 5px;
+    /* box-shadow: 0 0 35px 0 rgba(154, 161, 171, .15); */
+
+}
+
+.table {
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    color: #666 !important; 
+}
+
+
+.table th,td {
+    color: #666 !important;
+}
+
+
+h4 {
+    font-family: sans-serif;
+    color: #666 !important;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: green !important;
+    color: white !important;
+}
+.badge-due {
+    background-color: orange !important;
+    color: white !important;
+}
+.badge-pending {
+    background-color: blue !important;
+    color: white !important;
+}
+.badge-failed {
+    background-color: red !important;
+    color: white !important;
+}
+.badge-refunded {
+    background-color: gray !important;
+    color: white !important;
+}
+.badge-cancelled {
+    background-color: black !important;
+    color: white !important;
+}
+ 

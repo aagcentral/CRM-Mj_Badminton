@@ -25,7 +25,7 @@
             "CustomNamespace\\": "path/to/custom/namespace/"
         },
         "files": [
-            "app/http/Helpers/Helpers.php"
+            "app/Http/Helpers/Helpers.php"
         ]
     },
     "autoload-dev": {

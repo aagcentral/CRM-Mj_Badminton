@@ -37,8 +37,7 @@ View Registration Details
                 <div class="card h-100 mb-3">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <div class="text-center">
-                            <img class="rounded-circle img-fluid"
-                                src="{{ isset($viewdata) && $viewdata->image && file_exists(public_path('player/' . $viewdata->image)) ? asset('player/' . $viewdata->image) : asset('images/noimages.PNG') }}">
+                            <img class="rounded-circle border img-fluid" src="{{ $viewdata->image && file_exists(public_path('player/' . $viewdata->image)) ? asset('player/' . $viewdata->image) : asset('assets/images/noimages.png') }}">
                         </div>
 
                         <h3 class="profile-username text-center mt-2 m-0 p-0">

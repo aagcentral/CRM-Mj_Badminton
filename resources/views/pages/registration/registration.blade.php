@@ -119,7 +119,11 @@ Registration
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Upload Image</label>
                                                 <div class="col-sm-10">
-                                                    <input class="form-control" type="file" id="formFile" name="image" value="{{ old('image', $enquiry->image ?? '') }}">
+                                                    <input class="form-control" type="file" name="image" id="image" accept=".jpg,.jpeg,.png">
+                                                    <!-- <input class="form-control" type="file" id="formFile" name="image" value="{{ old('image', $enquiry->image ?? '') }}"> -->
+                                                    @error('image')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
 

@@ -39,15 +39,14 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{{url('images/nouser.jpg')}}" alt="Profile" class="rounded-circle border border-secondary">
+            <img src="{{ asset('assets/images/nouser.jpg') }}" alt="Profile" class="rounded-circle border border-light">
             <span class="d-none d-md-block dropdown-toggle ps-2">{{ Auth::user()->name }}</span>
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{ Auth::user()->name }}</h6>
-
-              <span>{{ Auth::user()->locations->location }}</span>
+              <span>{{ Auth::user()->Userlocations->location }}</span>
             </li>
             <li>
               <hr class="dropdown-divider">

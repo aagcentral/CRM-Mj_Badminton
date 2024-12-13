@@ -137,9 +137,10 @@ Edit Registration
                                                     <!-- Image display and remove logic -->
                                                     @if($edit_registration->image)
                                                     <div class="image-container mt-2" style="position: relative; display: inline-block;">
-                                                        <img src="{{ file_exists(public_path('player/' . $edit_registration->image)) && !empty($edit_registration->image) ? asset('player/' . $edit_registration->image) : asset('images/noimages.PNG') }}" class="border" alt="Registration Image" height="150" width="150">
+                                                        <img src="{{ !empty($edit_registration->image) && file_exists(public_path('player/' . $edit_registration->image)) ? asset('player/' . $edit_registration->image) : asset('assets/images/noimages.png') }}" class="border" alt="Registration Image" height="150" width="150">
                                                         <button type="button" class="remove-image-btn" onclick="removeImage()">&#10005;</button>
                                                     </div>
+
                                                     @else
                                                     <p>No image available</p>
                                                     @endif

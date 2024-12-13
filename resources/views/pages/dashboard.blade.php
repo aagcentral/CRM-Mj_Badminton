@@ -20,7 +20,7 @@
 </style>
 @section('content')
 <div class="container-fluid py-3">
-    <h3 class="my-4">Dashboard</h3>
+    <h3 class="my-4">New Dashboard</h3>
     <div class="row">
         <div class="col-sm-2">
             <div class="wrapper count-title text-center">
@@ -90,7 +90,7 @@
                 </div> -->
                 <div class="card-body">
                     <h5 class="card-title p-2">Product List <span>| Today's</span></h5>
-                    <table id="example1" class="table  ">
+                    <table id="example1" class="table">
                         <thead>
                             <tr class="">
                                 <th>Category</th>
@@ -114,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <!-- <div class="col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title p-2">Latest Enquiry <span>| Today's</span></h5>
@@ -169,7 +169,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 </div>

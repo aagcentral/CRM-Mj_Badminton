@@ -40,7 +40,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
-    public function locations()
+
+    public function Userlocations()
     {
         return $this->belongsTo(Location::class, 'locationID', 'location_id');
     }

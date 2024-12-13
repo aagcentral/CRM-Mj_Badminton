@@ -157,12 +157,11 @@ for ($i = 1; $i <= 12; $i++) {
                         <td>
                             <div class="d-flex">
                                 <div class="me-2">
-                                    <img src="{{ isset($row) && $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('images/noimages.PNG') }}"
-                                        class="rounded-circle" style="height:35px;width:35px">
+                                    <img src="{{ $row->image && file_exists(public_path('player/' . $row->image)) ? asset('player/' . $row->image) : asset('assets/images/noimages.png') }}" class="rounded-circle" style="height:35px;width:35px">
                                 </div>
 
                                 <div>
-                                    <span><a href="#" class="d-block text-bold" style="color:#24ABF2">{{$row->name}}</a></span>
+                                    <span><a href="#" class="d-block fw-bold" style="color:#24ABF2">{{$row->name}}</a></span>
                                     <span>Reg.No. {{$row->registration_no}}</span><br>
                                     <span>Email: {{$row->email}}</span><br>
                                     <span>Phone No.: {{$row->phone}}</span><br>
@@ -178,9 +177,9 @@ for ($i = 1; $i <= 12; $i++) {
                         </td>
                         <td>
                             <div>
-                                <span>Package: {{$row->Packages!=null ? $row->Packages->package : '' }} </span><br>
+                                <span class="fw-bold" style="color:#24ABF2">Package:</span><span> {{$row->Packages!=null ? $row->Packages->package : '' }} </span><br>
                                 <span>Training Program: {{$row->TrainedP!=null ? $row->TrainedP->add_program : '' }}</span><br>
-                                <span>Session.: {{ $row->sesion!=null ? $row->sesion->session : '' }} </span><br>
+                                <span>Session: {{ $row->sesion!=null ? $row->sesion->session : '' }} </span><br>
                                 <span>Time Slot: {{ $row->Time!=null ? $row->Time->time_slot : '' }} </span><br>
                             </div>
                         </td>

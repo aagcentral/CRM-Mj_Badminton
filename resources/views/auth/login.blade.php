@@ -10,8 +10,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{  url('/') }}/assets/img/favicon.png" rel="icon">
-  <link href="{{  url('/') }}/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="{{ asset('assets/images/faviconc.png') }}" rel="icon">
+  <link href="{{ asset('assets/images/fav-apple.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -50,7 +50,8 @@
 
                 <div class="card-body">
                   <div class="text-center mt-3 mb-4">
-                    <img class="img-fluid" src="images/logo.jpg" style="height:80px; width:200px;">
+                    <img class="img-fluid" src="{{ asset('assets/images/logo.jpg') }}" alt="Logo" style="height:80px; width:200px;">
+
                     <p class="card-title text-center p-0 m-0 small">Login to Your Account</p>
                     <p class="text-center small p-0 m-0">Enter your username & password to login</p>
                   </div>
@@ -60,7 +61,7 @@
                     @csrf
 
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
+                      <label for="yourUsername" class="form-label">Email</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
                         <input type="text" name="username" class="form-control" id="yourUsername" required>

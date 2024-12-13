@@ -105,21 +105,13 @@ class RegistrationController extends Controller
 
 
 
-    public function registration_no()
-    {
-        $data = Registration::max('id');
-        return $data ? $data + 1 : 1;
-    }
-
-    // save
-
+    // !*********************************************** Add Registration Form************************************************************
     public function add_registration(Request $request)
     {
         // Validation
         $request->validate([
             'name' => 'required|string|max:255',
             'father' => 'required|string|max:255',
-            // 'dob' => 'required|date',
             'phone' => 'required|digits:10',
             'email' => 'required|email|unique:registrations,email',
             'state' => 'required',
@@ -129,108 +121,260 @@ class RegistrationController extends Controller
             'payment_status' => 'required',
             'payment_method' => 'required',
             'registration_fees' => 'required',
-            'registration_fees' => 'required',
+            'image' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ], [
             'email.unique' => 'This email address is already registered. Please use a different one.',
+            'image.mimes' => 'Only jpg, jpeg, and png images are allowed.',
+            'image.max' => 'The image size must not exceed 2MB.',
         ]);
 
         // Check if enquiry ID exists
-        $enquiryId = $request->input('enquiry_id');
-        if ($enquiryId) {
-            // Update enquiry lead status to "Converted"
-            $enquiry = Enquiry::findOrFail($enquiryId);
-            $enquiry->update(['lead_status' => 3]);
+        if ($request->input('enquiry_id')) {
+            Enquiry::where('id', $request->input('enquiry_id'))->update(['lead_status' => 3]);
         }
 
-        // Generate IDs
-        $lastPayment = PaymentDetails::latest('id')->first();
-        $id = ($lastPayment ? $lastPayment->id + 1 : 1);
-        $payment_id = 'MJPID' . date('dmy') . $id;
-        $registration_no = 'MJRN' . date('dmy') . ($this->registration_no() + 1);
+        // Begin transaction
+        DB::beginTransaction();
 
-        $filename = '';
-        if ($request->hasFile('image')) {
-            $filename = time() . '.' . $request->image->getClientOriginalExtension();
-            $request->image->move(public_path('player'), $filename);
+        try {
+            // Generate Registration Number (Prevent Duplicate with Locking)
+            $locationID = Auth::user()->locationID ?? 'DEFAULT';
+
+            $lastNumber = Registration::where('locationID', $locationID)
+                ->lockForUpdate() // Locks the table to prevent concurrent updates
+                ->orderBy('id', 'desc')
+                ->value('registration_no');
+
+            $nextNumber = 1;
+            if ($lastNumber) {
+                preg_match('/RID(\d+)$/', $lastNumber, $matches);
+                $nextNumber = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
+            }
+
+            $newRegistrationNo = strtoupper($locationID) . '-RID' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            // Generate Payment ID (Safe Unique ID)
+            $newPaymentID = 'MJPID' . date('dmy') . uniqid(); // Generates a unique ID
+
+            // Handle Image Upload
+            $filename = '';
+            if ($request->hasFile('image')) {
+                $filename = time() . '.' . $request->image->getClientOriginalExtension();
+                $request->image->move(public_path('player'), $filename);
+            }
+            $name = ucwords(strtolower($request->input('name')));
+
+            // Save Registration
+            $playerData = [
+                'registration_no' => $newRegistrationNo,
+                'name' => $name,
+                'father' => $request->input('father'),
+                'gender' => $request->input('gender'),
+                'image' => $filename,
+                'dob' => $request->input('dob'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'state' => $request->input('state'),
+                'city' => $request->input('city'),
+                'pincode' => $request->input('pincode'),
+                'address' => $request->input('address'),
+                'package' => $request->input('package'),
+                'training_program' => $request->input('training_program'),
+                'session' => $request->input('session'),
+                'time_slot' => $request->input('time_slot'),
+                'lead_source' => $request->input('lead_source'),
+                'registration_fee' => $request->input('registration_fee'),
+                'room_allotment' => $request->input('room_allotment'),
+                'room_type' => $request->input('room_type'),
+                'meal_subscription' => $request->input('meal_subscription'),
+                'meal_type' => $request->input('meal_type'),
+                'checking_date' => $request->input('checking_date'),
+                'checkout_date' => $request->input('checkout_date'),
+                'notes' => $request->input('notes'),
+                'date' => date('Y-m-d'),
+                'locationID' => $locationID,
+            ];
+
+            $player = Registration::create($playerData);
+
+            // Save Payment
+            $paymentData = [
+                'payment_id' => $newPaymentID,
+                'registration_no' => $newRegistrationNo,
+                'registration_fees' => $request->input('registration_fees'),
+                'program_fee' => $request->input('program_fee'),
+                'rooms_fees' => $request->input('rooms_fees'),
+                'meals_fees' => $request->input('meals_fees'),
+                'utr_no' => $request->input('utr_no'),
+                'payment_module' => $request->input('payment_module'),
+                'payment_date' => $request->input('payment_date'),
+                'upcoming_date' => $request->input('upcoming_date'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_status' => $request->input('payment_status'),
+                'payment_notes' => $request->input('payment_notes'),
+                'total_amt' => $request->input('total_amt'),
+                'date' => date('Y-m-d'),
+            ];
+
+            PaymentDetails::create($paymentData);
+
+            // Save Status Tracker
+            $trackData = [
+                'registration_no' => $newRegistrationNo,
+                'package' => $request->input('package'),
+                'training_program' => $request->input('training_program'),
+                'session' => $request->input('session'),
+                'time_slot' => $request->input('time_slot'),
+                'payment_module' => $request->input('payment_module'),
+                'payment_date' => $request->input('payment_date'),
+                'payment_method' => $request->input('payment_method'),
+                'utr_no' => $request->input('utr_no'),
+                'registration_fees' => $request->input('registration_fees'),
+                'total_amt' => $request->input('total_amt'),
+                'payment_status' => $request->input('payment_status'),
+                'payment_notes' => $request->input('payment_notes'),
+            ];
+
+            RegisterStatusTracker::create($trackData);
+
+            // Commit the transaction
+            DB::commit();
+
+            return back()->with('success', 'Registration and payment successfully saved!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
-
-        // Prepare data
-        $playerData = [
-            'registration_no' => $registration_no,
-            'name' => $request->input('name'),
-            'father' => $request->input('father'),
-            'gender' => $request->input('gender'),
-            'image' => $filename,
-            'dob' => $request->input('dob'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'state' => $request->input('state'),
-            'city' => $request->input('city'),
-            'pincode' => $request->input('pincode'),
-            'address' => $request->input('address'),
-            'package' => $request->input('package'),
-            'training_program' => $request->input('training_program'),
-            'session' => $request->input('session'),
-            'time_slot' => $request->input('time_slot'),
-            'lead_source' => $request->input('lead_source'),
-            'registration_fee' => $request->input('registration_fee'),
-            'room_allotment' => $request->input('room_allotment'),
-            'room_type' => $request->input('room_type'),
-            'meal_subscription' => $request->input('meal_subscription'),
-            'meal_type' => $request->input('meal_type'),
-            'checking_date' => $request->input('checking_date'),
-            'checkout_date' => $request->input('checkout_date'),
-            'notes' => $request->input('notes'),
-            'date' => date('Y-m-d'),
-        ];
-
-        $paymentData = [
-            'payment_id' => $payment_id,
-            'registration_no' => $registration_no,
-            'registration_fees' => $request->input('registration_fees'),
-            'program_fee' => $request->input('program_fee'),
-            'rooms_fees' => $request->input('rooms_fees'),
-            'meals_fees' => $request->input('meals_fees'),
-            'utr_no' => $request->input('utr_no'),
-            'payment_module' => $request->input('payment_module'),
-            'payment_date' => $request->input('payment_date'),
-            'upcoming_date' => $request->input('upcoming_date'),
-            'payment_method' => $request->input('payment_method'),
-            'payment_status' => $request->input('payment_status'),
-            'payment_notes' => $request->input('payment_notes'),
-            'total_amt' => $request->input('total_amt'),
-            'date' => date('Y-m-d'),
-        ];
-
-        // Save data
-        $player = Registration::create($playerData);
-        $payment = PaymentDetails::create($paymentData);
-
-        // Track initial data in RegisterStatusTracker
-        $trackData = [
-            'registration_no' => $registration_no,
-            'package' => $request->input('package'),
-            'training_program' => $request->input('training_program'),
-            'session' => $request->input('session'),
-            'time_slot' => $request->input('time_slot'),
-            'payment_module' => $request->input('payment_module'),
-            'payment_date' => $request->input('payment_date'),
-            'payment_method' => $request->input('payment_method'),
-            'utr_no' => $request->input('utr_no'),
-            'registration_fees' => $request->input('registration_fees'),
-            'total_amt' => $request->input('total_amt'),
-            'payment_status' => $request->input('payment_status'),
-            'payment_notes' => $request->input('payment_notes'),
-        ];
-
-        RegisterStatusTracker::create($trackData);
-        // Check if data was saved
-        if ($player && $payment) {
-            return back()->with('success', 'Registration are successfully.');
-        }
-
-        return redirect()->back()->with('error', 'Failed to save data.');
     }
+
+
+
+    // public function registration_no()
+    // {
+    //     $data = Registration::max('id');
+    //     return $data ? $data + 1 : 1;
+    // }
+
+    // // save
+
+    // public function add_registration(Request $request)
+    // {
+    //     // Validation
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'father' => 'required|string|max:255',
+    //         // 'dob' => 'required|date',
+    //         'phone' => 'required|digits:10',
+    //         'email' => 'required|email|unique:registrations,email',
+    //         'state' => 'required',
+    //         'city' => 'required',
+    //         'pincode' => 'required|digits:6',
+    //         'package' => 'required',
+    //         'payment_status' => 'required',
+    //         'payment_method' => 'required',
+    //         'registration_fees' => 'required',
+    //         'registration_fees' => 'required',
+    //     ], [
+    //         'email.unique' => 'This email address is already registered. Please use a different one.',
+    //     ]);
+
+    //     // Check if enquiry ID exists
+    //     $enquiryId = $request->input('enquiry_id');
+    //     if ($enquiryId) {
+    //         // Update enquiry lead status to "Converted"
+    //         $enquiry = Enquiry::findOrFail($enquiryId);
+    //         $enquiry->update(['lead_status' => 3]);
+    //     }
+
+    //     // Generate IDs
+    //     $lastPayment = PaymentDetails::latest('id')->first();
+    //     $id = ($lastPayment ? $lastPayment->id + 1 : 1);
+    //     $payment_id = 'MJPID' . date('dmy') . $id;
+    //     $registration_no = 'MJRN' . date('dmy') . ($this->registration_no() + 1);
+
+    //     $filename = '';
+    //     if ($request->hasFile('image')) {
+    //         $filename = time() . '.' . $request->image->getClientOriginalExtension();
+    //         $request->image->move(public_path('player'), $filename);
+    //     }
+
+    //     // Prepare data
+    //     $playerData = [
+    //         'registration_no' => $registration_no,
+    //         'name' => $request->input('name'),
+    //         'father' => $request->input('father'),
+    //         'gender' => $request->input('gender'),
+    //         'image' => $filename,
+    //         'dob' => $request->input('dob'),
+    //         'email' => $request->input('email'),
+    //         'phone' => $request->input('phone'),
+    //         'state' => $request->input('state'),
+    //         'city' => $request->input('city'),
+    //         'pincode' => $request->input('pincode'),
+    //         'address' => $request->input('address'),
+    //         'package' => $request->input('package'),
+    //         'training_program' => $request->input('training_program'),
+    //         'session' => $request->input('session'),
+    //         'time_slot' => $request->input('time_slot'),
+    //         'lead_source' => $request->input('lead_source'),
+    //         'registration_fee' => $request->input('registration_fee'),
+    //         'room_allotment' => $request->input('room_allotment'),
+    //         'room_type' => $request->input('room_type'),
+    //         'meal_subscription' => $request->input('meal_subscription'),
+    //         'meal_type' => $request->input('meal_type'),
+    //         'checking_date' => $request->input('checking_date'),
+    //         'checkout_date' => $request->input('checkout_date'),
+    //         'notes' => $request->input('notes'),
+    //         'date' => date('Y-m-d'),
+    //     ];
+
+    //     $paymentData = [
+    //         'payment_id' => $payment_id,
+    //         'registration_no' => $registration_no,
+    //         'registration_fees' => $request->input('registration_fees'),
+    //         'program_fee' => $request->input('program_fee'),
+    //         'rooms_fees' => $request->input('rooms_fees'),
+    //         'meals_fees' => $request->input('meals_fees'),
+    //         'utr_no' => $request->input('utr_no'),
+    //         'payment_module' => $request->input('payment_module'),
+    //         'payment_date' => $request->input('payment_date'),
+    //         'upcoming_date' => $request->input('upcoming_date'),
+    //         'payment_method' => $request->input('payment_method'),
+    //         'payment_status' => $request->input('payment_status'),
+    //         'payment_notes' => $request->input('payment_notes'),
+    //         'total_amt' => $request->input('total_amt'),
+    //         'date' => date('Y-m-d'),
+    //     ];
+
+    //     // Save data
+    //     $player = Registration::create($playerData);
+    //     $payment = PaymentDetails::create($paymentData);
+
+    //     // Track initial data in RegisterStatusTracker
+    //     $trackData = [
+    //         'registration_no' => $registration_no,
+    //         'package' => $request->input('package'),
+    //         'training_program' => $request->input('training_program'),
+    //         'session' => $request->input('session'),
+    //         'time_slot' => $request->input('time_slot'),
+    //         'payment_module' => $request->input('payment_module'),
+    //         'payment_date' => $request->input('payment_date'),
+    //         'payment_method' => $request->input('payment_method'),
+    //         'utr_no' => $request->input('utr_no'),
+    //         'registration_fees' => $request->input('registration_fees'),
+    //         'total_amt' => $request->input('total_amt'),
+    //         'payment_status' => $request->input('payment_status'),
+    //         'payment_notes' => $request->input('payment_notes'),
+    //     ];
+
+    //     RegisterStatusTracker::create($trackData);
+    //     // Check if data was saved
+    //     if ($player && $payment) {
+    //         return back()->with('success', 'Registration are successfully.');
+    //     }
+
+    //     return redirect()->back()->with('error', 'Failed to save data.');
+    // }
 
 
     public function edit_registration($registration_no)
