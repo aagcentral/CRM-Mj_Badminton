@@ -11,6 +11,7 @@ use App\Models\Psession;
 use App\Models\Enquiry;
 use App\Models\Timings;
 use Illuminate\Http\Request;
+use App\Notifications\LeadNotification;
 use Auth;
 
 class EnquiryController extends Controller
@@ -18,7 +19,7 @@ class EnquiryController extends Controller
     public function enquiry_list(Request $request)
     {
         // Initialize the query builder for the Enquiry model
-        $query = Enquiry::with(['leads'])->latest();  // Applying latest() here to the query builder
+        $query = Enquiry::with(['leads'])->latest();
 
         // Retrieve necessary data for dropdowns
         $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
@@ -125,17 +126,29 @@ class EnquiryController extends Controller
             'locationID' => $locationID,
         ]);
 
-        // Check if save is successful
+
         if ($save) {
+            // Check if the user is authenticated
+            // if (auth()->check()) {
+            //     $user = auth()->user();
+            //     $user->notify(new LeadNotification($save));
+            // } else {
+            //     return back()->with('fail', 'User is not authenticated. Notification not sent.');
+            // }
+
+            // Track the lead status
             $this->lead_status_tracker($enquiry_Id, $request->lead_status, $request->notes);
-            return back()->with('success', 'Enquiry & Lead Added Successfully');
+
+            // Return success message
+            return back()->with('success', 'Enquiry  Added Successfully');
         } else {
+            // Handle the case where saving the enquiry fails
             return back()->with('fail', 'Something Went Wrong, Try again');
         }
     }
 
     // edit
-    public function edit_enquiry($id)
+    public function edit_enquiry($enquiry_Id)
     {
         // $edit_enquiry = Enquiry::where('id', $id)->first();
         $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
@@ -145,7 +158,7 @@ class EnquiryController extends Controller
         $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
         $user = Auth::user();
         $locationID = $user->locationID;
-        $edit_enquiry = Enquiry::where('id', $id)->where('locationID', $locationID)->first();
+        $edit_enquiry = Enquiry::where('enquiry_Id', $enquiry_Id)->where('locationID', $locationID)->first();
         if (!$edit_enquiry) {
             return redirect()->route('enquiry.list')->with('success', 'Location Update.');
         }

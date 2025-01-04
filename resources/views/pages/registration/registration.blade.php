@@ -105,13 +105,11 @@ Registration
 
                                                 <label class="control-label col-sm-2">Gender <span class="text-danger">*</span></label>
                                                 <div class="col-sm-4">
-                                                    <select id="applyFor" name="gender" value="{{ old('gender', $enquiry->gender ?? '') }}"
-                                                        class="form-select form-control">
+                                                    <select name="gender" class="form-select form-control">
                                                         <option selected disabled>Select Gender</option>
-                                                        <option value="0">Male</option>
-                                                        <option value="1">Female</option>
-                                                        <option value="2">Other</option>
-
+                                                        <option value="0" {{ old('gender', $enquiry->gender ?? '') == '0' ? 'selected' : '' }}>Male</option>
+                                                        <option value="1" {{ old('gender', $enquiry->gender ?? '') == '1' ? 'selected' : '' }}>Female</option>
+                                                        <option value="2" {{ old('gender', $enquiry->gender ?? '') == '2' ? 'selected' : '' }}>Other</option>
                                                     </select>
 
                                                 </div>
@@ -156,26 +154,29 @@ Registration
                                             </div>
 
                                             <div class="form-group">
-
                                                 <label class="control-label col-sm-4">State <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <select class="form-control" name="state" id="state" value="{{ old('state', $enquiry->state ?? '') }}">
+                                                    <select class="form-control" name="state" id="state">
                                                         <option value="">Select State</option>
                                                         @foreach ($states as $state)
-                                                        <option value="{{ $state->id }}">{{ $state->name }} </option>
+                                                        <option value="{{ $state->id }}" {{ old('state') == $state->id ? 'selected' : '' }}>
+                                                            {{ $state->name }}
+                                                        </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
+
                                             <div class="form-group">
                                                 <label class="control-label col-sm-4">City <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
-                                                    <select class="form-control" name="city" id="city" value="{{ old('city', $enquiry->city ?? '') }}">
+                                                    <select class="form-control" name="city" id="city">
                                                         <option value="">Select City</option>
+                                                        <!-- {{-- The options for the city dropdown should be dynamically populated based on the selected state --}} -->
                                                     </select>
                                                 </div>
-
                                             </div>
+
 
 
                                             <div class="form-group">
@@ -272,6 +273,12 @@ Registration
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-4">Register Date </label>
+                                                <div class="col-sm-8">
+                                                    <input type="date" class="form-control" name="date" value="{{ old('date') }}">
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -294,8 +301,8 @@ Registration
                                                 <div class="col-sm-10">
                                                     <select class="form-select form-control" name="room_allotment" id="room_allotment">
                                                         <option value="" disabled selected>Select Allotment</option>
-                                                        <option value="0">Yes</option>
-                                                        <option value="1">No</option>
+                                                        <option value="0" {{ old('room_allotment') == '0' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="1" {{ old('room_allotment') == '1' ? 'selected' : '' }}>No</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -307,11 +314,12 @@ Registration
                                                         <select name="room_type" class="form-select">
                                                             <option value="" disabled selected>Select Room Type</option>
                                                             @foreach ($rooms as $room)
-                                                            <option value="{{ $room->room_id }}" @if (old('room')==$room->room_id) selected @endif>
+                                                            <option value="{{ $room->room_id }}" {{ old('room_type') == $room->room_id ? 'selected' : '' }}>
                                                                 {{ $room->room_type }}
                                                             </option>
                                                             @endforeach
                                                         </select>
+
                                                     </div>
 
                                                     <label class="control-label col-sm-2">Room Fee ₹</label>
@@ -328,11 +336,12 @@ Registration
                                                 <div class="col-sm-10">
                                                     <select class="form-select form-control" name="meal_subscription" id="meal_subscription">
                                                         <option value="" disabled selected>Select Subscription</option>
-                                                        <option value="0">Yes</option>
-                                                        <option value="1">No</option>
+                                                        <option value="0" {{ old('meal_subscription') == '0' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="1" {{ old('meal_subscription') == '1' ? 'selected' : '' }}>No</option>
                                                     </select>
                                                 </div>
                                             </div>
+
                                             <div class="" id="meal_type_container" style="display: none;">
                                                 <div class="form-group">
                                                     <label class="control-label col-sm-2">Meal Type</label>
@@ -340,12 +349,13 @@ Registration
                                                         <select name="meal_type" class="form-select">
                                                             <option value="" disabled selected>Select Meal Type</option>
                                                             @foreach ($meals as $meal)
-                                                            <option value="{{ $meal->meal_id }}" @if (old('meal')==$meal->meal_id) selected @endif>
+                                                            <option value="{{ $meal->meal_id }}" {{ old('meal_type') == $meal->meal_id ? 'selected' : '' }}>
                                                                 {{ $meal->meal_type }}
                                                             </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
+
 
                                                     <label class="control-label col-sm-2">Meal Fee ₹</label>
                                                     <div class="col-sm-4">
@@ -410,22 +420,23 @@ Registration
                                                 <div class="col-sm-4">
                                                     <select name="payment_status" class="form-select">
                                                         <option value="" disabled selected>Select Payment Status</option>
-                                                        <option value="0">Success</option>
-                                                        <option value="1">Due</option>
-                                                        <option value="2">Pending</option>
-                                                        <option value="3">Failed</option>
-                                                        <option value="4">Refunded</option>
-                                                        <option value="5">Cancelled</option>
+                                                        <option value="0" {{ old('payment_status') == '0' ? 'selected' : '' }}>Success</option>
+                                                        <option value="1" {{ old('payment_status') == '1' ? 'selected' : '' }}>Due</option>
+                                                        <option value="2" {{ old('payment_status') == '2' ? 'selected' : '' }}>Pending</option>
+                                                        <option value="3" {{ old('payment_status') == '3' ? 'selected' : '' }}>Failed</option>
+                                                        <option value="4" {{ old('payment_status') == '4' ? 'selected' : '' }}>Refunded</option>
+                                                        <option value="5" {{ old('payment_status') == '5' ? 'selected' : '' }}>Cancelled</option>
+
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2">Payment Method</label>
+                                                <label class="control-label col-sm-2">Payment Method <span class="text-danger">*</span></label>
                                                 <div class="col-sm-4">
                                                     <select class="form-select form-control" name="payment_method" id="payment_method">
                                                         <option value="" disabled selected>Select Payment Method </option>
-                                                        <option value="0">Offline</option>
-                                                        <option value="1">Online</option>
+                                                        <option value="0" {{ old('payment_method') == '0' ? 'selected' : '' }}>Offline</option>
+                                                        <option value="1" {{ old('payment_method') == '1' ? 'selected' : '' }}>Online</option>
                                                     </select>
                                                 </div>
 
@@ -439,7 +450,7 @@ Registration
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2">Registration Fee ₹</label>
+                                                <label class="control-label col-sm-2">Registration Fee ₹<span class="text-danger">*</span></label>
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control" id="registration_fee" name="registration_fees" value="{{ old('registration_fees') }}" oninput="validateDecimal(this); calculateTotal()" pattern="^\d*(\.\d{0,2})?$">
                                                 </div>
@@ -454,6 +465,17 @@ Registration
                                                     <input type="text" class="form-control" id="total_amount" name="total_amt" value="{{ old('total_amt') }}" readonly>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2">Advance Paid ₹ <span class="text-danger">*</span></label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" id="submitted_amt" name="submitted_amt" value="{{ old('submitted_amt') }}" oninput="calculatePendingAmount()">
+                                                </div>
+                                                <label class="control-label col-sm-2">Pending ₹</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" id="pending_amt" name="pending_amt" value="{{ old('pending_amt') }}" readonly>
+                                                </div>
+                                            </div>
+
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Notes </label>
                                                 <div class="col-sm-10">
@@ -483,39 +505,59 @@ Registration
 @endsection
 
 @section('js')
+
 <!-- get state and city dependent list -->
 <script>
     $(document).ready(function() {
+
+        var oldStateValue = "{{ old('state') }}";
+        var oldCityValue = "{{ old('city') }}";
+        // If the old state is set, fetch cities for that state
+        if (oldStateValue) {
+            populateCities(oldStateValue, oldCityValue);
+        }
+
+        // Step 2: Listen for changes in the state dropdown to dynamically fetch cities
         $('#state').on('change', function() {
             var stateId = $(this).val();
             if (stateId) {
-                $.ajax({
-                    url: "{{ route('get.city') }}",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        state_id: stateId
-                    },
-
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data) {
-
-                        $('#city').empty();
-                        $('#city').append(
-                            '<option value="" disabled selected>Select City</option>');
-                        $.each(data, function(key, value) {
-                            $('#city').append('<option value="' + value.id + '">' +
-                                value.city + '</option>');
-                        });
-
-                    }
-                });
+                populateCities(stateId); // Fetch cities based on the selected state
+            } else {
+                // If no state is selected, clear the city dropdown
+                $('#city').empty();
+                $('#city').append('<option value="" disabled selected>Select City</option>');
             }
         });
     });
+
+    // Function to populate cities based on the selected state
+    function populateCities(stateId, selectedCity = null) {
+        $.ajax({
+            url: "{{ route('get.city') }}", // Ensure this route is correct
+            type: "POST",
+            dataType: "json",
+            data: {
+                state_id: stateId
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                // Empty the city dropdown
+                $('#city').empty();
+                $('#city').append('<option value="" disabled selected>Select City</option>');
+
+                // Populate city options dynamically
+                $.each(data, function(key, value) {
+                    // Mark the old city as selected if it matches
+                    var selected = (selectedCity == value.id) ? 'selected' : '';
+                    $('#city').append('<option value="' + value.id + '" ' + selected + '>' + value.city + '</option>');
+                });
+            }
+        });
+    }
 </script>
+
 <!-- for hide hostel panel if training program beginners -->
 <script>
     $(document).ready(function() {
@@ -543,6 +585,9 @@ Registration
             }
         });
     });
+</script>
+<script>
+    var oldCityValue = "{{ old('city') }}";
 </script>
 <!-- phone no validation -->
 <script>
@@ -746,23 +791,48 @@ Registration
 <!-- total amount -->
 <script>
     function calculateTotal() {
+        // Get the values for all fees and treat null or empty as 0
         let registrationFee = parseFloat(document.getElementById('registration_fee').value) || 0;
         let programFee = parseFloat(document.getElementById('program_fee').value) || 0;
-        let mealFee = document.getElementById('meal_fee').value ? parseFloat(document.getElementById('meal_fee').value) || 0 : 0;
-        let roomFee = document.getElementById('room_fee').value ? parseFloat(document.getElementById('room_fee').value) || 0 : 0;
+        let mealFee = parseFloat(document.getElementById('meal_fee').value) || 0; // Handle meal_fee as 0 if null or empty
+        let roomFee = parseFloat(document.getElementById('room_fee').value) || 0; // Handle room_fee as 0 if null or empty
 
-        // Calculate total
+        // Calculate total amount
         let totalAmount = registrationFee + programFee + mealFee + roomFee;
+
+        // Set the total amount in the input field
         document.getElementById('total_amount').value = totalAmount.toFixed(2);
+
+        // Recalculate pending amount every time total changes
+        calculatePendingAmount();
     }
 
+    function calculatePendingAmount() {
+        const totalAmount = parseFloat(document.getElementById('total_amount').value) || 0; // Ensure total_amount is correctly populated
+        const paidAmount = parseFloat(document.getElementById('submitted_amt').value) || 0; // Get the paid amount
+
+        // Calculate pending amount (total - paid)
+        const pendingAmount = totalAmount - paidAmount;
+
+        // Set the value of the pending amount field
+        document.getElementById('pending_amt').value = pendingAmount >= 0 ? pendingAmount.toFixed(2) : 0;
+    }
+
+    // Function to validate decimal input
     function validateDecimal(input) {
         let value = input.value;
         let regex = /^\d*(\.\d{0,2})?$/;
 
         if (!regex.test(value)) {
-            input.value = value.slice(0, -1);
+            input.value = value.slice(0, -1); // Remove invalid character
         }
     }
+
+    // Initialize pending amount and total amount when the page loads
+    window.onload = function() {
+        calculateTotal(); // Initialize total amount when page loads
+        calculatePendingAmount(); // Initialize pending amount based on any pre-filled values
+    };
 </script>
+
 @endsection

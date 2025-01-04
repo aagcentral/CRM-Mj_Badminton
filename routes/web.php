@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\notification\NotificationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TrainingProgramController;
@@ -17,11 +18,13 @@ use App\Http\Controllers\DistributedStockController;
 use App\Http\Controllers\FeeManagementController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StateCityController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Panel\Settings\RoleController;
 use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Panel\Settings\PermissionController;
 use App\Http\Controllers\EnquiryController;
 
@@ -33,8 +36,15 @@ use App\Http\Controllers\EnquiryController;
 // Route::name("admin.")->prefix("admin")->group(function ($router) {
 
 Route::get('/', [AuthController::class, 'index']);
-Route::get('/erp', [AuthController::class, 'index']);
+Route::get('/erp', [AuthController::class, 'index'])->name('erp');
 Route::post('/auth-login', [AuthController::class, 'auth_login'])->name('auth.login.post');
+
+Route::get('reset', [ForgotPasswordController::class, 'directReset'])->name('password.direct-reset');
+// Route to handle password reset submission
+Route::post('password/update', [ForgotPasswordController::class, 'update'])->name('password.update');
+
+
+
 
 Route::group(['middleware' => 'AuthLogin'], function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('panel.dashboard');
@@ -50,7 +60,9 @@ Route::group(['middleware' => 'AuthLogin'], function () {
         Route::get('delete/{id}', [UserController::class, 'delete'])->name('user.delete');
     });
 
+
     Route::group(['prefix' => 'settings'], function () {
+
         //Super Admin Guest Controller
         Route::controller(PermissionController::class)->group(function () {
             Route::get('permission-group', 'index')->name('settings.permission.group');
@@ -79,7 +91,7 @@ Route::group(['middleware' => 'AuthLogin'], function () {
         Route::controller(EnquiryController::class)->group(function () {
             Route::get('enquiry-list', 'enquiry_list')->name('enquiry.list');
             Route::post('add-enquiry', 'add_enquiry')->name('enquiry.add');
-            Route::get('edit-enquiry/{id}', 'edit_enquiry')->name('enquiry.edit');
+            Route::get('edit-enquiry/{enquiry_Id}', 'edit_enquiry')->name('enquiry.edit');
             Route::post('update-enquiry', 'update_enquiry')->name('enquiry.update');
             Route::post('delete-enquiry', 'destroy_enquiry')->name('enquiry.destroy');
             Route::get('view-status/{id}', 'view_status')->name('enquiry.status');
@@ -203,13 +215,6 @@ Route::group(['middleware' => 'AuthLogin'], function () {
         });
 
 
-        // Fee Management Routes
-        Route::controller(FeeManagementController::class)->group(function () {
-            Route::get('feemanagement', 'feemanagement_list')->name('feemanagement.list');
-            // Route::get('/registration/details/{registration_no}', 'getDetails')->name('registration.details'); // Fetch user details
-        });
-
-
 
         // registration-list registration 
         Route::controller(RegistrationController::class)->group(function () {
@@ -223,11 +228,25 @@ Route::group(['middleware' => 'AuthLogin'], function () {
             Route::post('registration/update-status', 'registrationupdateStatus')->name('registration.updateStatus');
             // lead to register
             Route::get('/register/{enquiry}', 'prefill')->name('registration.prefill');
+            Route::get('edit-userpackage/{registration_no}', 'edit_userpackage')->name('registration.editpackage');
+            Route::post('updatependingPayment', 'updatePayment')->name('registration.updatePayment');
+            Route::post('updateuserpackage', 'updateuser_package')->name('registration.updateuserpackage');
         });
 
 
         Route::controller(StateCityController::class)->group(function () {
             Route::post('get-city', 'getCities')->name('get.city');
+        });
+
+        Route::controller(NotificationController::class)->group(function () {
+            Route::get('notifications', 'notifications_list')->name('notifications.list');
+            Route::get('markasred/{id}', 'markasrednotification')->name('notifications.markasread');
+            Route::post('/mark-notification-read', 'markNotificationRead');
+        });
+
+
+        Route::controller(ReportController::class)->group(function () {
+            Route::get('fee-report', 'fee_report')->name('report.feecollection');
         });
     });
 });

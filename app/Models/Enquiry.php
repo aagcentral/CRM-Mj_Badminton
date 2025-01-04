@@ -64,6 +64,11 @@ class Enquiry extends Model
         return $this->hasMany(Registration::class, 'enquiry_Id');
     }
 
+    // Relationship to Location model
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'locationID');  // locationID is the foreign key in Enquiry
+    }
 
     // * Boot method for the model.
     //  */

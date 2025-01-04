@@ -97,7 +97,7 @@ Edit Stock
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-12">
+                        <!-- <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="edit_single_price">Single Price</label>
                                 <input type="text" id="edit_single_price" class="form-control single_price" name="single_price" min="0" step="0.01"
@@ -111,7 +111,7 @@ Edit Stock
                                 <input type="text" id="edit_total_price" class="form-control total_price" name="total_price" min="0" step="0.01"
                                     value="{{ old('total_price', $edit_stock->total_price) }}" readonly>
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <div class="col-md-4 col-sm-12">
@@ -142,8 +142,8 @@ Edit Stock
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="name">Vender Name </label>
-                                <input type="text" class="form-control" name="vender_name" value="{{ $edit_stock->vender_name }}" placeholder="Enter Vender Name">
+                                <label for="name">Vendor Name </label>
+                                <input type="text" class="form-control" name="vender_name" value="{{ $edit_stock->vender_name }}" placeholder="Enter Vendor Name">
                             </div>
                         </div>
                         <div class="col-md-8 col-sm-12">
@@ -152,7 +152,6 @@ Edit Stock
                                 <textarea type="text" class="form-control" name="notes" value="" placeholder="Write notes here...">{{ $edit_stock->notes }}</textarea>
                             </div>
                         </div>
-
 
                     </div>
                     <div class="col-md-12 d-flex justify-content-between mt-2">

@@ -35,7 +35,7 @@ class LocationController extends Controller
 
         // Save the data
         $save = Location::create([
-            'location_id' => 'MLID' . date('dmy') . $this->location() + 1,
+            'location_id' => 'MJID' . date('dmy') . $this->location() + 1,
             'location' => $request->location,
             'status' =>  $request->status == "active" ? '0' : '1',
         ]);

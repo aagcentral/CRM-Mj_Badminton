@@ -90,6 +90,11 @@ class Registration extends Model
     }
 
 
+    public function userPackageTracker()
+    {
+        return $this->hasMany(PackageUpdateTrack::class, 'registration_no', 'registration_no');
+    }
+
     public function enquiry()
     {
         return $this->belongsTo(Enquiry::class, 'enquiry_id');

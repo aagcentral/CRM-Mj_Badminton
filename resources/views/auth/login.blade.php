@@ -45,7 +45,18 @@
                   <span class="d-none d-lg-block">Mj Badminton</span>
                 </a>
               </div>End Logo -->
+              @if (session('error'))
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              @endif
 
+              @if (session('success'))
+              <div class="alert alert-success small">
+                {{ session('success') }}
+              </div>
+              @endif
               <div class="card mb-3 shadow">
 
                 <div class="card-body">
@@ -74,7 +85,9 @@
                       <input type="password" name="password" class="form-control" id="yourPassword" required>
                       <div class="invalid-feedback">Please enter your password!</div>
                     </div>
-
+                    <div class="col-12 text-end">
+                      <a href="{{ route('password.direct-reset') }}" class="small text-primary">Forgot Password?</a>
+                    </div>
 
                     <div class="col-12 mb-5 mt-4">
                       <button class="btn btn-primary w-100" type="submit">Login</button>

@@ -19,16 +19,16 @@
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
       </a>
-    </li><!-- End Dashboard Nav -->
+    </li>
     @endif
 
     @if(!empty($ViewPermissionUser))
     <li class="nav-item">
       <a class="nav-link @if(Request::segment(2) != 'user') collapsed  @endif" href="{{ route('user.list') }}">
-        <i class="fa-solid fa-user"></i>
+        <i class="fa-regular fa-user"></i>
         <span>User</span>
       </a>
-    </li><!-- End  Nav -->
+    </li>
     @endif
 
     @if(!empty($ViewPermissionSettingsMenu) || !empty($ViewPermissionSettingsPermission) || !empty($ViewPermissionSettingsRole) || !empty($ViewPermissionSettingsLocation))
@@ -49,6 +49,7 @@
           </a>
         </li>
         @endif
+        <!--***** Don't delete this is for developers and only enable when you want to create permission of new menu *******-->
         <!-- @if(!empty($ViewPermissionSettingsMenu))
         <li>
           <a href="{{ route('settings.permission.group') }}"
@@ -65,6 +66,7 @@
           </a>
         </li>
         @endif -->
+        <!--*****./End Don't delete it, this is for developers and only enable when you want to create permission of new menu *******-->
         @if(!empty($ViewPermissionSettingsRole))
         <li class="nav-item">
           <a class="nav-link @if(Route::currentRouteName() != 'settings.role.list') collapsed  @endif" href="{{ route('settings.role.list') }}">
@@ -137,13 +139,8 @@
     </li>
     @endif
 
-    <!-- fee management -->
-    <!-- <li class="nav-item">
-      <a class="nav-link @if(Route::currentRouteName() != 'feemanagement.list') collapsed  @endif" href="{{ route('feemanagement.list') }}">
-        <i class="bi bi-grid"></i>
-        <span>Fee Management</span>
-      </a>
-    </li> -->
+
+
     <!-- stock -->
     @if(havePermission('unit.list') || havePermission('category.list') || havePermission('product.list') || havePermission('stock.list') || havePermission('distributed.list'))
     <li class="nav-item">
@@ -205,29 +202,38 @@
     </li>
     @endif
 
-    <!-- fee -->
-    <!-- @if(havePermission('feemanagement.list'))
+    <!-- notification -->
+    @if(havePermission('notifications.list'))
     <li class="nav-item">
-      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['feemanagement.list'])) collapsed @endif"
-        data-bs-target="#forms-navfee" data-bs-toggle="collapse" href="#">
-        <i class="fa-solid fa-layer-group"></i><span>Fee Management</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link @if(Route::currentRouteName() != 'notifications.list') collapsed  @endif" href="{{ route('notifications.list') }}">
+        <i class="fa-solid fa-bell"></i>
+        <span>Notification</span>
       </a>
-      <ul id="forms-navfee"
-        class="nav-content @if (!in_array(Route::currentRouteName(), ['feemanagement.list'])) collapse @endif"
-        data-bs-parent="#sidebar-nav">
+    </li>
+    @endif
 
-        @if(havePermission('feemanagement.list'))
+    <!-- report -->
+    @if(havePermission('report.feecollection'))
+    <li class="nav-item">
+      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapsed @endif"
+        data-bs-target="#forms-navreport" data-bs-toggle="collapse" href="#">
+        <i class="fa-solid fa-calendar-days"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-navreport"
+        class="nav-content @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapse @endif"
+        data-bs-parent="#sidebar-nav">
+        <!-- {{-- Check and Show Registration Form Link --}} -->
+        @if(havePermission('report.feecollection'))
         <li>
-          <a href="{{ route('feemanagement.list') }}"
-            class="@if (Route::currentRouteName() == 'feemanagement.list') active @endif">
-            <i class="bi bi-circle"></i><span>Fee Record</span>
+          <a href="{{ route('report.feecollection') }}"
+            class="@if (Route::currentRouteName() == 'report.feecollection') active @endif">
+            <i class="bi bi-circle"></i><span>Fee Report</span>
           </a>
         </li>
         @endif
-
       </ul>
     </li>
-    @endif -->
+    @endif
 
     <!-- Miscellaneous -->
 

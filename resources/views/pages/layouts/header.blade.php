@@ -2,9 +2,9 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="#!" class="logo d-flex align-items-center">
         <!-- <img src="{{ url('') }}/assets/img/logo.png" alt=""> -->
-        <span class="d-none d-lg-block">MjBadminton</span>
+        <img class="img-fluid" src="{{ asset('assets/images/logo1.jpg') }}" alt="Logo" style="height:100px; width:200px;">
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
 
@@ -46,7 +46,7 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{ Auth::user()->name }}</h6>
-              <span>{{ Auth::user()->Userlocations->location }}</span>
+              <p>{{ Auth::user()->Userlocations ? Auth::user()->Userlocations->location : 'No Location' }}</p>
             </li>
             <li>
               <hr class="dropdown-divider">

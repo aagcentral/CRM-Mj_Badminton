@@ -82,16 +82,19 @@ for ($i = 1; $i <= 12; $i++) {
 
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="name">Lead Source <span class="text-danger">*</span></label>
+                                    <label for="lead_source">Lead Source <span class="text-danger">*</span></label>
                                     <select name="lead_source" class="form-select">
                                         <option value="" disabled selected>Select Lead Source</option>
                                         @foreach ($leads as $lead)
                                         <option value="{{ $lead->leadsource_id }}"
-                                            @if (old('lead')==$lead->leadsource_id) selected @endif>{{ $lead->leadsource}}</option>
+                                            @if (old('lead_source')==$lead->leadsource_id) selected @endif>
+                                            {{ $lead->leadsource }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label for="package">Package<span class="text-danger">*</span></label>
@@ -123,27 +126,33 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="name">Session<span class="text-danger">*</span></label>
+                                    <label for="session">Session <span class="text-danger">*</span></label>
                                     <select name="session" class="form-select">
                                         <option value="" disabled selected>Select Session</option>
                                         @foreach ($session as $sesion)
                                         <option value="{{ $sesion->session_id }}"
-                                            @if (old('sesion')==$sesion->session_id) selected @endif>{{ $sesion->session}}</option>
+                                            @if (old('session')==$sesion->session_id) selected @endif>
+                                            {{ $sesion->session }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
+
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="name">Time Slot<span class="text-danger">*</span></label>
+                                    <label for="time_slot">Time Slot <span class="text-danger">*</span></label>
                                     <select name="time_slot" class="form-select">
                                         <option value="" disabled selected>Select Time Slot</option>
                                         @foreach ($Timing as $Time)
                                         <option value="{{ $Time->timing_id }}"
-                                            @if (old('Time')==$Time->timing_id) selected @endif>{{ $Time->time_slot}}</option>
+                                            @if (old('time_slot')==$Time->timing_id) selected @endif>
+                                            {{ $Time->time_slot }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
+
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
@@ -164,13 +173,14 @@ for ($i = 1; $i <= 12; $i++) {
                                     <label for="lead_status">Lead Status <span class="text-danger">*</span></label>
                                     <select class="form-control" name="lead_status">
                                         <option value="" disabled selected>Select Lead Status</option>
-                                        <option value="0">New</option>
-                                        <option value="1">Assigned</option>
-                                        <option value="2">In Process</option>
-                                        <option value="3">Converted</option>
-                                        <option value="4">Dead</option>
-                                        <option value="5">Recycle</option>
+                                        <option value="0" @if (old('lead_status')==0) selected @endif>New</option>
+                                        <option value="1" @if (old('lead_status')==1) selected @endif>Assigned</option>
+                                        <option value="2" @if (old('lead_status')==2) selected @endif>In Process</option>
+                                        <option value="3" @if (old('lead_status')==3) selected @endif>Converted</option>
+                                        <option value="4" @if (old('lead_status')==4) selected @endif>Dead</option>
+                                        <option value="5" @if (old('lead_status')==5) selected @endif>Recycle</option>
                                     </select>
+
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
@@ -314,19 +324,21 @@ for ($i = 1; $i <= 12; $i++) {
                                 @if(havePermission('enquiry.status'))
                                 <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id])}}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
                                 @endif
-                                @if(havePermission('enquiry.edit'))
-                                <a href="#" class="btn btn-warning text-dark btn-sm" style="color: #7c5cc4;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="{{ $row->enquiry_Id }}"
+                                @if(havePermission('enquiry.updateStatus'))
+                                <a href="#" class="btn btn-warning text-dark btn-sm" style="color: #7c5cc4;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-enquiry_Id="{{ $row->enquiry_Id }}"
                                     data-followup_date="{{ $row->followup_date }}" data-status="{{ $row->lead_status }}" data-notes="{{ $row->notes }}">
                                     <i class="fa-solid fa-arrows-turn-to-dots"></i>
                                 </a>
-
-                                <a href="{{ route('enquiry.edit', $row->id) }}" class=" btn btn-info btn-sm"><i class="fas fa-edit"></i> </a>
+                                @endif
+                                @if(havePermission('enquiry.edit'))
+                                <a href="{{ route('enquiry.edit', $row->enquiry_Id) }}" class=" btn btn-info btn-sm"><i class="fas fa-edit"></i> </a>
+                                @endif
                                 @if(havePermission('registration.form'))
                                 @if ($row->lead_status == 3)
                                 <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary btn-sm small"> <i class="fa-solid fa-arrows-split-up-and-left me-1"></i>convert</a>
                                 @else @endif
                                 @endif
-                                @endif
+
 
 
                                 @if(havePermission('enquiry.destroy'))
@@ -470,7 +482,7 @@ for ($i = 1; $i <= 12; $i++) {
         // When the modal is triggered, populate the fields dynamically
         $('#exampleModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
-            var enquiryId = button.data('id');
+            var enquiryId = button.data('enquiry_Id');
             var followup = button.data('followup_date');
             var leadStatus = button.data('status');
             var notes = button.data('notes');

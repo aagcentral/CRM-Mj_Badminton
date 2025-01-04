@@ -183,8 +183,11 @@ for ($i = 1; $i <= 12; $i++) {
                                 <span>Time Slot: {{ $row->Time!=null ? $row->Time->time_slot : '' }} </span><br>
                             </div>
                         </td>
-
                         <td>
+                            <span class="fw-bold" style="color:#24ABF2">Total:</span><span> {{$row->PaymentDetail->total_amt ?? '' }} </span><br>
+                            <span>Paid: {{$row->PaymentDetail->submitted_amt ?? '' }}</span><br>
+                            <span>Remaining: {{$row->PaymentDetail->pending_amt ?? '' }} </span><br>
+
                             @php
                             $statusClasses = [
                             '0' => ['Success', 'badge-success'],
@@ -194,24 +197,49 @@ for ($i = 1; $i <= 12; $i++) {
                             '4' => ['Refunded', 'badge-refunded'],
                             '5' => ['Cancelled', 'badge-cancelled'],
                             ];
-                            $status = $row->PaymentDetail->payment_status ?? null;
+
+                            // Get payment status, default to 0 (Success) if null
+                            $status = $row->PaymentDetail->payment_status ?? 0;
                             @endphp
-                            <span class="badge {{ $statusClasses[$status][1] ?? 'badge-default' }}">
-                                {{ $statusClasses[$status][0] ?? 'Unknown' }}
+
+                            <!-- Check if the status exists and assign the correct class, else fallback to 'Unknown' -->
+                            <span class="badge {{ isset($statusClasses[$status]) ? $statusClasses[$status][1] : 'badge-default' }}">
+                                {{ isset($statusClasses[$status]) ? $statusClasses[$status][0] : 'Unknown' }}
                             </span>
                         </td>
+
+
                         <td>
 
+                            @if(havePermission('registration.editpackage'))
+                            <a href="{{ route('registration.editpackage', $row->registration_no) }}" class="btn btn-success btn-sm px-2">Update Package</a>
+                            @endif
                             @if(havePermission('registration.details'))
-                            <a href="{{ route('registration.details', $row->registration_no) }}" class="text-success px-2"><i class="fas fa-eye"></i> </a>
+                            <a href="{{ route('registration.details', $row->registration_no) }}" class="btn btn-success btn-sm small px-2"><i class="fas fa-eye"></i> </a>
                             @endif
                             @if(havePermission('registration.edit'))
-                            <a href="{{ route('registration.edit', $row->registration_no) }}" class="text-info px-2"><i class="fas fa-edit"></i> </a>
+                            <a href="{{ route('registration.edit', $row->registration_no) }}" class="btn btn-info btn-sm small px-2"><i class="fas fa-edit"></i> </a>
                             @endif
                             @if(havePermission('registration.destroy'))
-                            <button class="btn btn-default text-danger btn-sm px-2 delete-registration" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>
+                            <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>
                             @endif
-
+                            @if(havePermission('registration.updatePayment'))
+                            <!-- Display Registration Data in Modal -->
+                            <a href="#"
+                                class="btn btn-primary btn-sm small"
+                                data-bs-toggle="modal"
+                                data-bs-target="#paymentModal"
+                                data-registration_no="{{ $row->registration_no }}"
+                                data-total_amt="{{ $row->PaymentDetail->total_amt ?? '' }}"
+                                data-submitted_amt="{{ $row->PaymentDetail->submitted_amt ?? '' }}"
+                                data-pending_amt="{{ $row->PaymentDetail->pending_amt ?? '' }}"
+                                data-payment_status="{{ $row->PaymentDetail->payment_status ?? '' }}"
+                                data-payment_method="{{ $row->PaymentDetail->payment_method ?? '' }}"
+                                data-upcoming_date="{{ $row->PaymentDetail->upcoming_date ?? '' }}"
+                                data-payment_notes="{{ $row->PaymentDetail->payment_notes ?? '' }}">
+                                Collect Fee
+                            </a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -220,15 +248,143 @@ for ($i = 1; $i <= 12; $i++) {
             </table>
         </div>
     </div>
+    <!-- modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="paymentModalLabel">Payment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('registration.updatePayment') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="registration_no" id="registration_no">
 
+                        <!-- Total Amount (readonly) -->
+                        <div class="d-flex gap-2 mb-2">
+                            <div class="fw-bold">Total Amount :</div>
+                            <div class="text-primary fw-bold" id="total_amt"></div>
+                        </div>
 
+                        <!-- Submitted Amount -->
+                        <div class="d-flex gap-2 mb-2">
+                            <div class="fw-bold">Paid :</div>
+                            <div class="text-success fw-bold" id="submitted_amt_display"></div>
+                        </div>
+
+                        <!-- Remaining Amount -->
+                        <div class="d-flex gap-2 mb-2">
+                            <div class="fw-bold">Remaining:</div>
+                            <div class="text-danger fw-bold" id="pending_amt"></div>
+                        </div>
+
+                        <!-- Submitted Amount (editable) -->
+                        <div class="form-group mb-3">
+                            <label for="submitted_amt" class="fw-bold">Amount:</label>
+                            <input type="text" class="form-control" id="submitted_amt" name="submitted_amt" placeholder="Enter amount " min="0" required>
+                        </div>
+                        <!-- <div class="form-group mb-1">
+                            <label for="submitted_amt" class="fw-bold">Amount:</label>
+                            <input type="text" class="form-control" id=" " name=" " value="{{ old(' ') }}">
+                        </div> -->
+
+                        <!-- Payment Status -->
+                        <div class="form-group mb-2">
+                            <label for="payment_status" class="fw-bold">Payment Status:<span class="text-danger"> *</span></label>
+                            <select class="form-select" id="payment_status" name="payment_status">
+                                <option value="" disabled>Select Status</option>
+                                <option value="0">Success</option>
+                                <option value="1">Due</option>
+                                <option value="2">Pending</option>
+                                <option value="3">Failed</option>
+                                <option value="4">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="payment_method" class="fw-bold">Payment Method:</label>
+                            <select class="form-select" id="payment_method" name="payment_method">
+                                <option value="" disabled>Select Payment Method</option>
+                                <option value="0">Offline</option>
+                                <option value="1">Online</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-1">
+                            <label for="submitted_amt" class="fw-bold">Date:</label>
+                            <input type="date" class="form-control" id="upcoming_date" name="upcoming_date" value="{{ old('upcoming_date') }}">
+                        </div>
+                        <!-- Payment Notes -->
+                        <div class="form-group mb-2">
+                            <label for="payment_notes" class="fw-bold">Payment Notes:</label>
+                            <textarea class="form-control" id="payment_notes" name="payment_notes"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
 
 
     @endsection
 
     @section('js')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentModal = document.getElementById('paymentModal');
+
+            // Event listener for when the modal is shown
+            paymentModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget; // The button that triggered the modal
+
+                // Retrieve dynamic data from the button's data attributes
+                const registrationNo = button.getAttribute('data-registration_no');
+                const totalAmt = parseFloat(button.getAttribute('data-total_amt')) || 0;
+                const submittedAmt = parseFloat(button.getAttribute('data-submitted_amt')) || 0;
+                const paymentStatus = button.getAttribute('data-payment_status');
+                const paymentMethod = button.getAttribute('data-payment_method');
+                const paymentDate = button.getAttribute('data-upcoming_date');
+                const paymentNotes = button.getAttribute('data-payment_notes');
+
+                // Populate modal fields with data from the button
+                document.getElementById('registration_no').value = registrationNo;
+                document.getElementById('total_amt').textContent = totalAmt.toFixed(2);
+                document.getElementById('submitted_amt_display').textContent = submittedAmt.toFixed(2);
+                document.getElementById('payment_status').value = paymentStatus;
+                document.getElementById('payment_method').value = paymentMethod;
+                document.getElementById('upcoming_date').value = paymentDate;
+                document.getElementById('payment_notes').value = paymentNotes;
+
+                // Update Remaining Amount (Total - Submitted)
+                const pendingAmt = totalAmt - submittedAmt;
+                document.getElementById('pending_amt').textContent = pendingAmt.toFixed(2);
+
+                // Clear the 'Amount' field so user can fill it
+                document.getElementById('submitted_amt').value = '';
+            });
+
+            // Event listener for when the modal is hidden (optional, to reset the 'Amount' field)
+            paymentModal.addEventListener('hidden.bs.modal', function() {
+                // Clear the 'Amount' field after modal is closed
+                document.getElementById('submitted_amt').value = '';
+            });
+            // If pending amount is 0 and status is not filled, set status to 0 (Success)
+            if (pendingAmt === 0 && !paymentStatus) {
+                document.getElementById('payment_status').value = 0;
+            }
+        });
+    </script>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $('.delete-registration').click(function() {
             var id = $(this).data('id');
@@ -277,103 +433,8 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            function toggleFields(paymentMethod) {
 
-                $('#utr_no_group').toggle(paymentMethod == '1');
-                $('#registration_fee_group').toggle(paymentMethod == '0');
-            }
-            toggleFields($('#payment_method').val());
-            $('#payment_method').on('change', function() {
-                toggleFields($(this).val());
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const packageSelect = document.getElementById("package");
-            const trainingProgramField = document.getElementById("training_program_field");
-            const knownPackages = ['Training Program', 'TrainingProgram', 'training program', 'training-program', 'Training Programme', 'Training programme', 'trainingprogram', 'Training-Program'];
 
-            // Fuse.js options
-            const options = {
-                includeScore: true,
-                threshold: 0.3,
-            };
-            const fuse = new Fuse(knownPackages, options);
-
-            // Check the pre-selected value on page load
-            const selectedText = packageSelect.options[packageSelect.selectedIndex].text.trim();
-            const result = fuse.search(selectedText);
-            let showTrainingProgram = false;
-            for (let i = 0; i < result.length; i++) {
-                if (result[i].item.toLowerCase() === 'training program') {
-                    showTrainingProgram = true;
-                    break;
-                }
-            }
-            // Show or hide the Training Program field based on the selection
-            if (showTrainingProgram) {
-                trainingProgramField.style.display = "block";
-            } else {
-                trainingProgramField.style.display = "none";
-            }
-
-            packageSelect.addEventListener("change", function() {
-                const selectedText = packageSelect.options[packageSelect.selectedIndex].text.trim();
-                const result = fuse.search(selectedText);
-                let showTrainingProgram = false;
-                for (let i = 0; i < result.length; i++) {
-                    if (result[i].item.toLowerCase() === 'training program') {
-                        showTrainingProgram = true;
-                        break;
-                    }
-                }
-                if (showTrainingProgram) {
-                    trainingProgramField.style.display = "block";
-                } else {
-                    trainingProgramField.style.display = "none";
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('[data-bs-target="#exampleModal"]').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Map data-* attributes to modal fields
-                    const fields = [
-                        'registration_no',
-                        'package',
-                        'training_program',
-                        'session',
-                        'time_slot',
-                        'payment_module',
-                        'payment_date',
-                        'payment_status',
-                        'payment_method',
-                        'registration_fees',
-                        'utr_no',
-                        'notes'
-                    ];
-
-                    fields.forEach(field => {
-                        const modalField = document.getElementById(field);
-                        const dataValue = this.getAttribute(`data-${field}`);
-                        if (modalField) {
-                            if (modalField.tagName === 'SELECT' || modalField.tagName === 'INPUT') {
-                                modalField.value = dataValue || '';
-                            } else if (modalField.tagName === 'TEXTAREA') {
-                                modalField.textContent = dataValue || '';
-                            }
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 
 
     @endsection

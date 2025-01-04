@@ -48,9 +48,7 @@ class DistributedStockController extends Controller
             'product' => 'required',
             'quantity' => 'required|integer|min:1',
             'unit' => 'required',
-
         ]);
-
 
         // Find the product in the stock
         $check_product = Product::where('product_id', $request->product)->where('status', '0')->first();
@@ -67,14 +65,35 @@ class DistributedStockController extends Controller
         }
 
         // Check if there is enough stock to distribute
-        if ($stock->quantity < $request->quantity) {  // Deduct the requested quantity, not just 1
+        // if ($stock->quantity < $request->quantity) {  // Deduct the requested quantity
+        //     return back()->with('error', 'This Product Is Out of Stock');
+        // }
+        // Prevent distribution if stock is less than 50
+        if ($stock->quantity < 10) {
+            return back()->with('error', 'Cannot distribute product: Low stock (less than 10)');
+        }
+
+        // Check if there is enough stock to distribute
+        if ($stock->quantity < $request->quantity) {
             return back()->with('error', 'This Product Is Out of Stock');
         }
+        // Calculate the total price reduction for the distributed quantity
+        $pricePerUnit = $stock->single_price;
+        $totalPriceToDeduct = $request->quantity * $pricePerUnit;
 
         // Deduct the quantity from the stock
         $stock->quantity -= $request->quantity;  // Deduct requested quantity
+
+        // Reduce the total price based on the distributed quantity
+        $stock->total_price -= $totalPriceToDeduct;
+
+        // Ensure the total price doesn't go below zero
+        $stock->total_price = max($stock->total_price, 0);
+
+        // Save the updated stock
         $stock->save();
 
+        // Create a distributed stock record
         $distributedid = 'DSTID' . date('dmy') . $this->dstock() + 1;
         $save = DistributedStock::create([
             'distributed_id' => $distributedid,
@@ -85,7 +104,7 @@ class DistributedStockController extends Controller
             'unit' => $request->unit,
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
-            'status' =>  $request->status == "active" ? '0' : '1',
+            'status' => $request->status == "active" ? '0' : '1',
         ]);
 
         // Check if save is successful
@@ -95,6 +114,8 @@ class DistributedStockController extends Controller
             return back()->with('fail', 'Something Went Wrong, Try again');
         }
     }
+
+
 
 
     // edit

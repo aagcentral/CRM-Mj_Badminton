@@ -132,19 +132,19 @@ Stock
                                 <input type="text" class="form-control quantity" id="validateno" name="quantity" value="{{ old('quantity') }}" placeholder="Enter Quantity" oninput="validateDecimalInput(this)">
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <!-- <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="single_price">Single Price <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control single_price" name="single_price" value="{{ old('single_price') }}" placeholder="Enter Single Price"
                                     oninput="validateDecimalInput(this)">
                             </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12">
+                        </div> -->
+                        <!-- <div class="col-md-4 col-sm-12">
                             <div class="form-group">
                                 <label for="total_price">Total Price</label>
                                 <input type="text" class="form-control total_price" id="validateno" name="total_price" value="{{ old('total_price') }}" placeholder="Calculated Automatically" readonly>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
@@ -216,7 +216,7 @@ Stock
                         <th>Category</th>
                         <th>Product </th>
                         <th>Stock </th>
-                        <th>Total Price</th>
+                        <!-- <th>Total Price</th> -->
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -232,14 +232,14 @@ Stock
                         <!-- <td>{{ $row->product_id}}</td> -->
                         <td>{{ $row->products!=null ? $row->products->product : '' }}</td>
                         <td>{{ $row->quantity}}</td>
-                        <td>{{ $row->total_price}}</td>
+                        <!-- <td>{{ $row->total_price}}</td> -->
 
                         <td>
                             <span class="badge {{ $row->status == '0' ? 'bg-success' : 'bg-danger' }}"> {{ $row->status == '0' ? 'Active' : 'Inactive' }}</span>
                         </td>
                         <td>
                             @if(havePermission('stock.edit'))
-                            <a href="{{ route('stock.edit', $row->stock_id) }}" class="text-info px-2"><i class="fas fa-edit"></i> </a>
+                            <a href="{{ route('stock.edit', ['id'=>$row->id]) }}" class="text-info px-2"><i class="fas fa-edit"></i> </a>
                             @endif
                             @if(havePermission('stock.destroy'))
                             <button class="btn btn-default text-danger btn-sm px-2 delete-stock" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>

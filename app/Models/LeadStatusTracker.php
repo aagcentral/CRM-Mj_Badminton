@@ -18,7 +18,6 @@ class LeadStatusTracker extends Model
         'date',
         'locationID',
 
-
     ];
 
     public function enquiry(): BelongsTo

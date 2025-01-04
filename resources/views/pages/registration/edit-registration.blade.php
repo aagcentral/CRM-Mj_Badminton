@@ -389,7 +389,7 @@ Edit Registration
                             </div>
                             <!-- ************ End of hostel Details************** -->
                             <!-- ************ Start of Payment Details************** -->
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-lg-12">
                                     <div class="panel panel-default shadow">
                                         <div class="panel-heading">
@@ -485,7 +485,7 @@ Edit Registration
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row">
                                 <div class="d-flex justify-content-end">
                                     <button class="btn btn-dark" type="submit">Submit</button>

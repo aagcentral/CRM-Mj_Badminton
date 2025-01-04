@@ -20,68 +20,122 @@
 </style>
 @section('content')
 <div class="container-fluid py-3">
-    <h3 class="my-4">New Dashboard</h3>
+    <h3 class="my-4"> Dashboard</h3>
     <div class="row">
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text-danger">Total Player</strong>
+
+        <div class="col-sm-3">
+            <div class="card text-center shadow-sm p-3 mb-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="name mb-2">
+                        <strong class="text-danger">Total Players</strong>
                     </div>
-                    <div class="count-number employee-count">{{ $totalregistration }}</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text-success">Total Lead</strong></div>
-                    <div class="count-number attendance-count ">{{ $totallead }}</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text">Total Registration</strong></div>
-                    <div class="count-number leave-count">{{ $totalregistration }}</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text-primary">Total Product</strong></div>
-                    <div class="count-number total_expense">{{ $totalproduct }}</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text-warning">Total Stock</strong></div>
-                    <div class="count-number total_deposit">{{ $totalstock }}</div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-sm-2">
-            <div class="wrapper count-title text-center">
-                <a href="#">
-                    <div class="name"><strong class="text-success">All Category</strong>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="icon rounded-circle bg-light p-3 me-3">
+                            <i class="bi bi-people fs-4 text-danger"></i>
+                        </div>
+                        <div class="count-number employee-count fs-4 text-danger">
+                            {{ $totalregistration }}
+                        </div>
                     </div>
-                    <div class="count-number total_salaries_paid">{{ $totalCategory }}</div>
                 </a>
             </div>
         </div>
+
+
+
+        <!-- Toast Container -->
+        <!-- <div class="toast-container position-fixed top-0 end-0 p-3">
+            @forelse($notifications as $category => $categoryNotifications)
+            @foreach($categoryNotifications as $notification)
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                <div class="toast-header">
+                    <strong class="me-auto">{{ ucfirst($category) }}</strong>
+                    <small>Just now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+
+            </div>
+            @endforeach
+            @empty
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                <div class="toast-header">
+                    <strong class="me-auto">No Notifications</strong>
+                    <small>Just now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    You have no new notifications.
+                </div>
+            </div>
+            @endforelse
+        </div> -->
+
+
+
+        <div class="col-sm-3">
+            <div class="card text-center shadow-sm p-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="name mb-2">
+                        <strong class="text-success">Total Lead</strong>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="icon rounded-circle bg-light p-3 me-3 text-success">
+                            <i class="fa-solid fa-headset fs-4"></i>
+                        </div>
+                        <div class="text-success employee-count fs-4">
+                            {{ $totallead }}
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card text-center shadow-sm p-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="name mb-2">
+                        <strong class="text-dark">All Registration</strong>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="icon rounded-circle bg-light p-3 me-3">
+                            <i class="bi bi-person-check text-dark fs-4"></i>
+                        </div>
+                        <div class="text-dark employee-count fs-4">
+                            {{ $totalregistration }}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card text-center shadow-sm p-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="name mb-2">
+                        <strong class="text-primary">Total Product</strong>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="icon rounded-circle bg-light p-3 me-3">
+                            <i class="bi bi-box text-primary fs-4"></i>
+                        </div>
+                        <div class="text-primary employee-count fs-4">
+                            {{ $totalproduct }}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
     </div>
 
-    <div class="row mt-4">
-        <div class="col-md-6 col-sm-12">
+    <div class="row mt-3">
+
+        <div class="col-md-9 col-sm-12">
             <div class="card">
+
+
                 <!-- <div class="card-header d-flex align-items-center justify-content-between">
                     <h3 class="card-title mb-0">
                         <i class="ion ion-clipboard mr-2"></i>Product List
@@ -111,6 +165,46 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12 row-reverse">
+            <div class="col-sm-12">
+                <div class="card text-center shadow-sm p-3">
+                    <a href="#" class="text-decoration-none">
+                        <div class="name mb-1">
+                            <strong class="text-warning">Total Stock</strong>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="icon rounded-circle bg-light p-3 me-3">
+                                <i class="bi bi-cart text-warning fs-4"></i>
+                            </div>
+                            <div class="text-warning employee-count fs-4">
+                                {{ $totalstock }}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12">
+                <div class="card text-center shadow-sm p-3">
+
+                    <a href="#" class="text-decoration-none">
+                        <div class="name mb-1">
+                            <strong class="text-success">Total Category</strong>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="icon rounded-circle bg-light p-3 me-3">
+                                <i class="bi bi-tags text-success fs-4"></i>
+                            </div>
+                            <div class="text-success employee-count fs-4">
+                                {{ $totalCategory }}
+                            </div>
+                        </div>
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -174,3 +268,12 @@
 
 </div>
 @endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(toastElement => {
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        });
+    });
+</script>

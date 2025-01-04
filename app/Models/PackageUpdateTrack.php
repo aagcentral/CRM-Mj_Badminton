@@ -2,29 +2,35 @@
 
 namespace App\Models;
 
-use Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Auth;
 
-class RegisterStatusTracker extends Model
+class PackageUpdateTrack extends Model
 {
     use HasFactory;
     protected $fillable = [
         'registration_no',
-        'upcoming_date',
-        'payment_method',
-        'total_amt',
-        'submitted_amt',
-        'pending_amt',
-        'payment_status',
-        'payment_notes',
+        'package',
+        'training_program',
+        'session',
+        'time_slot',
+        'package_fee',
+        'date',
+        'package_notes',
         'locationID',
 
     ];
+
+
+
+    public function registration()
+    {
+        return $this->belongsTo(Registration::class, 'registration_no', 'registration_no');
+    }
+
     public function Trackerpackage()
     {
         return $this->belongsTo(Package::class, 'package', 'package_id');
@@ -43,19 +49,6 @@ class RegisterStatusTracker extends Model
     {
         return $this->belongsTo(Timings::class, 'time_slot', 'timing_id');
     }
-
-    public function Trackermodule(): belongsTo
-    {
-        return $this->belongsTo(PaymentModule::class, 'payment_module', 'module_id');
-    }
-    public function Registration()
-    {
-        return $this->belongsTo(Registration::class, 'registration_no', 'registration_no');
-    }
-
-
-
-    // * Boot method for the model.
 
     protected static function boot()
     {

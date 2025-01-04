@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Unit;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Auth;
 
 class DashboardController extends Controller
 {
@@ -26,7 +27,8 @@ class DashboardController extends Controller
         $data = Product::latest()->get();
         $sdata = Enquiry::with(['leads'])->latest()->get();
         $units = Unit::where('status', '0')->orderBy('unit', 'asc')->get();
-        return view('pages.dashboard', compact('totalregistration', 'totalproduct', 'totalstock', 'totallead', 'totalCategory', 'data', 'sdata', 'units'));
+        $notifications = Auth::user()->unreadNotifications->groupBy('data.category');
+        return view('pages.dashboard', compact('notifications', 'totalregistration', 'totalproduct', 'totalstock', 'totallead', 'totalCategory', 'data', 'sdata', 'units'));
     }
 
     public function loguots(Request $request)

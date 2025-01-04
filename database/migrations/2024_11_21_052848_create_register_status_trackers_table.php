@@ -15,15 +15,8 @@ return new class extends Migration
             Schema::create('register_status_trackers', function (Blueprint $table) {
                 $table->id();
                 $table->string('registration_no');
-                $table->string('package')->nullable();
-                $table->string('training_program')->nullable();
-                $table->string('session')->nullable();
-                $table->string('time_slot')->nullable();
-                $table->string('payment_module')->nullable();
-                $table->string('payment_date')->nullable();
+                $table->string('upcoming_date')->nullable();
                 $table->string('payment_method')->nullable();
-                $table->string('utr_no')->nullable();
-                $table->string('registration_fees')->nullable();
                 $table->string('total_amt')->nullable();
                 $table->string('submitted_amt')->nullable();
                 $table->string('pending_amt')->nullable();
