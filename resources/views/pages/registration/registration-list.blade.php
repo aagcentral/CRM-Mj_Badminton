@@ -331,7 +331,6 @@ for ($i = 1; $i <= 12; $i++) {
     </div>
 
 
-
     @endsection
 
     @section('js')
@@ -381,7 +380,6 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
-
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -433,8 +431,5 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
-
-
-
 
     @endsection
