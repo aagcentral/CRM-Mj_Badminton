@@ -43,35 +43,6 @@
 
 
 
-        <!-- Toast Container -->
-        <!-- <div class="toast-container position-fixed top-0 end-0 p-3">
-            @forelse($notifications as $category => $categoryNotifications)
-            @foreach($categoryNotifications as $notification)
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                <div class="toast-header">
-                    <strong class="me-auto">{{ ucfirst($category) }}</strong>
-                    <small>Just now</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-
-            </div>
-            @endforeach
-            @empty
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-                <div class="toast-header">
-                    <strong class="me-auto">No Notifications</strong>
-                    <small>Just now</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    You have no new notifications.
-                </div>
-            </div>
-            @endforelse
-        </div> -->
-
-
-
         <div class="col-sm-3">
             <div class="card text-center shadow-sm p-3">
                 <a href="#" class="text-decoration-none">

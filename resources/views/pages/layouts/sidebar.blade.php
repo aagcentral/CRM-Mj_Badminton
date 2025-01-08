@@ -260,7 +260,7 @@
         <li>
           <a href="{{ route('package.list') }}"
             class="@if (Route::currentRouteName() == 'package.list') active @endif">
-            <i class="bi bi-circle"></i><span>Package</span>
+            <i class="bi bi-circle"></i><span>Category</span>
           </a>
         </li>
         @endif

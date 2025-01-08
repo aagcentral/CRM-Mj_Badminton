@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\UserRegistrationNotification;
+
 use Illuminate\Support\Facades\Storage;
 use App\Models\Registration;
 use App\Models\LeadSource;
@@ -99,9 +99,7 @@ class RegistrationController extends Controller
         // dd($viewdata->registerStatusTracker);
         $viewpayment = PaymentDetails::with(['paymentmodule'])->where('registration_no', $registration_no)->first();
         $Packages = Package::where('status', '0')->orderBy('package', 'asc')->get();
-        $UserPackages = PackageUpdateTrack::where('registration_no', $registration_no)
-            ->where('locationID', $locationID)
-            ->get();
+        $UserPackages = PackageUpdateTrack::with('registration')->where('registration_no', $registration_no)->where('locationID', $locationID)->get();
         $Training = TrainingProgram::where('status', '0')->orderBy('add_program', 'asc')->get();
         $sessions = Psession::where('status', '0')->orderBy('session', 'asc')->get();
         $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
@@ -542,42 +540,47 @@ class RegistrationController extends Controller
         // Validate the input
         $validated = $request->validate([
             'registration_no' => 'required|exists:payment_details,registration_no',
-            'payment_status' => 'required|exists:payment_details,payment_status',
-
+            'submitted_amt' => 'required|numeric|min:0',
         ]);
+
+        // Fetch the payment record
         $payment = PaymentDetails::where('registration_no', $request->registration_no)->first();
+
         if ($payment) {
+            // Calculate the new submitted amount
             $newSubmittedAmt = $request->submitted_amt;
             $submittedAmt = $payment->submitted_amt + $newSubmittedAmt;
+
+            // Ensure the submitted amount does not exceed the total amount
             if ($submittedAmt > $payment->total_amt) {
                 return redirect()->back()->with(
                     'error',
                     'The total submitted amount cannot exceed the total fee.'
                 );
             }
+
+            // Calculate pending amount and determine payment status
             $pendingAmt = max(0, $payment->total_amt - $submittedAmt);
-            if ($pendingAmt == 0) {
-                $paymentStatus = 0;  // Success
-            } elseif ($pendingAmt > 0 && $submittedAmt < $payment->total_amt) {
-                $paymentStatus = 2;
-            } else {
-                $paymentStatus = 1;
-            }
-            if ($request->payment_status === null || $request->payment_status === '') {
-                if ($pendingAmt == 0) {
-                    $paymentStatus = 0;
-                } elseif ($pendingAmt > 0) {
-                    $paymentStatus = 2;
-                }
-            }
+
+
+            // Update the PaymentDetails record
             $payment->update([
                 'submitted_amt' => $submittedAmt,
                 'upcoming_date' => $request->upcoming_date,
                 'pending_amt' => $pendingAmt,
-                'payment_status' => $paymentStatus,
+                'payment_status' => $request->payment_status,
+                'payment_method' => $request->payment_method,
                 'payment_notes' => $request->payment_notes,
             ]);
+        } else {
+            // If no payment record is found, return with an error
+            return redirect()->back()->with(
+                'error',
+                'Payment record not found for the given registration number.'
+            );
         }
+
+        // Create a new entry in the RegisterStatusTracker
         $trackData = [
             'registration_no' => $request->registration_no,
             'upcoming_date' => $request->upcoming_date,
@@ -585,10 +588,12 @@ class RegistrationController extends Controller
             'total_amt' => $payment->total_amt,
             'submitted_amt' => $submittedAmt,
             'pending_amt' => $pendingAmt,
-            'payment_status' => $paymentStatus,
+            'payment_status' => $request->payment_status,
             'payment_notes' => $request->payment_notes,
         ];
         RegisterStatusTracker::create($trackData);
+
+        // Redirect back with success message
         return redirect()->back()->with('success', 'Payment updated successfully!');
     }
 }

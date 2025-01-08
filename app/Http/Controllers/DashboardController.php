@@ -27,8 +27,8 @@ class DashboardController extends Controller
         $data = Product::latest()->get();
         $sdata = Enquiry::with(['leads'])->latest()->get();
         $units = Unit::where('status', '0')->orderBy('unit', 'asc')->get();
-        $notifications = Auth::user()->unreadNotifications->groupBy('data.category');
-        return view('pages.dashboard', compact('notifications', 'totalregistration', 'totalproduct', 'totalstock', 'totallead', 'totalCategory', 'data', 'sdata', 'units'));
+
+        return view('pages.dashboard', compact('totalregistration', 'totalproduct', 'totalstock', 'totallead', 'totalCategory', 'data', 'sdata', 'units'));
     }
 
     public function loguots(Request $request)

@@ -25,6 +25,8 @@ class Enquiry extends Model
         'time_slot',
         'enquiry_date',
         'followup_date',
+        'interested_branch',
+        'address',
         'notes',
         'lead_status',
         'locationID',

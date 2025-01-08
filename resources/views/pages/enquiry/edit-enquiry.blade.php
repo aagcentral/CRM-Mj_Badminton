@@ -54,7 +54,7 @@ Edit Enquiry
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="name">Email <span class="text-danger">*</span></label>
+                                <label for="name">Email </label>
                                 <input type="text" class="form-control quantity" name="email" value="{{ $edit_enquiry->email }}" placeholder="Enter Email">
                             </div>
                         </div>
@@ -68,7 +68,7 @@ Edit Enquiry
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="name">Lead Source <span class="text-danger">*</span></label>
+                                <label for="name">Lead Source </label>
                                 <select name="lead_source" class="form-select">
                                     <option value="" disabled selected>Select Lead Source</option>
                                     @foreach ($leads as $lead)
@@ -80,9 +80,9 @@ Edit Enquiry
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="package">Package <span class="text-danger">*</span></label>
+                                <label for="package">Category </label>
                                 <select name="package" id="package" class="form-select">
-                                    <option value="" disabled selected>Select Package</option>
+                                    <option value="" disabled selected>Select Category</option>
                                     @foreach ($Packages as $Packag)
                                     <option value="{{ $Packag->package_id }}"
                                         @if ($edit_enquiry->package == $Packag->package_id) selected @endif>{{ $Packag->package }}
@@ -107,7 +107,7 @@ Edit Enquiry
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="name">Session <span class="text-danger">*</span></label>
+                                <label for="name">Session </label>
                                 <select name="session" class="form-select">
                                     <option value="" disabled selected>Select Session</option>
                                     @foreach ($session as $sesion)
@@ -120,7 +120,7 @@ Edit Enquiry
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="time_slot">Time Slot <span class="text-danger">*</span></label>
+                                <label for="time_slot">Time Slot </label>
                                 <select name="time_slot" class="form-select">
                                     <option value="" disabled>Select Time Slot</option>
                                     @foreach ($Timing as $Time)
@@ -148,7 +148,7 @@ Edit Enquiry
 
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
-                                <label for="lead_status">Lead Status</label>
+                                <label for="lead_status">Lead Status <span class="text-danger">*</span></label>
                                 <select class="form-control" name="lead_status">
                                     <option value="" disabled selected>Select Lead Status</option>
                                     <option value="0" @if($edit_enquiry->lead_status=='0') selected @endif>New</option>
@@ -162,12 +162,33 @@ Edit Enquiry
                         </div>
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
+                                <label for="interested_branch">Interested Branch</label>
+                                <select name="interested_branch" id="interested_branch" class="form-select">
+                                    <option value="" disabled selected>Select Branch</option>
+                                    @foreach ($location as $locate)
+                                    <option value="{{ $locate->location_id }}"
+                                        @if (isset($edit_enquiry) && $edit_enquiry->interested_branch == $locate->location_id) selected @endif>
+                                        {{ $locate->location }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="name">Address</label>
+                                <textarea type="text" class="form-control" name="address" value="" placeholder="Write Address here...">{{ $edit_enquiry->address}}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
                                 <label for="name">Notes</label>
                                 <textarea type="text" class="form-control" name="notes" value="" placeholder="Write notes here...">{{ $edit_enquiry->notes }}</textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 d-flex justify-content-between align-items-center mt-2 w-100">
+                    <div class="col-md-12 d-flex justify-content-between align-items-center mt-4 w-100">
                         <div class="">
                             <input type="radio" class="btn-check" name="status" id="success-outlined" autocomplete="off" value="0" {{ old('status', $edit_enquiry->status) == '0' ? 'checked' : '' }}>
                             <label class="btn btn-outline-success" for="success-outlined">Active</label>

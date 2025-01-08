@@ -1,6 +1,6 @@
 @extends('pages.layouts.app')
 @section('title')
-Fee Management
+Update Category
 @endsection
 
 @section('css')
@@ -45,14 +45,14 @@ Fee Management
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-md-6 col-sm-12">
-                <h3>Update Package</h3>
+                <h3>Update Category</h3>
             </div>
             <div class="col-md-6 col-sm-12">
                 <ol class="breadcrumb float-sm-right" style="font-family: sans-serif;">
                     @if(havePermission('registration.list'))
                     <li class="breadcrumb-item"><a href="{{route('registration.list')}}">RegistrationL List</a></li>
                     @endif
-                    <li class="breadcrumb-item active">Update Package</li>
+                    <li class="breadcrumb-item active">Update Category</li>
                 </ol>
             </div>
         </div>
@@ -84,7 +84,7 @@ Fee Management
                             <div class="col-lg-12">
                                 <div class="panel panel-default shadow">
                                     <div class="panel-heading">
-                                        <h5 class="panel-title fw-bold">Package Details</h5>
+                                        <h5 class="panel-title fw-bold">Category Details</h5>
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
@@ -92,10 +92,10 @@ Fee Management
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="name" value="{{ $edit_userpackage->name }}" readonly="">
                                             </div>
-                                            <label class="form-label col-sm-2">Package <span class="text-danger">*</span></label>
+                                            <label class="form-label col-sm-2">Category <span class="text-danger">*</span></label>
                                             <div class="col-sm-4">
                                                 <select name="package" id="package" class="form-select">
-                                                    <option value="" disabled selected>Select Package</option>
+                                                    <option value="" disabled selected>Select Category</option>
                                                     @foreach ($Packages as $Packag)
                                                     <option value="{{ $Packag->package_id }}"
                                                         @if ($edit_userpackage->package == $Packag->package_id) selected @endif>{{ $Packag->package }}
@@ -142,7 +142,7 @@ Fee Management
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label col-sm-2">Package Fee ₹</label>
+                                            <label class="control-label col-sm-2">Category Fee ₹ <span class="text-danger">*</span></label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" id="program_fee" name="program_fee" value="{{ $edit_userpayment->program_fee}}" oninput="validateDecimal(this); calculateTotal()" pattern="^\d*(\.\d{0,2})?$">
                                             </div>

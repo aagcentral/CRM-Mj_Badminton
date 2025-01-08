@@ -63,12 +63,16 @@ View Registration Details
                                     <td>{{$viewdata->email}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Package </td>
+                                    <td>Category </td>
                                     <td>{{$viewdata->Packages!=null ? $viewdata->Packages->package : '' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Time Slot</td>
                                     <td>{{ $viewdata->Time!=null ? $viewdata->Time->time_slot : '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>{{\Carbon\Carbon::parse($viewdata->date)->format('d/m/y') ?? 'Not Available' }}</td>
                                 </tr>
 
                             </tbody>
@@ -92,7 +96,7 @@ View Registration Details
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit" aria-selected="false" tabindex="-1" role="tab"> Package Details</button>
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit" aria-selected="false" tabindex="-1" role="tab"> Category Details</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
@@ -165,7 +169,7 @@ View Registration Details
                                             <table id="example1" class="table dataTable table-hover">
                                                 <thead>
                                                     <tr class="">
-                                                        <th>Package</th>
+                                                        <th>Category</th>
                                                         <th>Training Type</th>
                                                         <th>Session</th>
                                                         <th>Time Slot</th>
@@ -290,7 +294,7 @@ View Registration Details
                                         <span style="color: black;">Not Available</span>
                                         @endif
                                     </div>
-                                    <div class="col-lg-3 col-md-4 label">Package Fee</div>
+                                    <div class="col-lg-3 col-md-4 label">Category Fee</div>
                                     <div class="col-lg-3 col-md-8">
                                         {{ $viewpayment?->program_fee ?? 'Not Available' }}
                                     </div>
@@ -354,7 +358,7 @@ View Registration Details
                                 @forelse($viewdata->registerStatusTracker as $row)
 
                                 <tr class="">
-                                    <td>{{$row->registration_no}} </td>
+                                    <td>{{$row->registration->name}} </td>
                                     <td>
                                         @if($row)
                                         @if($row->payment_method === '0') Offline
@@ -362,7 +366,7 @@ View Registration Details
                                         @else Not Available @endif
                                         @else Payment information not available @endif
                                     </td>
-                                    <td>{{ $row->upcoming_date }} </td>
+                                    <td>{{\Carbon\Carbon::parse($row->upcoming_date)->format('d/m/y') ?? 'Not Available'}} </td>
                                     <td>{{ $row->total_amt }} </td>
                                     <td>{{ $row->submitted_amt }}</td>
                                     <td>{{ $row->pending_amt }}</td>

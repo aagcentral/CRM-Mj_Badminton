@@ -9,6 +9,7 @@ use App\Models\TrainingProgram;
 use App\Models\LeadStatusTracker;
 use App\Models\Psession;
 use App\Models\Enquiry;
+use App\Models\Location;
 use App\Models\Timings;
 use Illuminate\Http\Request;
 use App\Notifications\LeadNotification;
@@ -23,6 +24,7 @@ class EnquiryController extends Controller
 
         // Retrieve necessary data for dropdowns
         $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
+        $location = Location::where('status', '0')->orderBy('location', 'asc')->get();
         $Packages = Package::where('status', '0')->orderBy('package', 'asc')->get();
         $Training = TrainingProgram::where('status', '0')->orderBy('add_program', 'asc')->get();
         $session = Psession::where('status', '0')->orderBy('session', 'asc')->get();
@@ -44,7 +46,7 @@ class EnquiryController extends Controller
         $data = $query->get();
 
         // Pass the data and other necessary variables to the view
-        return view('pages.enquiry.enquiry-list', compact('data', 'leads', 'Packages', 'Training', 'session', 'Timing'));
+        return view('pages.enquiry.enquiry-list', compact('data', 'leads', 'Packages', 'Training', 'session', 'Timing', 'location'));
     }
 
 
@@ -76,25 +78,81 @@ class EnquiryController extends Controller
 
 
     // Add
+    // public function add_enquiry(Request $request)
+    // {
+    //     // Validate the incoming request
+    //     $data = $request->validate([
+    //         'name' => 'required',
+    //         'mobile' => 'required|mobile|unique:enquiries,mobile',
+    //         'enquiry_date' => 'required',
+    //         'followup_date' => 'required',
+    //         'lead_status' => 'required',
+
+    //     ], [
+    //         'mobile.unique' => 'This Phone Number is already registered. Please use a different one.',
+    //     ]);
+    //     // Dynamically get the current user's locationID
+    //     $locationID = Auth::user()->locationID ?? 'Default';
+
+    //     // Generate the enquiry ID with the locationID, current date, and sequence number
+    //     $datePart = date('dmy');
+    //     $nextNumber = str_pad(($this->enquiry() + 1), 3, '0', STR_PAD_LEFT);
+    //     $enquiry_Id = 'ENQID' . strtoupper($locationID) . $datePart . $nextNumber;
+
+    //     // convert camel case
+    //     $name = ucwords(strtolower($request->name));
+
+    //     // Save the data
+    //     $save = Enquiry::create([
+    //         'enquiry_Id' =>  $enquiry_Id,
+    //         'name' => $name,
+    //         'email' => $request->email,
+    //         'mobile' => $request->mobile,
+    //         'lead_source' => $request->lead_source,
+    //         'package' => $request->package,
+    //         'training_program' => $request->training_program,
+    //         'session' => $request->session,
+    //         'time_slot' => $request->time_slot,
+    //         'enquiry_date' => $request->enquiry_date,
+    //         'followup_date' => $request->followup_date,
+    //         'lead_status' => $request->lead_status,
+    //         'interested_branch' => $request->interested_branch,
+    //         'address' => $request->address,
+    //         'notes' => $request->notes,
+    //         'date' => date('Y-m-d H:i:s'),
+    //         'status' =>  $request->status == "active" ? '0' : '1',
+    //         'locationID' => $locationID,
+    //     ]);
+
+    //     if ($save) {
+    //         // Track the lead status
+    //         $this->lead_status_tracker($enquiry_Id, $request->lead_status, $request->notes);
+    //         // Return success message
+    //         return back()->with('success', 'Enquiry  Added Successfully');
+    //     } else {
+    //         // Handle the case where saving the enquiry fails
+    //         return back()->with('fail', 'Something Went Wrong, Try again');
+    //     }
+    // }
     public function add_enquiry(Request $request)
     {
         // Validate the incoming request
         $data = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:enquiries,email',
-            'mobile' => 'required',
-            'lead_source' => 'required',
-            'package' => 'required',
-            'training_program' => 'nullable',
-            'session' => 'required',
-            'time_slot' => 'required',
-            'enquiry_date' => 'required',
-            'followup_date' => 'required',
+            'mobile' => [
+                'required',
+                'regex:/^[6-9]\d{9}$/', // Indian mobile number validation
+                'unique:enquiries,mobile'
+            ],
+            'enquiry_date' => 'required|date',
+            'followup_date' => 'required|date|after_or_equal:enquiry_date',
             'lead_status' => 'required',
-
         ], [
-            'email.unique' => 'This email address is already registered. Please use a different one.',
+            'mobile.unique' => 'This Phone Number is already registered. Please use a different one.',
+            'mobile.regex' => 'Please enter a valid 10-digit mobile number.',
+            'followup_date.after_or_equal' => 'Follow-up date must be on or after the enquiry date.',
         ]);
+
         // Dynamically get the current user's locationID
         $locationID = Auth::user()->locationID ?? 'Default';
 
@@ -103,7 +161,7 @@ class EnquiryController extends Controller
         $nextNumber = str_pad(($this->enquiry() + 1), 3, '0', STR_PAD_LEFT);
         $enquiry_Id = 'ENQID' . strtoupper($locationID) . $datePart . $nextNumber;
 
-        // convert camel case
+        // Convert name to proper case
         $name = ucwords(strtolower($request->name));
 
         // Save the data
@@ -120,27 +178,19 @@ class EnquiryController extends Controller
             'enquiry_date' => $request->enquiry_date,
             'followup_date' => $request->followup_date,
             'lead_status' => $request->lead_status,
+            'interested_branch' => $request->interested_branch,
+            'address' => $request->address,
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
             'status' =>  $request->status == "active" ? '0' : '1',
             'locationID' => $locationID,
         ]);
 
-
         if ($save) {
-            // Check if the user is authenticated
-            // if (auth()->check()) {
-            //     $user = auth()->user();
-            //     $user->notify(new LeadNotification($save));
-            // } else {
-            //     return back()->with('fail', 'User is not authenticated. Notification not sent.');
-            // }
-
             // Track the lead status
             $this->lead_status_tracker($enquiry_Id, $request->lead_status, $request->notes);
-
             // Return success message
-            return back()->with('success', 'Enquiry  Added Successfully');
+            return back()->with('success', 'Enquiry Added Successfully');
         } else {
             // Handle the case where saving the enquiry fails
             return back()->with('fail', 'Something Went Wrong, Try again');
@@ -153,6 +203,7 @@ class EnquiryController extends Controller
         // $edit_enquiry = Enquiry::where('id', $id)->first();
         $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
         $Packages = Package::where('status', '0')->orderBy('package', 'asc')->get();
+        $location = Location::where('status', '0')->orderBy('location', 'asc')->get();
         $Training = TrainingProgram::where('status', '0')->orderBy('add_program', 'asc')->get();
         $session = Psession::where('status', '0')->orderBy('session', 'asc')->get();
         $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
@@ -162,7 +213,7 @@ class EnquiryController extends Controller
         if (!$edit_enquiry) {
             return redirect()->route('enquiry.list')->with('success', 'Location Update.');
         }
-        return view('pages.enquiry.edit-enquiry', compact('edit_enquiry', 'leads', 'Packages', 'Training', 'session', 'Timing'));
+        return view('pages.enquiry.edit-enquiry', compact('location', 'edit_enquiry', 'leads', 'Packages', 'Training', 'session', 'Timing'));
     }
 
     // update
@@ -196,6 +247,8 @@ class EnquiryController extends Controller
                 'enquiry_date' => $request->enquiry_date,
                 'followup_date' => $request->followup_date,
                 'lead_status' => $request->lead_status,
+                'interested_branch' => $request->interested_branch,
+                'address' => $request->address,
                 'notes' => $request->notes,
                 'date' => date('Y-m-d H:i:s'),
                 'status' =>  $request->status
@@ -275,7 +328,7 @@ class EnquiryController extends Controller
             $enquiry->update([
                 'lead_status' => $request->lead_status,
                 'notes' => $request->notes,
-                'followup_date' => $request->followup_date, // Optional, if you're updating the follow-up date
+                'followup_date' => $request->followup_date,
             ]);
 
             // Log the status change in the LeadStatusTracker

@@ -166,14 +166,14 @@ Notification
                                     class="p-2 shadow mb-3 d-flex justify-content-between align-items-center small notification-item"
                                     style="background-color: rgba(99, 190, 255, 0.27); border-left: 4px solid #63beff; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
                                     <div>
-                                        <strong>{{ $update->Registration->name ?? ''  }}</strong> has updated:
+                                        <strong>{{ $update->Registration->name ?? ''  }}</strong> has Renewed:
 
                                         @if($update->Trackerpackage)
                                         <!-- Display package if available -->
-                                        Package is <strong>{{ $update->Trackerpackage->package }}</strong>
+                                        Category is <strong>{{ $update->Trackerpackage->package }}</strong>
                                         @else
                                         <!-- Handle case where Trackerpackage is null -->
-                                        Package is <strong class="text-danger">not available</strong>
+                                        Category is <strong class="text-danger">not available</strong>
                                         @endif
 
                                         @if($update->Trackerpackage && $update->Traintype)

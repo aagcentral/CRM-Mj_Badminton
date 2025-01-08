@@ -98,8 +98,8 @@ for ($i = 1; $i <= 12; $i++) {
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
-                                <select id="applyFor" name="package" class="form-select form-control" aria-label="Default select example">
-                                    <option selected disabled>Filter by Package</option>
+                                <select id="applyFor" name="Category" class="form-select form-control" aria-label="Default select example">
+                                    <option selected disabled>Filter by Category</option>
                                     @foreach ($Packages as $pckg)
                                     <option value="{{ $pckg->package_id }}"
                                         @if (old('package')==$pckg->package_id) selected @endif>{{ $pckg->package }}</option>
@@ -177,7 +177,7 @@ for ($i = 1; $i <= 12; $i++) {
                         </td>
                         <td>
                             <div>
-                                <span class="fw-bold" style="color:#24ABF2">Package:</span><span> {{$row->Packages!=null ? $row->Packages->package : '' }} </span><br>
+                                <span class="fw-bold" style="color:#24ABF2">Category:</span><span> {{$row->Packages!=null ? $row->Packages->package : '' }} </span><br>
                                 <span>Training Program: {{$row->TrainedP!=null ? $row->TrainedP->add_program : '' }}</span><br>
                                 <span>Session: {{ $row->sesion!=null ? $row->sesion->session : '' }} </span><br>
                                 <span>Time Slot: {{ $row->Time!=null ? $row->Time->time_slot : '' }} </span><br>
@@ -210,20 +210,8 @@ for ($i = 1; $i <= 12; $i++) {
 
 
                         <td>
-
-                            @if(havePermission('registration.editpackage'))
-                            <a href="{{ route('registration.editpackage', $row->registration_no) }}" class="btn btn-success btn-sm px-2">Update Package</a>
-                            @endif
-                            @if(havePermission('registration.details'))
-                            <a href="{{ route('registration.details', $row->registration_no) }}" class="btn btn-success btn-sm small px-2"><i class="fas fa-eye"></i> </a>
-                            @endif
-                            @if(havePermission('registration.edit'))
-                            <a href="{{ route('registration.edit', $row->registration_no) }}" class="btn btn-info btn-sm small px-2"><i class="fas fa-edit"></i> </a>
-                            @endif
-                            @if(havePermission('registration.destroy'))
-                            <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>
-                            @endif
                             @if(havePermission('registration.updatePayment'))
+                            @if(isset($row->PaymentDetail) && $row->PaymentDetail->pending_amt > 0)
                             <!-- Display Registration Data in Modal -->
                             <a href="#"
                                 class="btn btn-primary btn-sm small"
@@ -239,6 +227,22 @@ for ($i = 1; $i <= 12; $i++) {
                                 data-payment_notes="{{ $row->PaymentDetail->payment_notes ?? '' }}">
                                 Collect Fee
                             </a>
+                            @endif
+                            @endif
+
+
+                            @if(havePermission('registration.details'))
+                            <a href="{{ route('registration.details', $row->registration_no) }}" class="btn btn-success btn-sm small px-2"><i class="fas fa-eye"></i> </a>
+                            @endif
+                            @if(havePermission('registration.edit'))
+                            <a href="{{ route('registration.edit', $row->registration_no) }}" class="btn btn-info btn-sm small px-2"><i class="fas fa-edit"></i> </a>
+                            @endif
+                            @if(havePermission('registration.destroy'))
+                            <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>
+                            @endif
+
+                            @if(havePermission('registration.editpackage'))
+                            <a href="{{ route('registration.editpackage', $row->registration_no) }}" class="btn btn-success btn-sm px-2">Renew Category</a>
                             @endif
                         </td>
                     </tr>
@@ -284,10 +288,6 @@ for ($i = 1; $i <= 12; $i++) {
                             <label for="submitted_amt" class="fw-bold">Amount:</label>
                             <input type="text" class="form-control" id="submitted_amt" name="submitted_amt" placeholder="Enter amount " min="0" required>
                         </div>
-                        <!-- <div class="form-group mb-1">
-                            <label for="submitted_amt" class="fw-bold">Amount:</label>
-                            <input type="text" class="form-control" id=" " name=" " value="{{ old(' ') }}">
-                        </div> -->
 
                         <!-- Payment Status -->
                         <div class="form-group mb-2">
@@ -298,6 +298,7 @@ for ($i = 1; $i <= 12; $i++) {
                                 <option value="1">Due</option>
                                 <option value="2">Pending</option>
                                 <option value="3">Failed</option>
+                                <option value="4">Fefunded</option>
                                 <option value="4">Cancelled</option>
                             </select>
                         </div>
@@ -380,7 +381,6 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
-
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

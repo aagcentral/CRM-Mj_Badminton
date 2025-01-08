@@ -203,10 +203,10 @@ Registration
                                         <div class="panel-body p-5">
 
                                             <div class="form-group">
-                                                <label class="form-label col-sm-4">Package <span class="text-danger">*</span></label>
+                                                <label class="form-label col-sm-4">Category <span class="text-danger">*</span></label>
                                                 <div class="col-sm-8">
                                                     <select name="package" id="package" class="form-select">
-                                                        <option value="" disabled selected>Select Package</option>
+                                                        <option value="" disabled selected>Select Category</option>
                                                         @foreach ($Packages as $Packag)
                                                         <option value="{{ $Packag->package_id }}"
                                                             @if (old('package')==$Packag->package_id || (isset($enquiry) && $enquiry->package == $Packag->package_id)) selected @endif> {{ $Packag->package }}

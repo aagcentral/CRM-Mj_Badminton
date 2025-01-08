@@ -106,7 +106,7 @@ Meal
 
                         <td>{{ $row->meal_type}}</td>
                         <!-- <td>{{ $row->meal_fees }}</td> -->
-                        <td>{{ $row->date }}</td>
+                        <td>{{\Carbon\Carbon::parse($row->date)->format('d/m/y') ?? 'Not Available'}}</td>
 
                         <td>
                             <span class="badge {{ $row->status == '0' ? 'bg-success' : 'bg-danger' }}"> {{ $row->status == '0' ? 'Active' : 'Inactive' }}</span>

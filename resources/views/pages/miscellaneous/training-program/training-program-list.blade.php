@@ -51,18 +51,11 @@ Training Type
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="name">Add Training Program <span class="text-danger">*</span></label>
+                                <label for="name">Add Training Type<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="add_program"
-                                    value="{{ old('add_program') }}" placeholder="Enter Training Program  ">
+                                    value="{{ old('add_program') }}" placeholder="Enter Training Type">
                             </div>
                         </div>
-                        <!-- <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="name">Training Program Fee <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="fees" id="validateno" value="{{ old('fees') }}" placeholder="Enter Training Program Fee ">
-                            </div>
-                        </div> -->
-
                     </div>
                     <div class="col-md-12 d-flex justify-content-between align-items-center mt-2 w-100">
                         <div>
@@ -90,8 +83,7 @@ Training Type
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Program Name</th>
-                        <!-- <th>Fees</th> -->
+                        <th>Tranining Type </th>
                         <th>Added Date</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -101,10 +93,8 @@ Training Type
                     @foreach ($data as $row)
                     <tr>
                         <th>{{ $loop->iteration }}</th>
-
                         <td>{{ $row->add_program}}</td>
-                        <!-- <td>{{ $row->fees}}</td> -->
-                        <td>{{ $row->date }}</td>
+                        <td>{{\Carbon\Carbon::parse($row->date)->format('d/m/y') ?? 'Not Available'}}</td>
                         <td>
                             <span class="badge {{ $row->status == '0' ? 'bg-success' : 'bg-danger' }}">
                                 {{ $row->status == '0' ? 'Active' : 'Inactive' }}

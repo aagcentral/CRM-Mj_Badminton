@@ -1,6 +1,6 @@
 @extends('pages.layouts.app')
 @section('title')
-Edit Package
+Edit Category
 @endsection
 
 @section('css')
@@ -13,14 +13,14 @@ Edit Package
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h4>Edit Package</h4>
+                <h4>Edit Category</h4>
             </div>
             <div class="col-md-6 col-sm-12">
                 <ol class="breadcrumb float-sm-right" style="font-family: sans-serif;">
                     @if(havePermission('package.list'))
-                    <li class="breadcrumb-item"><a href="{{route('package.list')}}">Package</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('package.list')}}">Category</a></li>
                     @endif
-                    <li class="breadcrumb-item active">Edit Package</li>
+                    <li class="breadcrumb-item active">Edit Category</li>
                 </ol>
             </div>
         </div>
@@ -51,7 +51,7 @@ Edit Package
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="name">Package Name <span class="text-danger">*</span></label>
+                                <label for="name">Category Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="package" value="{{ $edit_package->package }}">
                             </div>
                         </div>

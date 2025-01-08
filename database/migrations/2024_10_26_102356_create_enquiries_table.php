@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('time_slot')->nullable();
             $table->string('enquiry_date')->nullable();
             $table->string('followup_date')->nullable();
+            $table->string('interested_branch')->nullable();
+            $table->string('address')->nullable();
             $table->string('notes')->nullable();
             $table->enum('lead_status', ['0', '1', '2', '3', '4', '5'])->default('0')->comment('0 -> New, 1->Assigned, 2->Inprocess, 3->Converted, 4->Dead,5->Recycle');
             $table->string('locationID')->nullable();

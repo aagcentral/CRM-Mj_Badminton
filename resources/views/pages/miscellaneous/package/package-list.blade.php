@@ -1,6 +1,6 @@
 @extends('pages.layouts.app')
 @section('title')
-Package
+Category
 @endsection
 
 @section('css')
@@ -12,12 +12,12 @@ Package
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-md-6 col-sm-12">
-                <h4>Create And Manage Package</h4>
+                <h4>Create And Manage Category</h4>
             </div>
             <div class="col-md-6 col-sm-12">
                 <ol class="breadcrumb float-sm-right" style="font-family: sans-serif;">
                     <li class="breadcrumb-item"><a href="{{route('panel.dashboard')}}">Dasboard</a></li>
-                    <li class="breadcrumb-item active">Package</li>
+                    <li class="breadcrumb-item active">Category</li>
                 </ol>
             </div>
         </div>
@@ -27,7 +27,7 @@ Package
     <div class="row mt-4">
         <div class="col-md-12 d-flex">
             @if(havePermission('package.add'))
-            <button id="toggleButton" class="btn btn-info mb-3 ml-1"><i class="fas fa-plus-circle me-2"></i>Add Package</button>
+            <button id="toggleButton" class="btn btn-info mb-3 ml-1"><i class="fas fa-plus-circle me-2"></i>Add Category</button>
             @endif
         </div>
         @if ($errors->any())
@@ -51,16 +51,11 @@ Package
 
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="name">Add Package <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="package" value="{{ old('package') }}" placeholder="Enter Package">
+                                <label for="name">Add Category <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="package" value="{{ old('package') }}" placeholder="Enter Category">
                             </div>
                         </div>
-                        <!-- <div class="col-6">
-                            <div class="form-group">
-                                <label for="name">Package Fee <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="fees" id="validateno" value="{{ old('fees') }}" placeholder="Enter Package Fee ">
-                            </div>
-                        </div> -->
+
                     </div>
                     <div class="col-md-12 d-flex justify-content-between align-items-center mt-2 w-100">
                         <div>
@@ -89,9 +84,7 @@ Package
                 <thead>
                     <tr class="">
                         <th>#</th>
-
-                        <th>Package </th>
-                        <!-- <th>Package Fee</th> -->
+                        <th>Category </th>
                         <th>Added Date</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -106,7 +99,7 @@ Package
 
                         <td>{{ $row->package}}</td>
                         <!-- <td>{{ $row->fees }}</td> -->
-                        <td>{{ $row->date }}</td>
+                        <td>{{\Carbon\Carbon::parse($row->date)->format('d/m/y') ?? 'Not Available'}}</td>
 
                         <td>
                             <span class="badge {{ $row->status == '0' ? 'bg-success' : 'bg-danger' }}">

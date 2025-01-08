@@ -68,7 +68,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="name">Email<span class="text-danger">*</span></label>
+                                    <label for="name">Email </label>
                                     <input type="text" class="form-control quantity" name="email" value="{{ old('email') }}" placeholder="Enter Email">
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ for ($i = 1; $i <= 12; $i++) {
 
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="lead_source">Lead Source <span class="text-danger">*</span></label>
+                                    <label for="lead_source">Lead Source </label>
                                     <select name="lead_source" class="form-select">
                                         <option value="" disabled selected>Select Lead Source</option>
                                         @foreach ($leads as $lead)
@@ -97,9 +97,9 @@ for ($i = 1; $i <= 12; $i++) {
 
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="package">Package<span class="text-danger">*</span></label>
+                                    <label for="package">Category </label>
                                     <select name="package" id="package" class="form-select">
-                                        <option value="" disabled selected>Select Package</option>
+                                        <option value="" disabled selected>Select Category</option>
                                         @foreach ($Packages as $Packag)
                                         <option value="{{ $Packag->package_id }}"
                                             @if (old('package')==$Packag->package_id) selected @endif>
@@ -112,9 +112,9 @@ for ($i = 1; $i <= 12; $i++) {
                             <!-- make sure add Training Program -->
                             <div id="trainingProgramContainer" class="col-md-4 col-sm-12" style="display: none;">
                                 <div class="form-group">
-                                    <label for="training_program">Training Program </label>
+                                    <label for="training_program">Training Program Type </label>
                                     <select name="training_program" class="form-select">
-                                        <option value="" disabled selected>Select Training Program</option>
+                                        <option value="" disabled selected>Select Training Program Type</option>
                                         @foreach ($Training as $Trng)
                                         <option value="{{ $Trng->program_id }}"
                                             @if (old('training_program')==$Trng->program_id) selected @endif>
@@ -126,7 +126,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="session">Session <span class="text-danger">*</span></label>
+                                    <label for="session">Session </label>
                                     <select name="session" class="form-select">
                                         <option value="" disabled selected>Select Session</option>
                                         @foreach ($session as $sesion)
@@ -141,7 +141,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="time_slot">Time Slot <span class="text-danger">*</span></label>
+                                    <label for="time_slot">Time Slot </label>
                                     <select name="time_slot" class="form-select">
                                         <option value="" disabled selected>Select Time Slot</option>
                                         @foreach ($Timing as $Time)
@@ -185,12 +185,32 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
+                                    <label for="time_slot">Interested Branch </label>
+                                    <select name="time_slot" class="form-select">
+                                        <option value="" disabled selected>Select Branch</option>
+                                        @foreach ($location as $locate)
+                                        <option value="{{ $locate->location_id }}"
+                                            @if (old('location')==$locate->location_id) selected @endif>
+                                            {{ $locate->location }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="name">Address</label>
+                                    <textarea type="text" class="form-control" name="address" value="{{ old('address') }}" placeholder="Write Address here..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
                                     <label for="name">Notes</label>
                                     <textarea type="text" class="form-control" name="notes" value="{{ old('notes') }}" placeholder="Write notes here..."></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 d-flex justify-content-between align-items-center mt-2 w-100">
+                        <div class="col-md-12 d-flex justify-content-between align-items-center mt-4 w-100">
                             <div>
                                 <input type="radio" class="btn-check" name="status" id="success-outlined" autocomplete="off" value="active" {{ old('status', 'active') == 'active' ? 'checked' : '' }}>
                                 <label class="btn btn-outline-success btn-md" for="success-outlined">Active</label>
@@ -214,7 +234,7 @@ for ($i = 1; $i <= 12; $i++) {
                 <form method="GET" action="">
                     <div class="row">
                         <div class="">
-                            <h6 class="card-title"> Filter</h6>
+                            <h6 class="card-title">Filter</h6>
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
@@ -252,7 +272,6 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                         </div>
 
-
                         <div class="d-flex gap-2 justify-content-end">
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary btn-sm">Apply Filter <i class="fa-solid fa-filter"></i></button>
@@ -274,7 +293,7 @@ for ($i = 1; $i <= 12; $i++) {
                         <tr class="">
                             <th>#</th>
                             <th>Name</th>
-                            <th>Package</th>
+                            <th>Category</th>
                             <th>Date & Status</th>
                             <th>Notes</th>
                             <th>Action</th>
@@ -293,15 +312,16 @@ for ($i = 1; $i <= 12; $i++) {
                             </td>
 
                             <td>
-                                <strong>Package:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
+                                <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
                                 <strong>Session:</strong> {{ $row->sesion!=null ? $row->sesion->session : '' }} <br>
                                 <strong>Time Slot:</strong> {{ $row->Time!=null ? $row->Time->time_slot : '' }}<br>
                                 <strong>Training Program:</strong> {{ $row->TrainedP!=null ? $row->TrainedP->add_program : '' }}
                             </td>
 
                             <td>
-                                <strong>Enquiry Date:</strong> {{ $row->enquiry_date }}<br>
-                                <strong> Followup Date:</strong> {{ $row->followup_date }}<br>
+                                <strong>Enquiry Date:</strong> {{ \Carbon\Carbon::parse($row->enquiry_date)->format('d/m/y') }}<br>
+                                <strong>Followup Date:</strong> {{ \Carbon\Carbon::parse($row->followup_date)->format('d/m/y') }}<br>
+
                                 <strong>Lead Status:</strong>
                                 <span class="badge 
                                 {{ $row->lead_status == '0' ? 'bg-primary' : 
@@ -322,20 +342,22 @@ for ($i = 1; $i <= 12; $i++) {
 
                             <td>
                                 @if(havePermission('enquiry.status'))
-                                <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id])}}" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id])}}" class="btn btn-default text-white btn-sm" style="background-color: #7c5cc4;"><i class="fas fa-eye"></i></a>
                                 @endif
                                 @if(havePermission('enquiry.updateStatus'))
-                                <a href="#" class="btn btn-warning text-dark btn-sm" style="color: #7c5cc4;" data-bs-toggle="modal" data-bs-target="#exampleModal" data-enquiry_Id="{{ $row->enquiry_Id }}"
+                                <a href="#" class="btn btn-success text-white  btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-enquiry_id="{{ $row->enquiry_Id }}"
                                     data-followup_date="{{ $row->followup_date }}" data-status="{{ $row->lead_status }}" data-notes="{{ $row->notes }}">
-                                    <i class="fa-solid fa-arrows-turn-to-dots"></i>
+                                    <i class="fa-solid fa-user-plus"></i>
                                 </a>
                                 @endif
+
+
                                 @if(havePermission('enquiry.edit'))
                                 <a href="{{ route('enquiry.edit', $row->enquiry_Id) }}" class=" btn btn-info btn-sm"><i class="fas fa-edit"></i> </a>
                                 @endif
                                 @if(havePermission('registration.form'))
                                 @if ($row->lead_status == 3)
-                                <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary btn-sm small"> <i class="fa-solid fa-arrows-split-up-and-left me-1"></i>convert</a>
+                                <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary text-white btn-sm small"> </i>convert</a>
                                 @else @endif
                                 @endif
 
@@ -363,11 +385,20 @@ for ($i = 1; $i <= 12; $i++) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if ($errors->any())
+                    <div class="text-danger small">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <div class="card-body">
-                        <form action="{{ route('enquiry.updateStatus') }}" method="POST">
+                        <form action="{{ route('enquiry.updateStatuss') }}" method="POST">
                             @csrf
 
-                            <input type="hidden" name="enquiry_Id" id="enquiry_Id"> <!-- Hidden input for enquiry id -->
+                            <input type="hidden" name="enquiry_Id" id="enquiry_Id">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
@@ -482,7 +513,7 @@ for ($i = 1; $i <= 12; $i++) {
         // When the modal is triggered, populate the fields dynamically
         $('#exampleModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
-            var enquiryId = button.data('enquiry_Id');
+            var enquiryId = button.data('enquiry_id');
             var followup = button.data('followup_date');
             var leadStatus = button.data('status');
             var notes = button.data('notes');
