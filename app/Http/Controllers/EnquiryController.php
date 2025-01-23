@@ -42,6 +42,17 @@ class EnquiryController extends Controller
             $query->whereYear('created_at', $request->year);
         }
 
+        // Filter by Enquiry Date (exact date)
+        if ($request->has('enquiry_date') && !is_null($request->enquiry_date)) {
+            $enquiryDate = $request->enquiry_date;  // Get the selected enquiry date
+            $query->whereDate('enquiry_date', '=', $enquiryDate);
+        }
+
+        // Filter by Follow-up Date (exact date)
+        if ($request->has('followup_date') && !is_null($request->followup_date)) {
+            $followupDate = $request->followup_date;  // Get the selected follow-up date
+            $query->whereDate('followup_date', '=', $followupDate);
+        }
         // Get the filtered data
         $data = $query->get();
 
@@ -222,13 +233,7 @@ class EnquiryController extends Controller
         $data = $request->validate([
             'status' => 'required',
             'name' => 'required',
-            'email' => 'required',
             'mobile' => 'required',
-            'lead_source' => 'required',
-            'package' => 'required',
-            'training_program' => 'nullable',
-            'session' => 'required',
-            'time_slot' => 'required',
             'enquiry_date' => 'required',
             'followup_date' => 'required',
             'lead_status' => 'required',

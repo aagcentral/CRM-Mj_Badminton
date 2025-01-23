@@ -200,15 +200,16 @@ for ($i = 1; $i <= 12; $i++) {
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="name">Address</label>
-                                    <textarea type="text" class="form-control" name="address" value="{{ old('address') }}" placeholder="Write Address here..."></textarea>
+                                    <textarea class="form-control" name="address" placeholder="Write Address here...">{{ old('address') }}</textarea>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="name">Notes</label>
-                                    <textarea type="text" class="form-control" name="notes" value="{{ old('notes') }}" placeholder="Write notes here..."></textarea>
+                                    <textarea class="form-control" name="notes" placeholder="Write notes here...">{{ old('notes') }}</textarea>
                                 </div>
                             </div>
+
                         </div>
                         <div class="col-md-12 d-flex justify-content-between align-items-center mt-4 w-100">
                             <div>
@@ -233,10 +234,24 @@ for ($i = 1; $i <= 12; $i++) {
             <div class="card-body">
                 <form method="GET" action="">
                     <div class="row">
-                        <div class="">
+                        <!-- <div class="">
                             <h6 class="card-title">Filter</h6>
+                        </div> -->
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="form-group mb-3">
+                                <label for="enquiryDate" class="small">Filter by Enquiry Date</label>
+                                <input type="date" id="enquiryDate" name="enquiry_date" class="form-control" value="{{ old('enquiry_date', request('enquiry_date')) }}">
+                            </div>
                         </div>
-                        <div class="col-lg-3 col-sm-12">
+
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="form-group mb-3">
+                                <label for="followupDate" class="small">Filter by Follow-up Date</label>
+                                <input type="date" id="followupDate" name="followup_date" class="form-control" value="{{ old('followup_date', request('followup_date')) }}">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="paymentType" name="month" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Month</option>
@@ -247,7 +262,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col-lg-4 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="paymentType" name="year" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Year</option>
@@ -258,7 +273,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                         </div>
                         <!-- Filter by Payment Status -->
-                        <div class="col-lg-3 col-sm-12">
+                        <div class="col-lg-4 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="leadStatus" name="lead_status" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Lead Status</option>
@@ -271,6 +286,7 @@ for ($i = 1; $i <= 12; $i++) {
                                 </select>
                             </div>
                         </div>
+
 
                         <div class="d-flex gap-2 justify-content-end">
                             <div class="mb-3">
@@ -385,15 +401,7 @@ for ($i = 1; $i <= 12; $i++) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @if ($errors->any())
-                    <div class="text-danger small">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
+
                     <div class="card-body">
                         <form action="{{ route('enquiry.updateStatuss') }}" method="POST">
                             @csrf
