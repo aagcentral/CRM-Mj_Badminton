@@ -185,18 +185,19 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label for="time_slot">Interested Branch </label>
-                                    <select name="time_slot" class="form-select">
-                                        <option value="" disabled selected>Select Branch</option>
+                                    <label for="interested_branch">Interested Branch</label>
+                                    <select name="interested_branch" class="form-select">
+                                        <option value="" disabled {{ old('interested_branch') == null ? 'selected' : '' }}>Select Branch</option>
                                         @foreach ($location as $locate)
                                         <option value="{{ $locate->location_id }}"
-                                            @if (old('location')==$locate->location_id) selected @endif>
+                                            @if (old('interested_branch')==$locate->location_id) selected @endif>
                                             {{ $locate->location }}
                                         </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label for="name">Address</label>
