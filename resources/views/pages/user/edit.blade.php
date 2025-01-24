@@ -32,28 +32,28 @@ Edit User
                         @csrf
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <label for="inputText" class="col-sm-2 col-form-label">Name</label>
+                                <label for="inputText" class="col-sm-2 col-form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="name" value="{{ $getUser->name }}">
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <label for="inputText" class="col-sm-2 col-form-label">Email</label>
+                                <label for="inputText" class="col-sm-2 col-form-label">Email <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="email" value="{{ $getUser->email }}" readonly>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <label for="inputText" class="col-sm-2 col-form-label">Password</label>
+                                <label for="inputText" class="col-sm-2 col-form-label">Password </label>
                                 <input type="text" class="form-control" name="password">
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <label for="inputText" class="col-sm-2 col-form-label">Role</label>
+                                <label for="inputText" class="col-sm-2 col-form-label">Role <span class="text-danger">*</span></label>
                                 <select name="role_id" id="" class="form-select">
                                     <option value="" disabled selected>--Select Role--</option>
                                     @foreach ($getRole as $role)
@@ -64,7 +64,7 @@ Edit User
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <label for="inputText" class="col-sm-2 col-form-label">Location</label>
+                                <label for="inputText" class="col-sm-2 col-form-label">Location <span class="text-danger">*</span></label>
                                 <select name="locationID" id="" class="form-select">
                                     <option value="" disabled selected>--Select Location--</option>
                                     @foreach ($getLocation as $location)

@@ -466,11 +466,11 @@ Registration
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-2">Advance Paid ₹ <span class="text-danger">*</span></label>
+                                                <label class="control-label col-sm-2">Paid Amount ₹ <span class="text-danger">*</span></label>
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control" id="submitted_amt" name="submitted_amt" value="{{ old('submitted_amt') }}" oninput="calculatePendingAmount()">
                                                 </div>
-                                                <label class="control-label col-sm-2">Pending ₹</label>
+                                                <label class="control-label col-sm-2">Pending Amount₹</label>
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control" id="pending_amt" name="pending_amt" value="{{ old('pending_amt') }}" readonly>
                                                 </div>
