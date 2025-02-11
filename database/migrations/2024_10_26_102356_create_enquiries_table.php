@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('enquiry_date')->nullable();
             $table->string('followup_date')->nullable();
             $table->string('interested_branch')->nullable();
+            $table->enum('transport', ['0', '1'])->default('0')->comment('0 -> No, 1->Yes');
+            $table->enum('hostel', ['0', '1'])->default('0')->comment('0 -> No, 1->Yes');
+            $table->enum('is_converted', ['0', '1'])->default('0')->comment('0 -> Revert, 1->Converted');
+            $table->string('assigned')->nullable();
             $table->string('address')->nullable();
             $table->string('notes')->nullable();
             $table->enum('lead_status', ['0', '1', '2', '3', '4', '5'])->default('0')->comment('0 -> New, 1->Assigned, 2->Inprocess, 3->Converted, 4->Dead,5->Recycle');

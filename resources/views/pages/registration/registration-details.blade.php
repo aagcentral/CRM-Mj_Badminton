@@ -1,6 +1,6 @@
 @extends('pages.layouts.app')
 @section('title')
-View Registration Details
+Profile
 @endsection
 
 @section('css')
@@ -41,14 +41,14 @@ View Registration Details
                         </div>
 
                         <h3 class="profile-username text-center mt-2 m-0 p-0">
-                            {{ isset($viewdata) && $viewdata->name ? $viewdata->name : 'No Name Available' }}
+                            {{ isset($viewdata) && $viewdata->name ? $viewdata->name : 'N/A' }}
                         </h3>
 
                         <p class="text-muted text-center m-0 p-0">
                             @if($viewdata->gender === '0') Male
                             @elseif($viewdata->gender === '1') Female
                             @elseif($viewdata->gender === '2') Other
-                            @else Not Available
+                            @else N/A
                             @endif
                         </p>
 
@@ -64,16 +64,17 @@ View Registration Details
                                 </tr>
                                 <tr>
                                     <td>Category </td>
-                                    <td>{{$viewdata->Packages!=null ? $viewdata->Packages->package : '' }}</td>
+                                    <td>{{$viewdata->Packages!=null ? $viewdata->Packages->package : 'N/A' }}</td>
                                 </tr>
                                 <tr>
                                     <td>Time Slot</td>
-                                    <td>{{ $viewdata->Time!=null ? $viewdata->Time->time_slot : '' }}</td>
+                                    <td>{{ $viewdata->Time!=null ? $viewdata->Time->time_slot : 'N/A' }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Date</td>
-                                    <td>{{\Carbon\Carbon::parse($viewdata->date)->format('d/m/y') ?? 'Not Available' }}</td>
+                                    <td>Joining Date</td>
+                                    <td>{{ $viewdata->date }} </td>
                                 </tr>
+
 
                             </tbody>
                         </table>
@@ -117,7 +118,7 @@ View Registration Details
 
                                 <div class="row">
                                     <div class="col-lg-3 col-md-4 label">DOB</div>
-                                    <div class="col-lg-9 col-md-8">{{ \Carbon\Carbon::parse($viewdata->dob)->format('d/m/y') ?? 'Not Available'}} </div>
+                                    <div class="col-lg-9 col-md-8"> {{ $viewdata->dob }} </div>
                                 </div>
 
                                 <div class="row">
@@ -126,7 +127,7 @@ View Registration Details
                                         @if($viewdata->gender === '0') Male
                                         @elseif($viewdata->gender === '1') Female
                                         @elseif($viewdata->gender === '2') Other
-                                        @else Not Available
+                                        @else N/A
                                         @endif
                                     </div>
                                 </div>
@@ -181,9 +182,9 @@ View Registration Details
                                                     @foreach($UserPackages as $row)
                                                     <tr>
                                                         <td>{{$row->Trackerpackage!=null ? $row->Trackerpackage->package : '' }}</td>
-                                                        <td> {!! $row->Traintype != null ? $row->Traintype->add_program : '<span class="text-danger">Not Available</span>' !!}</td>
-                                                        <td>{{ $row->Trackersession!=null ? $row->Trackersession->session : '' }}</td>
-                                                        <td>{{ $row->Trackerslot!=null ? $row->Trackerslot->time_slot : '' }}</td>
+                                                        <td> {!! $row->Traintype != null ? $row->Traintype->add_program : '<span class="text-danger">N/A</span>' !!}</td>
+                                                        <td>{{ $row->Trackersession!=null ? $row->Trackersession->session : 'N/A' }}</td>
+                                                        <td>{{ $row->Trackerslot!=null ? $row->Trackerslot->time_slot : 'N/A' }}</td>
                                                         <td>{{ $row->package_fee }}</td>
                                                         <td>{{ \Carbon\Carbon::parse($row->date)->format('d/m/y') }}</td>
                                                     </tr>
@@ -203,7 +204,7 @@ View Registration Details
                                     <div class="col-lg-9 col-md-8">
                                         @if($viewdata->room_allotment === '0') Yes
                                         @elseif($viewdata->room_allotment === '1') No
-                                        @else Not Available
+                                        @else N/A
                                         @endif
                                     </div>
                                 </div>
@@ -211,12 +212,12 @@ View Registration Details
 
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Room Type</div>
-                                    <div class="col-lg-9 col-md-8">{{ $viewdata->rooms!=null ? $viewdata->rooms->room_type : 'Not Available' }} </div>
+                                    <div class="col-lg-9 col-md-8">{{ $viewdata->rooms!=null ? $viewdata->rooms->room_type : 'N/A' }} </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Room Fee</div>
                                     <div class="col-lg-9 col-md-8">
-                                        {!! $viewpayment->rooms_fees ?? '<span class="text-danger">Not Available</span>' !!}
+                                        {!! $viewpayment->rooms_fees ?? '<span class="text-danger">N/A</span>' !!}
                                     </div>
 
                                 </div>
@@ -225,33 +226,40 @@ View Registration Details
                                     <div class="col-lg-9 col-md-8">
                                         @if($viewdata->meal_subscription === '0') Yes
                                         @elseif($viewdata->meal_subscription === '1') No
-                                        @else Not Available
+                                        @else N/A
                                         @endif
 
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Meal Type</div>
-                                    <div class="col-lg-9 col-md-8">{{ $viewdata->meals!=null ? $viewdata->meals->meal_type : 'Not Available' }} </div>
+                                    <div class="col-lg-9 col-md-8">{{ $viewdata->meals!=null ? $viewdata->meals->meal_type : 'N/A' }} </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Meal Fee</div>
                                     <div class="col-lg-9 col-md-8">
-                                        {!! $viewpayment->meals_fees ?? '<span class="text-danger">Not Available</span>' !!}
+                                        {!! $viewpayment->meals_fees ?? '<span class="text-danger">N/A</span>' !!}
                                     </div>
 
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Checking Date</div>
-                                    <div class="col-lg-9 col-md-8">{{ \Carbon\Carbon::parse($viewdata->checking_date)->format('d/m/y') ?? 'Not Available'}} </div>
+                                    <div class="col-lg-9 col-md-8">
+                                        {{ $viewdata->checking_date ?? 'N/A' }}
+                                    </div>
                                 </div>
+
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Checkout Date</div>
-                                    <div class="col-lg-9 col-md-8">{{ \Carbon\Carbon::parse($viewdata->checkout_date)->format('d/m/y') ?? 'Not Available'}} </div>
+                                    <div class="col-lg-9 col-md-8">
+
+                                        {{ $viewdata->checkout_date ?? 'N/A' }}
+                                    </div>
                                 </div>
+
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Notes</div>
-                                    <div class="col-lg-9 col-md-8">{{$viewdata->notes ?? 'Not Available'}}</div>
+                                    <div class="col-lg-9 col-md-8">{{$viewdata->notes ?? 'N/A'}}</div>
                                 </div>
 
                             </div>
@@ -264,14 +272,14 @@ View Registration Details
                                         @if($viewpayment)
                                         @if($viewpayment->payment_method === '0') Offline
                                         @elseif($viewpayment->payment_method === '1') Online
-                                        @else Not Available @endif
-                                        @else Payment information not available @endif
+                                        @else N/A @endif
+                                        @else Payment information N/A @endif
 
                                     </div>
 
                                     <div class="col-lg-3 col-md-4 label">Registration Fee</div>
                                     <div class="col-lg-3 col-md-8">
-                                        {{ $viewpayment?->registration_fees ?? 'Not Available' }}
+                                        {{ $viewpayment?->registration_fees ?? 'N/A' }}
                                     </div>
                                 </div>
 
@@ -291,39 +299,45 @@ View Registration Details
                                         @elseif(optional($viewpayment)->payment_status === '5')
                                         <span style="color: gray;">Cancelled</span>
                                         @else
-                                        <span style="color: black;">Not Available</span>
+                                        <span style="color: black;">N/A</span>
                                         @endif
                                     </div>
                                     <div class="col-lg-3 col-md-4 label">Category Fee</div>
                                     <div class="col-lg-3 col-md-8">
-                                        {{ $viewpayment?->program_fee ?? 'Not Available' }}
+                                        {{ $viewpayment?->program_fee ?? 'N/A' }}
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Payment Module</div>
-                                    <div class="col-lg-3 col-md-8"> {{$viewpayment->paymentmodule!=null ? $viewpayment->paymentmodule->module : 'Not Available' }}</div>
+                                    <div class="col-lg-3 col-md-8"> {{$viewpayment->paymentmodule!=null ? $viewpayment->paymentmodule->module : 'N/A' }}</div>
                                     <div class="col-lg-3 col-md-4 label">Total Amount</div>
                                     <div class="col-lg-3 col-md-8">
-                                        {{ $viewpayment?->total_amt ?? 'Not Available' }}
+                                        {{ $viewpayment?->total_amt ?? 'N/A' }}
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Payment Date</div>
-                                    <div class="col-lg-9 col-md-8">{{ \Carbon\Carbon::parse($viewdata->payment_date)->format('d/m/y') ?? 'Not Available'}} </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-3 col-md-4 label">Next Payment Date</div>
-                                    <div class="col-lg-9 col-md-8">{{ \Carbon\Carbon::parse($viewdata->upcoming_date)->format('d/m/y') ?? 'Not Available'}} </div>
+                                    <div class="col-lg-9 col-md-8">
+                                        {{ $viewdata->payment_date ?? 'N/A' }}
+                                    </div>
                                 </div>
 
                                 <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Next Payment Date</div>
+                                    <div class="col-lg-9 col-md-8">
+                                        {{ $viewdata->upcoming_date ?? 'N/A' }}
+                                    </div>
+                                </div>
+
+
+                                <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">UTR No</div>
-                                    <div class="col-lg-9 col-md-8">{{$viewpayment->utr_no ?? 'Not Available' }} </div>
+                                    <div class="col-lg-9 col-md-8">{{$viewpayment->utr_no ?? 'N/A' }} </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Notes</div>
-                                    <div class="col-lg-9 col-md-8">{{$viewpayment->payment_notes ?? 'Not Available' }} </div>
+                                    <div class="col-lg-9 col-md-8">{{$viewpayment->payment_notes ?? 'N/A' }} </div>
                                 </div>
                             </div>
                         </div>
@@ -344,7 +358,8 @@ View Registration Details
                                 <tr class="">
                                     <th>Name</th>
                                     <th>Payment Method</th>
-                                    <th>Payment Date</th>
+                                    <th>Due Date</th>
+                                    <th>Upcoming Date</th>
                                     <th>Total Amount</th>
                                     <th>Submitted</th>
                                     <th>Pending</th>
@@ -358,15 +373,16 @@ View Registration Details
                                 @forelse($viewdata->registerStatusTracker as $row)
 
                                 <tr class="">
-                                    <td>{{$row->registration->name}} </td>
+                                    <td>{{$row->registration->name}}</td>
                                     <td>
                                         @if($row)
                                         @if($row->payment_method === '0') Offline
                                         @elseif($row->payment_method === '1') Online
-                                        @else Not Available @endif
-                                        @else Payment information not available @endif
+                                        @else N/A @endif
+                                        @else Payment information N/A @endif
                                     </td>
-                                    <td>{{\Carbon\Carbon::parse($row->upcoming_date)->format('d/m/y') ?? 'Not Available'}} </td>
+                                    <td>{{\Carbon\Carbon::parse($row->updated_at)->format('d/m/y') ?? 'N/A'}} </td>
+                                    <td>{{\Carbon\Carbon::parse($row->upcoming_date)->format('d/m/y') ?? 'N/A'}} </td>
                                     <td>{{ $row->total_amt }} </td>
                                     <td>{{ $row->submitted_amt }}</td>
                                     <td>{{ $row->pending_amt }}</td>
@@ -384,7 +400,7 @@ View Registration Details
                                         @elseif(optional($row)->payment_status === '5')
                                         <span style="color: gray;">Cancelled</span>
                                         @else
-                                        <span style="color: black;">Not Available</span>
+                                        <span style="color: black;">N/A</span>
                                         @endif
                                     </td>
 

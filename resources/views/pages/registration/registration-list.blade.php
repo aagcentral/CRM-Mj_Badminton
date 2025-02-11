@@ -64,7 +64,7 @@ for ($i = 1; $i <= 12; $i++) {
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="paymentType" name="month" class="form-select form-control">
-                                    <option value="" disabled selected>Filter by Month</option>
+                                    <option value="" disabled selected>Filter By Month</option>
                                     @foreach ($months as $month)
                                     <option value="{{ $month }}" @if(isset($_GET['month']) && $_GET['month']==$month) selected @endif>{{ $month }}</option>
                                     @endforeach
@@ -75,18 +75,18 @@ for ($i = 1; $i <= 12; $i++) {
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="paymentType" name="year" class="form-select form-control">
-                                    <option value="" disabled selected>Filter by Year</option>
+                                    <option value="" disabled selected>Filter By Year</option>
                                     @for ($year = 2024; $year <= date('Y') + 1; $year++)
                                         <option value="{{ $year }}" @if(isset($_GET['year']) && $_GET['year']==$year) selected @endif>{{ $year }}</option>
                                         @endfor
                                 </select>
                             </div>
                         </div>
-                        <!-- Filter by Payment Status -->
+                        <!-- Filter By Payment Status -->
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="paymentStatus" name="payment_status" class="form-select form-control">
-                                    <option value="" disabled selected>Filter by Payment Status</option>
+                                    <option value="" disabled selected>Filter By Payment Status</option>
                                     <option value="0" @if(request()->get('payment_status') === '0') selected @endif>Success</option>
                                     <option value="1" @if(request()->get('payment_status') === '1') selected @endif>Due</option>
                                     <option value="2" @if(request()->get('payment_status') === '2') selected @endif>Pending</option>
@@ -98,8 +98,8 @@ for ($i = 1; $i <= 12; $i++) {
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
-                                <select id="applyFor" name="Category" class="form-select form-control" aria-label="Default select example">
-                                    <option selected disabled>Filter by Category</option>
+                                <select id="applyFor" name="Category" class="form-select form-control">
+                                    <option selected disabled>Filter By Category</option>
                                     @foreach ($Packages as $pckg)
                                     <option value="{{ $pckg->package_id }}"
                                         @if (old('package')==$pckg->package_id) selected @endif>{{ $pckg->package }}</option>
@@ -109,12 +109,35 @@ for ($i = 1; $i <= 12; $i++) {
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
-                                <select id="applyFor" name="training_program" class="form-select form-control" aria-label="Default select example">
-                                    <option selected disabled>Filter by Training Type</option>
+                                <select id="applyFor" name="payment_module" class="form-select form-control">
+                                    <option selected disabled>Filter By Payment Module</option>
+                                    @foreach ($Modules as $Mdul)
+                                    <option value="{{ $Mdul->module_id }}"
+                                        {{ request('payment_module') == $Mdul->module_id ? 'selected' : '' }}>
+                                        {{ $Mdul->module }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group mb-3">
+                                <select id="applyFor" name="training_program" class="form-select form-control">
+                                    <option selected disabled>Filter By Training Type</option>
                                     @foreach ($Training as $Trng)
                                     <option value="{{ $Trng->program_id }}"
                                         @if (old('training_program')==$Trng->program_id) selected @endif>{{ $Trng->add_program }}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="form-group mb-3">
+                                <select name="status" class="form-select form-control">
+                                    <option value="" disabled selected>Filter By User Status</option>
+                                    <option value="0" @if(request()->get('status') === '0') selected @endif>Active</option>
+                                    <option value="1" @if(request()->get('status') === '1') selected @endif>Inactive</option>
                                 </select>
                             </div>
                         </div>
@@ -144,9 +167,9 @@ for ($i = 1; $i <= 12; $i++) {
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Training</th>
+                        <th>Training & Payment</th>
                         <th>Payment Status</th>
-                        <th class="no-print">Action</th>
+                        <th class="no-print">Action | Renew Category | User Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -179,8 +202,9 @@ for ($i = 1; $i <= 12; $i++) {
                             <div>
                                 <span class="fw-bold" style="color:#24ABF2">Category:</span><span> {{$row->Packages!=null ? $row->Packages->package : '' }} </span><br>
                                 <span>Training Program: {{$row->TrainedP!=null ? $row->TrainedP->add_program : '' }}</span><br>
-                                <span>Session: {{ $row->sesion!=null ? $row->sesion->session : '' }} </span><br>
-                                <span>Time Slot: {{ $row->Time!=null ? $row->Time->time_slot : '' }} </span><br>
+                                <span>Payment Module: {{ $row->PaymentDetail && $row->PaymentDetail->paymentmodule ? $row->PaymentDetail->paymentmodule->module : 'N/A' }} </span><br>
+                                <span>Form submit Date: {{ $row->created_at ? \Carbon\Carbon::parse($row->created_at)->format('d/m/y') : 'N/A' }} </span>
+
                             </div>
                         </td>
                         <td>
@@ -210,45 +234,73 @@ for ($i = 1; $i <= 12; $i++) {
 
 
                         <td>
-                            @if(havePermission('registration.updatePayment'))
-                            @if(isset($row->PaymentDetail) && $row->PaymentDetail->pending_amt > 0)
-                            <!-- Display Registration Data in Modal -->
-                            <a href="#"
-                                class="btn btn-primary btn-sm small"
-                                data-bs-toggle="modal"
-                                data-bs-target="#paymentModal"
-                                data-registration_no="{{ $row->registration_no }}"
-                                data-total_amt="{{ $row->PaymentDetail->total_amt ?? '' }}"
-                                data-submitted_amt="{{ $row->PaymentDetail->submitted_amt ?? '' }}"
-                                data-pending_amt="{{ $row->PaymentDetail->pending_amt ?? '' }}"
-                                data-payment_status="{{ $row->PaymentDetail->payment_status ?? '' }}"
-                                data-payment_method="{{ $row->PaymentDetail->payment_method ?? '' }}"
-                                data-upcoming_date="{{ $row->PaymentDetail->upcoming_date ?? '' }}"
-                                data-payment_notes="{{ $row->PaymentDetail->payment_notes ?? '' }}">
-                                Collect Fee
-                            </a>
-                            @endif
-                            @endif
 
+                            <div class="mt-4 text-center">
+                                <!-- active and inactive show hide buttons -->
+                                @if($row->status == 0)
+                                @if(havePermission('registration.updatePayment'))
+                                @if(isset($row->PaymentDetail) && $row->PaymentDetail->pending_amt > 0)
+                                <a href="#" class="btn btn-primary btn-sm small" data-bs-toggle="modal"
+                                    data-bs-target="#paymentModal"
+                                    data-registration_no="{{ $row->registration_no }}"
+                                    data-total_amt="{{ $row->PaymentDetail->total_amt ?? '' }}"
+                                    data-submitted_amt="{{ $row->PaymentDetail->submitted_amt ?? '' }}"
+                                    data-pending_amt="{{ $row->PaymentDetail->pending_amt ?? '' }}"
+                                    data-payment_status="{{ $row->PaymentDetail->payment_status ?? '' }}"
+                                    data-payment_method="{{ $row->PaymentDetail->payment_method ?? '' }}"
+                                    data-upcoming_date="{{ $row->PaymentDetail->upcoming_date ?? '' }}"
+                                    data-payment_notes="{{ $row->PaymentDetail->payment_notes ?? '' }}" title="Fee Collection">
+                                    Collect Fee
+                                </a>
+                                @endif
+                                @endif
 
-                            @if(havePermission('registration.details'))
-                            <a href="{{ route('registration.details', $row->registration_no) }}" class="btn btn-success btn-sm small px-2"><i class="fas fa-eye"></i> </a>
-                            @endif
-                            @if(havePermission('registration.edit'))
-                            <a href="{{ route('registration.edit', $row->registration_no) }}" class="btn btn-info btn-sm small px-2"><i class="fas fa-edit"></i> </a>
-                            @endif
-                            @if(havePermission('registration.destroy'))
-                            <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button>
-                            @endif
+                                @if(havePermission('registration.details'))
+                                <a href="{{ route('registration.details', $row->registration_no) }}" class="btn btn-dark btn-sm small px-2" title="View Profile">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                @endif
 
-                            @if(havePermission('registration.editpackage'))
-                            <a href="{{ route('registration.editpackage', $row->registration_no) }}" class="btn btn-success btn-sm px-2">Renew Category</a>
-                            @endif
+                                @if(havePermission('registration.edit'))
+                                <a href="{{ route('registration.edit', $row->registration_no) }}" class="btn btn-info btn-sm small px-2" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                @endif
+
+                                @if(havePermission('registration.destroy'))
+                                <!-- <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}" title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button> -->
+                                <button class="btn btn-danger btn-sm delete-registration"
+                                    data-id="{{ $row->id }}"
+                                    data-enquiry_id="{{ $row->enquiry_id }}"
+
+                                    title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                                @endif
+                                @if(havePermission('registration.editpackage'))
+                                <a href="{{ route('registration.editpackage', $row->registration_no) }}" class="btn btn-warning btn-sm px-2" title="Renew Category">
+                                    <i class="fa-solid fa-recycle"></i>
+                                </a>
+                                @endif
+                                @endif
+                                <!-- End if status is 0  -->
+                                <!-- this button for active and inactive -->
+                                <a href="#" class="btn btn-sm small 
+                                {{ trim(strtolower($row->status)) == '0' ? 'btn-success' : 'btn-danger' }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#statusModal"
+                                    data-reg-id="{{ $row->registration_no }}"
+                                    data-status="{{ $row->status ?? '' }}" title="User Status">
+                                    {{ trim(strtolower($row->status)) == '0' ? 'Active' : 'Inactive' }}
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
-
             </table>
         </div>
     </div>
@@ -329,7 +381,37 @@ for ($i = 1; $i <= 12; $i++) {
             </div>
         </div>
     </div>
+    <!-- user status update -->
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="statusModalLabel">Update User Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('registration.updateuserstatus')}} " method="POST">
+                        @csrf
+                        <input type="hidden" name="registration_no" id="reg_id">
 
+                        <!-- Payment Status -->
+                        <div class="form-group mb-2">
+                            <label for="status" class="fw-bold">User Status:<span class="text-danger"> *</span></label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="" disabled>Select Status</option>
+                                <option value="0">Active</option>
+                                <option value="1">Inactive</option>
+                            </select>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @endsection
 
@@ -380,8 +462,27 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusModal = document.getElementById('statusModal');
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            statusModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+
+                const registrationsNo = button.getAttribute('data-reg-id');
+                const status = button.getAttribute('data-status');
+
+                // Set registration_no input field
+                document.getElementById('reg_id').value = registrationsNo;
+
+                // Set the selected status in the dropdown
+                const statusDropdown = document.getElementById('status');
+                if (status !== null) {
+                    statusDropdown.value = status;
+                }
+            });
+        });
+    </script>
 
     <script>
         $('.delete-registration').click(function() {
@@ -431,5 +532,7 @@ for ($i = 1; $i <= 12; $i++) {
             }
         });
     </script>
+    <!-- update status -->
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @endsection

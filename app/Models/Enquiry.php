@@ -26,6 +26,10 @@ class Enquiry extends Model
         'enquiry_date',
         'followup_date',
         'interested_branch',
+        'transport',
+        'hostel',
+        'is_converted',
+        'assigned',
         'address',
         'notes',
         'lead_status',
@@ -71,6 +75,7 @@ class Enquiry extends Model
     {
         return $this->belongsTo(Location::class, 'locationID');  // locationID is the foreign key in Enquiry
     }
+
 
     // * Boot method for the model.
     //  */

@@ -122,7 +122,14 @@
 
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            tooltipTriggerList.forEach(function(tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

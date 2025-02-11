@@ -789,7 +789,7 @@ Registration
     });
 </script>
 <!-- total amount -->
-<script>
+<!-- <script>
     function calculateTotal() {
         // Get the values for all fees and treat null or empty as 0
         let registrationFee = parseFloat(document.getElementById('registration_fee').value) || 0;
@@ -833,6 +833,90 @@ Registration
         calculateTotal(); // Initialize total amount when page loads
         calculatePendingAmount(); // Initialize pending amount based on any pre-filled values
     };
+</script> -->
+
+
+
+<script>
+    function calculateTotal() {
+        let registrationFee = parseFloat(document.getElementById('registration_fee').value) || 0;
+        let programFee = parseFloat(document.getElementById('program_fee').value) || 0;
+        let mealFee = parseFloat(document.getElementById('meal_fee').value) || 0;
+        let roomFee = parseFloat(document.getElementById('room_fee').value) || 0;
+
+        let baseTotal = programFee + mealFee + roomFee; // Excludes registration fee initially
+
+        const paymentModule = document.getElementById("payment_module");
+        const selectedModule = paymentModule.options[paymentModule.selectedIndex];
+        const paymentInterval = selectedModule.getAttribute("data-interval");
+
+        let multiplier = 1; // Default multiplier for calculation
+
+        if (paymentInterval) {
+            switch (paymentInterval.toLowerCase()) {
+                case 'monthly':
+                case 'month':
+                case 'every month':
+                case 'monthly payment':
+                case 'monthly subscription':
+                    multiplier = 1;
+                    break;
+
+                case 'quarterly':
+                case 'quarter':
+                case 'every quarter':
+                case 'quarterly payment':
+                case 'quarterly subscription':
+                    multiplier = 3;
+                    break;
+
+                case 'half-yearly':
+                case 'half yearly':
+                case 'every half year':
+                case 'half yearly payment':
+                case 'half yearly subscription':
+                    multiplier = 6;
+                    break;
+
+                case 'annual':
+                case 'annually':
+                case 'yearly':
+                case 'every year':
+                case 'annual payment':
+                case 'annual subscription':
+                    multiplier = 12;
+                    break;
+
+                default:
+                    console.error(`Unrecognized interval: ${paymentInterval}`);
+                    return;
+            }
+        }
+
+        let totalAmount = baseTotal * multiplier + registrationFee; // Add registration fee only once
+
+        document.getElementById('total_amount').value = totalAmount.toFixed(2);
+        calculatePendingAmount(); // Update pending amount
+    }
+
+    function calculatePendingAmount() {
+        const totalAmount = parseFloat(document.getElementById('total_amount').value) || 0;
+        const paidAmount = parseFloat(document.getElementById('submitted_amt').value) || 0;
+        const pendingAmount = totalAmount - paidAmount;
+
+        document.getElementById('pending_amt').value = pendingAmount >= 0 ? pendingAmount.toFixed(2) : 0;
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("payment_module").addEventListener("change", calculateTotal);
+        document.getElementById("registration_fee").addEventListener("input", calculateTotal);
+        document.getElementById("program_fee").addEventListener("input", calculateTotal);
+        document.getElementById("meal_fee").addEventListener("input", calculateTotal);
+        document.getElementById("room_fee").addEventListener("input", calculateTotal);
+        document.getElementById("submitted_amt").addEventListener("input", calculatePendingAmount);
+
+        calculateTotal();
+    });
 </script>
 
 @endsection

@@ -10,6 +10,7 @@ use App\Models\LeadStatusTracker;
 use App\Models\Psession;
 use App\Models\Enquiry;
 use App\Models\Location;
+use App\Models\User;
 use App\Models\Timings;
 use Illuminate\Http\Request;
 use App\Notifications\LeadNotification;
@@ -53,6 +54,22 @@ class EnquiryController extends Controller
             $followupDate = $request->followup_date;  // Get the selected follow-up date
             $query->whereDate('followup_date', '=', $followupDate);
         }
+        // Filter by Follow-up Date (Range)
+        if ($request->has('from_date') && $request->has('to_date') && !is_null($request->from_date) && !is_null($request->to_date)) {
+            $fromDate = $request->from_date; // Start Date (e.g., 2024-01-25)
+            $toDate = $request->to_date;     // End Date (e.g., 2024-01-28)
+
+            $query->whereBetween('followup_date', [$fromDate, $toDate]);
+        }
+        if ($request->has('hostel') && $request->hostel !== null) {
+            $query->where('hostel', $request->hostel);
+        }
+        if ($request->has('transport') && $request->transport !== null) {
+            $query->where('transport', $request->transport);
+        }
+        if ($request->has('package') && $request->package !== null) {
+            $query->where('package', $request->package);
+        }
         // Get the filtered data
         $data = $query->get();
 
@@ -61,13 +78,19 @@ class EnquiryController extends Controller
     }
 
 
+    public function enquiry_form(Request $request)
+    {
+        $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
+        $location = Location::where('status', '0')->orderBy('location', 'asc')->get();
+        $users = User::orderBy('name', 'asc')->get();
+        $Packages = Package::where('status', '0')->orderBy('package', 'asc')->get();
+        $Training = TrainingProgram::where('status', '0')->orderBy('add_program', 'asc')->get();
+        $session = Psession::where('status', '0')->orderBy('session', 'asc')->get();
+        $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
+        return view('pages.enquiry.enquiry', compact('Packages', 'Training', 'session', 'Timing', 'leads', 'location', 'users'));
+    }
 
 
-    // public function enquiry()
-    // {
-    //     $data = Enquiry::max('id');
-    //     return $data ? $data + 1 : 1;
-    // }
     public function enquiry()
     {
         $locationID = Auth::user()->locationID ?? 'Default';
@@ -190,10 +213,13 @@ class EnquiryController extends Controller
             'followup_date' => $request->followup_date,
             'lead_status' => $request->lead_status,
             'interested_branch' => $request->interested_branch,
+            'transport' => $request->transport,
+            'assigned' => $request->assigned,
+            'hostel' => $request->hostel,
             'address' => $request->address,
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
-            'status' =>  $request->status == "active" ? '0' : '1',
+            // 'status' =>  $request->status == "active" ? '0' : '1',
             'locationID' => $locationID,
         ]);
 
@@ -218,20 +244,22 @@ class EnquiryController extends Controller
         $Training = TrainingProgram::where('status', '0')->orderBy('add_program', 'asc')->get();
         $session = Psession::where('status', '0')->orderBy('session', 'asc')->get();
         $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
+        $location = Location::where('status', '0')->orderBy('location', 'asc')->get();
+        $users = User::orderBy('name', 'asc')->get();
         $user = Auth::user();
         $locationID = $user->locationID;
         $edit_enquiry = Enquiry::where('enquiry_Id', $enquiry_Id)->where('locationID', $locationID)->first();
         if (!$edit_enquiry) {
             return redirect()->route('enquiry.list')->with('success', 'Location Update.');
         }
-        return view('pages.enquiry.edit-enquiry', compact('location', 'edit_enquiry', 'leads', 'Packages', 'Training', 'session', 'Timing'));
+        return view('pages.enquiry.edit-enquiry', compact('location', 'edit_enquiry', 'leads', 'Packages', 'Training', 'session', 'Timing', 'location', 'users'));
     }
 
     // update
     public function update_enquiry(Request $request)
     {
         $data = $request->validate([
-            'status' => 'required',
+            // 'status' => 'required',
             'name' => 'required',
             'mobile' => 'required',
             'enquiry_date' => 'required',
@@ -253,6 +281,9 @@ class EnquiryController extends Controller
                 'followup_date' => $request->followup_date,
                 'lead_status' => $request->lead_status,
                 'interested_branch' => $request->interested_branch,
+                'transport' => $request->transport,
+                'hostel' => $request->hostel,
+                'assigned' => $request->assigned,
                 'address' => $request->address,
                 'notes' => $request->notes,
                 'date' => date('Y-m-d H:i:s'),
@@ -348,5 +379,28 @@ class EnquiryController extends Controller
         }
 
         return redirect()->route('enquiry.list')->with('error', 'Enquiry not found!');
+    }
+
+
+
+
+
+    // move
+    public function moveLocation(Request $request, $id)
+    {
+        $request->validate([
+            'new_location' => 'required|exists:locations,location_id', // Ensure valid location
+        ]);
+
+        $enquiry = Enquiry::find($id);
+        if (!$enquiry) {
+            return back()->with('fail', 'Enquiry not found!');
+        }
+
+        // Update location
+        $enquiry->interested_branch = $request->new_location;
+        $enquiry->save();
+
+        return back()->withSuccess('Enquiry moved successfully!');
     }
 }

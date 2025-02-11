@@ -32,8 +32,8 @@ class RegistrationController extends Controller
         $session = Psession::where('status', '0')->orderBy('session', 'asc')->get();
         $Timing = Timings::where('status', '0')->orderBy('time_slot', 'asc')->get();
         $rooms = Room::where('status', '0')->orderBy('room_type', 'asc')->get();
+        $Modules = PaymentModule::where('status', '0')->orderBy('module', 'asc')->get();
         $meals = Meal::where('status', '0')->orderBy('meal_type', 'asc')->get();
-        $pmodules = PaymentModule::where('status', '0')->orderBy('module', 'asc')->get();
         $query = Registration::with(['PaymentDetail']);
 
         if ($request->has('month') && $request->month !== null) {
@@ -48,7 +48,12 @@ class RegistrationController extends Controller
         if ($request->has('package') && $request->package !== null) {
             $query->where('package', $request->package);
         }
-
+        // if ($request->has('payment_module') && $request->payment_module !== null) {
+        //     $query->where('payment_module', $request->payment_module);
+        // }
+        if ($request->has('status') && $request->status !== null) {
+            $query->where('status', $request->status);
+        }
         if ($request->has('year') && $request->year !== null) {
             $query->whereYear('created_at', $request->year);
         }
@@ -58,10 +63,14 @@ class RegistrationController extends Controller
                 $paymentQuery->where('payment_status', $request->payment_status);
             });
         }
-
+        if ($request->filled('payment_module')) {
+            $query->whereHas('PaymentDetail', function ($moduleQuery) use ($request) {
+                $moduleQuery->whereRaw('LOWER(payment_module) = ?', [strtolower($request->payment_module)]);
+            });
+        }
         $data = $query->latest()->get();
         // dd($data);
-        return view('pages.registration.registration-list', compact('data', 'pmodules', 'Packages', 'Training', 'session', 'Timing',));
+        return view('pages.registration.registration-list', compact('data', 'Packages', 'Training', 'session', 'Timing', 'Modules'));
     }
 
     public function registration_form(Request $request, $enquiryId = null)
@@ -113,6 +122,7 @@ class RegistrationController extends Controller
     {
         // Validation
         $request->validate([
+            'enquiry_id' => 'required|exists:enquiries,id',
             'name' => 'required|string|max:255',
             'father' => 'required|string|max:255',
             'phone' => 'required|digits:10',
@@ -136,24 +146,32 @@ class RegistrationController extends Controller
             DB::beginTransaction();
 
             // Check and Update Enquiry Status
-            if ($request->input('enquiry_id')) {
-                Enquiry::where('id', $request->input('enquiry_id'))->update(['lead_status' => 3]);
-            }
-
-            // Generate Registration Number
+            // if ($request->input('enquiry_id')) {
+            //     Enquiry::where('id', $request->input('enquiry_id'))->update(['lead_status' => 3]);
+            // }
             $locationID = Auth::user()->locationID ?? 'DEFAULT';
+            // Lock the table to prevent duplicate registration numbers
             $lastNumber = Registration::where('locationID', $locationID)
-                ->lockForUpdate()
+                ->lockForUpdate() // Prevent race conditions
                 ->orderBy('id', 'desc')
                 ->value('registration_no');
 
+            // Extract the numeric part of the last registration number
             $nextNumber = 1;
             if ($lastNumber) {
-                preg_match('/RID(\d+)$/', $lastNumber, $matches);
-                $nextNumber = isset($matches[1]) ? intval($matches[1]) + 1 : 1;
+                if (preg_match('/MJRNO-(\d+)$/', $lastNumber, $matches)) {
+                    $nextNumber = intval($matches[1]) + 1;
+                }
             }
-            $newRegistrationNo = strtoupper($locationID) . '-RID' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
+            // Generate the new unique registration number
+            $newRegistrationNo = 'MJRNO-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+            // Ensure no duplicate entry exists
+            while (Registration::where('registration_no', $newRegistrationNo)->exists()) {
+                $nextNumber++;
+                $newRegistrationNo = 'MJRNO-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            }
             // Generate Unique Payment ID
             $newPaymentID = 'MJPID' . date('dmy') . uniqid();
 
@@ -218,7 +236,16 @@ class RegistrationController extends Controller
                 'date' => date('Y-m-d'),
             ];
 
+
             $payment = PaymentDetails::create($paymentData);
+
+            // Check and Update Enquiry Status
+            if ($request->input('enquiry_id')) {
+                Enquiry::where('id', $request->input('enquiry_id'))->update([
+                    'lead_status' => 3,
+                    'is_converted' => '1'
+                ]);
+            }
 
             // Save Package Details
             $packageData = [
@@ -297,7 +324,6 @@ class RegistrationController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'father' => 'required|string|max:255',
-            // 'dob' => 'required|date',
             'phone' => 'required|digits:10',
             'email' => 'required|email',
             'state' => 'required',
@@ -310,23 +336,19 @@ class RegistrationController extends Controller
         // Handle Image Upload
         if ($request->hasFile('image')) {
             if ($registration->image && file_exists(public_path('player/' . $registration->image))) {
-                unlink(public_path('player/' . $registration->image)); // Delete the old file
+                unlink(public_path('player/' . $registration->image));
             }
             // Store the new image
             $filename = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('player'), $filename);
-
-            // Update the image in the database
             $registration->image = $filename;
         }
         if ($request->input('remove_image') == '1') {
-
             if ($registration->image && file_exists(public_path('player/' . $registration->image))) {
-                unlink(public_path('player/' . $registration->image)); // Delete the file
+                unlink(public_path('player/' . $registration->image));
             }
             $registration->image = null;
         }
-
         try {
             // Update registration details
             $registration->update([
@@ -356,31 +378,17 @@ class RegistrationController extends Controller
             ]);
             $payment = PaymentDetails::where('registration_no', $registration_no)->firstOrFail();
 
-            // Handle UTR number logic
-            if ($request->input('payment_method') == '0') { // Offline
-                $payment->utr_no = null; // Remove UTR number for offline
-            } else { // Online
-                $payment->utr_no = $request->input('utr_no'); // Set UTR number for online
+            if ($request->input('payment_method') == '0') {
+                $payment->utr_no = null;
+            } else {
+                $payment->utr_no = $request->input('utr_no');
             }
 
             $payment->update([
-                // 'registration_fees' => $request->input('registration_fees'),
-                // 'program_fee' => $request->input('program_fee'),
                 'rooms_fees' => $request->input('rooms_fees'),
                 'meals_fees' => $request->input('meals_fees'),
-                // 'utr_no' => $request->input('utr_no'),
-                // 'payment_module' => $request->input('payment_module'),
-                // 'payment_date' => $request->input('payment_date'),
-                // 'upcoming_date' => $request->input('upcoming_date'),
-                // 'payment_method' => $request->input('payment_method'),
-                // 'payment_status' => $request->input('payment_status'),
-                // 'payment_notes' => $request->input('payment_notes'),
-                // 'total_amt' => $request->input('total_amt'),
             ]);
-
-            // Commit transaction if both updates are successful
             DB::commit();
-            // Save Package Details
             $packageData = [
                 'registration_no' => $registration_no,
                 'package' => $request->input('package'),
@@ -389,24 +397,8 @@ class RegistrationController extends Controller
                 'time_slot' => $request->input('time_slot'),
                 'package_fee' => $payment->program_fee,
                 'package_notes' => $payment->payment_notes,
-
             ];
-
             PackageUpdateTrack::create($packageData);
-
-            // Track updated data in RegisterStatusTracker
-            // $trackData = [
-            //     'registration_no' => $registration_no,
-            //     'upcoming_date' => $request->input('upcoming_date'),
-            //     'payment_method' => $request->input('payment_method'),
-            //     'total_amt' => $request->input('total_amt'),
-            //     'submitted_amt' => $request->input('submitted_amt'),
-            //     'pending_amt' => $request->input('pending_amt'),
-            //     'payment_status' => $request->input('payment_status'),
-            //     'payment_notes' => $request->input('payment_notes'),
-            // ];
-
-            // RegisterStatusTracker::create($trackData);
             return redirect()->route('registration.list')->with('success', 'Registration updated successfully.');
         } catch (\Exception $e) {
             DB::rollback();
@@ -414,13 +406,15 @@ class RegistrationController extends Controller
         }
     }
 
-    // delete
+    // // delete
     public function destroy_registration(Request $request)
     {
         $data = Registration::where('id', $request->id)->first();
         $data->delete();
         return response()->json(['message' => 'data deleted successfully.']);
     }
+
+
 
 
 
@@ -437,10 +431,7 @@ class RegistrationController extends Controller
         return view('registrations.prefill', compact('enquiry'));
     }
 
-
     // <!***************************************update package******************************************************>
-
-
     // edit package
     public function edit_userpackage($registration_no)
     {
@@ -532,7 +523,6 @@ class RegistrationController extends Controller
         }
     }
 
-
     // <!***************************************update payment******************************************************>
     // update payment or pending payment
     public function updatePayment(Request $request)
@@ -542,10 +532,7 @@ class RegistrationController extends Controller
             'registration_no' => 'required|exists:payment_details,registration_no',
             'submitted_amt' => 'required|numeric|min:0',
         ]);
-
-        // Fetch the payment record
         $payment = PaymentDetails::where('registration_no', $request->registration_no)->first();
-
         if ($payment) {
             // Calculate the new submitted amount
             $newSubmittedAmt = $request->submitted_amt;
@@ -558,11 +545,8 @@ class RegistrationController extends Controller
                     'The total submitted amount cannot exceed the total fee.'
                 );
             }
-
             // Calculate pending amount and determine payment status
             $pendingAmt = max(0, $payment->total_amt - $submittedAmt);
-
-
             // Update the PaymentDetails record
             $payment->update([
                 'submitted_amt' => $submittedAmt,
@@ -595,5 +579,17 @@ class RegistrationController extends Controller
 
         // Redirect back with success message
         return redirect()->back()->with('success', 'Payment updated successfully!');
+    }
+
+    public function updateuser_status(Request $request)
+    {
+        $request->validate([
+            'registration_no' => 'required|exists:registrations,registration_no',
+            'status' => 'required|in:0,1',
+        ]);
+        Registration::where('registration_no', $request->registration_no)
+            ->update(['status' => $request->status]);
+
+        return redirect()->back()->with('success', 'User status updated successfully.');
     }
 }

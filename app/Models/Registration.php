@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Carbon\Carbon;
 
 class Registration extends Model
 {
@@ -46,6 +47,19 @@ class Registration extends Model
         'date',
         'status',
     ];
+    // Global date format for all date attributes
+    public function getAttribute($key)
+    {
+        $dateFields = ['dob', 'checking_date', 'checkout_date', 'date'];
+
+        if (in_array($key, $dateFields)) {
+            $value = parent::getAttribute($key);
+            return $value ? Carbon::parse($value)->format('d-m-y') : null;
+        }
+
+        return parent::getAttribute($key);
+    }
+
 
 
     public function leads(): HasOne

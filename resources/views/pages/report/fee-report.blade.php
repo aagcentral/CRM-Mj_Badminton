@@ -42,7 +42,7 @@ for ($i = 1; $i <= 12; $i++) {
             <div class="col-md-12 col-sm-12">
                 <div class="card" id="filterForm">
                     <div class="card-header bg-light p-1">
-                        <h6 class="fw-blod mt-2"> Search Collection Fee Report</h6>
+                        <h6 class="fw-blod mt-2"> Search Fee Report Collection</h6>
                     </div>
                     <div class="card-body">
                         <form action="" method="GET">
@@ -132,14 +132,17 @@ for ($i = 1; $i <= 12; $i++) {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Registration No</th>
-                                    <th>User Name</th>
+                                    <th>Reg.No.</th>
+                                    <th>Name</th>
                                     <th>Total Amount</th>
                                     <th>paid</th>
                                     <th>Pending</th>
                                     <th>Status</th>
-                                    <th>Method</th>
-                                    <th>Date</th>
+                                    <!-- <th>Method</th> -->
+                                    <th>Mobile</th>
+                                    <th>Due Date</th>
+                                    <th>Upcoming Date</th>
+                                    <th>Joining Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -151,7 +154,7 @@ for ($i = 1; $i <= 12; $i++) {
                                         {{ $row->registration_no}}
                                     </td>
                                     <td>
-                                        {{ $row->Registration->name ?? 'Name not available' }}
+                                        {{ $row->Registration->name ?? '' }}
                                     </td>
                                     <td>
                                         <div>{{$row->total_amt}} </div>
@@ -179,7 +182,7 @@ for ($i = 1; $i <= 12; $i++) {
 
                                         {{ $statusMap[$status] ?? 'Unknown' }}
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         @php
                                         $methodMap = [
                                         '0' => 'Offline',
@@ -190,9 +193,20 @@ for ($i = 1; $i <= 12; $i++) {
                                         @endphp
 
                                         {{ $methodMap[$method] ?? 'Unknown' }}
+                                    </td> -->
+                                    <td>
+                                        <div>{{$row->Registration->phone}} </div>
                                     </td>
                                     <td>
                                         <div>{{ \Carbon\Carbon::parse($row->updated_at)->format('d/m/y') }}</div>
+                                    </td>
+                                    <td>
+                                        <div>{{ \Carbon\Carbon::parse($row->upcoming_date)->format('d/m/y') }}</div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            {{ optional($row->Registration)->date ? \Carbon\Carbon::parse($row->Registration->date)->format('d/m/y') : 'N/A' }}
+                                        </div>
                                     </td>
 
                                 </tr>

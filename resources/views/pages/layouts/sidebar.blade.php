@@ -31,53 +31,7 @@
     </li>
     @endif
 
-    @if(!empty($ViewPermissionSettingsMenu) || !empty($ViewPermissionSettingsPermission) || !empty($ViewPermissionSettingsRole) || !empty($ViewPermissionSettingsLocation))
-    <li class="nav-item">
-      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['settings.permission','location.list', 'settings.permission.group','settings.role.list'])) collapsed @endif"
-        data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-        <i class="ri-settings-3-line"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="forms-nav"
-        class="nav-content @if (!in_array(Route::currentRouteName(), ['settings.permission','location.list', 'settings.permission.group','settings.role.list'])) collapse @endif"
-        data-bs-parent="#sidebar-nav">
 
-        @if(!empty($ViewPermissionSettingsLocation))
-        <li>
-          <a href="{{ route('location.list') }}"
-            class="@if (Route::currentRouteName() == 'location.list') active @endif">
-            <i class="bi bi-circle"></i><span>Location</span>
-          </a>
-        </li>
-        @endif
-        <!--***** Don't delete this is for developers and only enable when you want to create permission of new menu *******-->
-        <!-- @if(!empty($ViewPermissionSettingsMenu))
-        <li>
-          <a href="{{ route('settings.permission.group') }}"
-            class="@if (Route::currentRouteName() == 'settings.permission.group') active @endif">
-            <i class="bi bi-circle"></i><span>Permission Group</span>
-          </a>
-        </li>
-        @endif
-        @if(!empty($ViewPermissionSettingsPermission))
-        <li>
-          <a href="{{ route('settings.permission') }}"
-            class="@if (Route::currentRouteName() == 'settings.permission') active @endif">
-            <i class="bi bi-circle"></i><span>Permission</span>
-          </a>
-        </li>
-        @endif -->
-        <!--*****./End Don't delete it, this is for developers and only enable when you want to create permission of new menu *******-->
-        @if(!empty($ViewPermissionSettingsRole))
-        <li class="nav-item">
-          <a class="nav-link @if(Route::currentRouteName() != 'settings.role.list') collapsed  @endif" href="{{ route('settings.role.list') }}">
-            <i class="bi bi-emoji-laughing-fill"></i>
-            <span>Role</span>
-          </a>
-        </li><!-- End  Nav -->
-        @endif
-      </ul>
-    </li><!-- End Forms Nav -->
-    @endif
 
 
 
@@ -212,28 +166,7 @@
     </li>
     @endif
 
-    <!-- report -->
-    @if(havePermission('report.feecollection'))
-    <li class="nav-item">
-      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapsed @endif"
-        data-bs-target="#forms-navreport" data-bs-toggle="collapse" href="#">
-        <i class="fa-solid fa-calendar-days"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="forms-navreport"
-        class="nav-content @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapse @endif"
-        data-bs-parent="#sidebar-nav">
-        <!-- {{-- Check and Show Registration Form Link --}} -->
-        @if(havePermission('report.feecollection'))
-        <li>
-          <a href="{{ route('report.feecollection') }}"
-            class="@if (Route::currentRouteName() == 'report.feecollection') active @endif">
-            <i class="bi bi-circle"></i><span>Fee Report</span>
-          </a>
-        </li>
-        @endif
-      </ul>
-    </li>
-    @endif
+
 
     <!-- Miscellaneous -->
 
@@ -322,7 +255,76 @@
       </ul>
     </li>
     @endif
+    <!-- report -->
+    @if(havePermission('report.feecollection'))
+    <li class="nav-item">
+      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapsed @endif"
+        data-bs-target="#forms-navreport" data-bs-toggle="collapse" href="#">
+        <i class="fa-solid fa-calendar-days"></i><span>Report</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-navreport"
+        class="nav-content @if (!in_array(Route::currentRouteName(), ['report.feecollection'])) collapse @endif"
+        data-bs-parent="#sidebar-nav">
+        <!-- {{-- Check and Show Registration Form Link --}} -->
+        @if(havePermission('report.feecollection'))
+        <li>
+          <a href="{{ route('report.feecollection') }}"
+            class="@if (Route::currentRouteName() == 'report.feecollection') active @endif">
+            <i class="bi bi-circle"></i><span>Fee Report</span>
+          </a>
+        </li>
+        @endif
+      </ul>
+    </li>
+    @endif
+    <!-- settings -->
+    @if(!empty($ViewPermissionSettingsMenu) || !empty($ViewPermissionSettingsPermission) || !empty($ViewPermissionSettingsRole) || !empty($ViewPermissionSettingsLocation))
+    <li class="nav-item">
+      <a class="nav-link @if (!in_array(Route::currentRouteName(), ['settings.permission','location.list', 'settings.permission.group','settings.role.list'])) collapsed @endif"
+        data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="ri-settings-3-line"></i><span>Settings</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav"
+        class="nav-content @if (!in_array(Route::currentRouteName(), ['settings.permission','location.list', 'settings.permission.group','settings.role.list'])) collapse @endif"
+        data-bs-parent="#sidebar-nav">
 
+        @if(!empty($ViewPermissionSettingsLocation))
+        <li>
+          <a href="{{ route('location.list') }}"
+            class="@if (Route::currentRouteName() == 'location.list') active @endif">
+            <i class="bi bi-circle"></i><span>Location</span>
+          </a>
+        </li>
+        @endif
+        <!--***** Don't delete this is for developers and only enable when you want to create permission of new menu *******-->
+        <!-- @if(!empty($ViewPermissionSettingsMenu))
+        <li>
+          <a href="{{ route('settings.permission.group') }}"
+            class="@if (Route::currentRouteName() == 'settings.permission.group') active @endif">
+            <i class="bi bi-circle"></i><span>Permission Group</span>
+          </a>
+        </li>
+        @endif
+        @if(!empty($ViewPermissionSettingsPermission))
+        <li>
+          <a href="{{ route('settings.permission') }}"
+            class="@if (Route::currentRouteName() == 'settings.permission') active @endif">
+            <i class="bi bi-circle"></i><span>Permission</span>
+          </a>
+        </li>
+        @endif -->
+        <!--*****./End Don't delete it, this is for developers and only enable when you want to create permission of new menu *******-->
+        @if(!empty($ViewPermissionSettingsRole))
+        <li class="nav-item">
+          <a class="nav-link @if(Route::currentRouteName() != 'settings.role.list') collapsed  @endif" href="{{ route('settings.role.list') }}">
+            <i class="bi bi-emoji-laughing-fill"></i>
+            <span>Role</span>
+          </a>
+        </li><!-- End  Nav -->
+        @endif
+      </ul>
+    </li><!-- End Forms Nav -->
+    @endif
 
   </ul>
 

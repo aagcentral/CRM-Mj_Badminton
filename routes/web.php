@@ -90,12 +90,14 @@ Route::group(['middleware' => 'AuthLogin'], function () {
 
         Route::controller(EnquiryController::class)->group(function () {
             Route::get('enquiry-list', 'enquiry_list')->name('enquiry.list');
+            Route::get('enquiry', 'enquiry_form')->name('enquiry.Form');
             Route::post('add-enquiry', 'add_enquiry')->name('enquiry.add');
             Route::get('edit-enquiry/{enquiry_Id}', 'edit_enquiry')->name('enquiry.edit');
             Route::post('update-enquiry', 'update_enquiry')->name('enquiry.update');
             Route::post('delete-enquiry', 'destroy_enquiry')->name('enquiry.destroy');
             Route::get('view-status/{id}', 'view_status')->name('enquiry.status');
             Route::post('enquiry/update-status', 'updateStatus')->name('enquiry.updateStatuss');
+            Route::post('/enquiry/move-location/{id}',  'moveLocation')->name('enquiry.moveLocation');
         });
 
         // category-list
@@ -231,6 +233,8 @@ Route::group(['middleware' => 'AuthLogin'], function () {
             Route::get('edit-userpackage/{registration_no}', 'edit_userpackage')->name('registration.editpackage');
             Route::post('updatependingPayment', 'updatePayment')->name('registration.updatePayment');
             Route::post('updateuserpackage', 'updateuser_package')->name('registration.updateuserpackage');
+            // update status
+            Route::post('updateuserstatus',  'updateuser_status')->name('registration.updateuserstatus');
         });
 
 
