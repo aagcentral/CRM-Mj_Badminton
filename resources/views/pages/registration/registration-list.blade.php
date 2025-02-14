@@ -271,13 +271,13 @@ for ($i = 1; $i <= 12; $i++) {
                                 <!-- <button class="btn btn-danger small btn-sm px-2 delete-registration" data-id="{{ $row->id }}" title="Delete">
                                     <i class="fa-solid fa-trash"></i>
                                 </button> -->
-                                <button class="btn btn-danger btn-sm delete-registration"
+                                <button class="btn btn-danger btn-sm delete-registration d-inline-block"
                                     data-id="{{ $row->id }}"
-                                    data-enquiry_id="{{ $row->enquiry_id }}"
-
+                                    data-mobile="{{ $row->mobile }}"
                                     title="Delete">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
+
 
                                 @endif
                                 @if(havePermission('registration.editpackage'))
@@ -484,7 +484,7 @@ for ($i = 1; $i <= 12; $i++) {
         });
     </script>
 
-    <script>
+    <!-- <script>
         $('.delete-registration').click(function() {
             var id = $(this).data('id');
 
@@ -518,7 +518,7 @@ for ($i = 1; $i <= 12; $i++) {
                 }
             });
         });
-    </script>
+    </script> -->
     <script>
         document.querySelector('.toggle-form').addEventListener('click', function(e) {
             e.preventDefault(); // Prevent default action of the link
@@ -526,10 +526,48 @@ for ($i = 1; $i <= 12; $i++) {
             var formSection = document.getElementById('filterForm');
 
             if (formSection.style.display === 'none' || formSection.style.display === '') {
-                formSection.style.display = 'block'; // Show the form
+                formSection.style.display = 'block';
             } else {
-                formSection.style.display = 'none'; // Hide the form
+                formSection.style.display = 'none';
             }
+        });
+
+
+        $(document).on("click", ".delete-registration", function() {
+            var id = $(this).data("id");
+            var mobile = $(this).data("mobile");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('registration.destroy') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            mobile: mobile,
+                            _token: "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire("Deleted!", "Registration has been deleted.", "success");
+                            } else {
+                                Swal.fire("Error!", response.message, "error");
+                            }
+                        },
+                        error: function() {
+                            Swal.fire("Error!", "Something went wrong!", "error");
+                        },
+                    });
+                }
+            });
         });
     </script>
     <!-- update status -->

@@ -136,7 +136,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                         </div>
                         <!-- Filter by Payment Status -->
-                        <div class="col-lg-3 col-sm-12">
+                        <!-- <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="leadStatus" name="lead_status" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Lead Status</option>
@@ -148,7 +148,7 @@ for ($i = 1; $i <= 12; $i++) {
                                     <option value="5" @if(request()->get('lead_status') === '5') selected @endif>Recycle</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <div class="d-flex gap-2 justify-content-end">
@@ -171,12 +171,11 @@ for ($i = 1; $i <= 12; $i++) {
                     <thead>
                         <tr class="">
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Category</th>
+                            <th>Name & Category</th>
                             <th>Date & Status</th>
-                            <!-- <th>Interested Branch</th> -->
-                            <!-- <th>Assigned To</th> -->
-                            <th>Action</th>
+                            <th>Notes</th>
+                            <!-- <th>Move</th> -->
+                            <th class="text-center">Action</th>
                         </tr>
 
                     </thead>
@@ -186,18 +185,19 @@ for ($i = 1; $i <= 12; $i++) {
                             <th>{{ $loop->iteration }}</th>
                             <td>
                                 <strong>Name:</strong> {{ $row->name }}<br>
-                                <strong>Enquiry_Id:</strong> {{ $row->enquiry_Id }}<br>
-                                <strong>Email:</strong> {{ $row->email }}<br>
+                                <!-- <strong>Enquiry_Id:</strong> {{ $row->enquiry_Id }}<br> -->
+                                <!-- <strong>Email:</strong> {{ $row->email }}<br> -->
                                 <strong>Phone:</strong> {{ $row->mobile }}<br>
-                                <strong>Lead Source:</strong> {{ $row->leads!=null ? $row->leads->leadsource : '' }} <br>
+                                <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
+                                <!-- <strong>Lead Source:</strong> {{ $row->leads!=null ? $row->leads->leadsource : '' }} <br> -->
                             </td>
 
-                            <td>
+                            <!-- <td>
                                 <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
                                 <strong>Session:</strong> {{ $row->sesion!=null ? $row->sesion->session : '' }} <br>
                                 <strong>Time Slot:</strong> {{ $row->Time!=null ? $row->Time->time_slot : '' }}<br>
                                 <strong>Training Program:</strong> {{ $row->TrainedP!=null ? $row->TrainedP->add_program : '' }}
-                            </td>
+                            </td> -->
 
                             <td>
                                 <strong>Enquiry Date:</strong> {{ \Carbon\Carbon::parse($row->enquiry_date)->format('d/m/y') }}<br>
@@ -218,132 +218,79 @@ for ($i = 1; $i <= 12; $i++) {
                                 ($row->lead_status == '4' ? 'Dead' : 'Recycle')))) }}
                                 </span>
                                 <br>
+                                <strong>Interested Branch: </strong>{{ $row->interestedlocation ? $row->interestedlocation->location : 'N/A' }}
                             </td>
-                            <!-- <td>
-                                <form action="{{ route('enquiry.moveLocation', $row->id) }}" method="POST" class="move-location-form">
-                                    @csrf
-
-                                    <select name="new_location" class="form-select move-location-dropdown">
-                                        @foreach ($location as $loc)
-                                        <option value="{{ $loc->location_id }}"
-                                            {{ $row->interested_branch == $loc->location_id ? 'selected' : '' }}>
-                                            {{ $loc->location }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="btn btn-primary btn-sm mt-1">Move</button>
-                                </form>
-                            </td> -->
-
-
-                            <!-- <td>
-                                <div class="d-flex gap-2">
-                                    <select class="form-control move-location" data-enquiry-id="{{ $row->id }}">
-                                        <option value="">Select Location</option>
-                                        @foreach($location as $locat)
-                                        @if($locat->id != $row->locationID)
-                                        <option value="{{ $locat->id }}">{{ $locat->location }}</option>
-                                        @endif
-                                        @endforeach
-                                    </select>
-
-                                    <button class="btn btn-primary move-enquiry" data-enquiry-id="{{ $row->id }}" data-current-location="{{ $row->locationID }}">
-                                        <i class="fa-solid fa-arrow-up"></i> {{ $row->location ? $row->location->location : '' }}
-                                    </button>
+                            <td style="max-width: 150px; overflow: auto; white-space: normal;">
+                                <div style="max-height: 100px; overflow-y: auto;">
+                                    {{ $row->notes }}
                                 </div>
-                            </td> -->
-
-                            <!-- <td>{{ $row->assigned }}</td> -->
-
-
-
-                            <!-- <td>
-                                @if(havePermission('enquiry.status'))
-                                <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id]) }}"
-                                    class="btn btn-default text-white btn-sm" style="background-color: #7c5cc4;" title="View Status">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                @endif
-
-                                @if(havePermission('enquiry.updateStatus'))
-                                <a href="#" class="btn btn-success text-white  btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-enquiry_id="{{ $row->enquiry_Id }}"
-                                    data-followup_date="{{ $row->followup_date }}" data-status="{{ $row->lead_status }}" data-notes="{{ $row->notes }}" title="Followup Status">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                </a>
-                                @endif
-
-
-                                @if(havePermission('enquiry.edit'))
-                                <a href="{{ route('enquiry.edit', $row->enquiry_Id) }}" class=" btn btn-info btn-sm" title="Edit Enquiry"><i class="fas fa-edit"></i> </a>
-                                @endif
-                                @if(havePermission('registration.form'))
-                                @if ($row->lead_status == 3)
-                                <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary text-white btn-sm small"> </i>convert</a>
-                                @else @endif
-                                @endif
-
-
-
-                                @if(havePermission('enquiry.destroy'))
-                                <button class="btn btn-danger btn-sm  delete-enquiry" data-id="{{ $row->id }}" title="Delete"><i class="fa-solid fa-trash"></i> </button>
-                                @endif
-
-                            </td> -->
-
-                            <td id="lead-row-{{ $row->id }}">
-                                @if($row->is_converted == '0') <!-- Show buttons only if not converted -->
-
-                                @if(havePermission('enquiry.status'))
-                                <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id]) }}"
-                                    class="btn btn-default text-white btn-sm"
-                                    style="background-color: #7c5cc4;"
-                                    title="View Status">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                @endif
-
-                                @if(havePermission('enquiry.updateStatus'))
-                                <a href="#" class="btn btn-success text-white btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal"
-                                    data-enquiry_id="{{ $row->enquiry_Id }}"
-                                    data-followup_date="{{ $row->followup_date }}"
-                                    data-status="{{ $row->lead_status }}"
-                                    data-notes="{{ $row->notes }}"
-                                    title="Followup Status">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                </a>
-                                @endif
-
-                                @if(havePermission('enquiry.edit'))
-                                <a href="{{ route('enquiry.edit', $row->enquiry_Id) }}"
-                                    class="btn btn-info btn-sm"
-                                    title="Edit Enquiry">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                @endif
-
-                                @if(havePermission('registration.form') && $row->lead_status == 3)
-                                <a href="{{ route('registration.form', $row->id) }}"
-                                    class="btn bg-primary text-white btn-sm">
-                                    Convert
-                                </a>
-                                @endif
-
-                                @if(havePermission('enquiry.destroy'))
-                                <button class="btn btn-danger btn-sm delete-registration"
-                                    data-id="{{ $row->id }}"
-                                    data-enquiry_id="{{ $row->enquiry_Id }}"
-                                    title="Delete">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                                @endif
-
-                                @else
-                                <!-- Show only "Converted" badge if lead is converted -->
-                                <span class="badge bg-success">Converted</span>
-                                @endif
                             </td>
+                            <!-- BUTTONS -->
+                            <td id="lead-row-{{ $row->id }}" class="text-center">
+                                <div class="d-inline-block">
+                                    @if($row->is_converted == '0')
+                                    <form action="{{ route('enquiry.moveLocation', $row->id) }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="d-flex align-items-center gap-2">
+                                            <select name="locationID" class="form-select form-select-sm">
+                                                @foreach ($location as $loc)
+                                                <option value="{{ $loc->location_id }}" {{ $row->locationID == $loc->location_id ? 'selected' : '' }}>
+                                                    {{ $loc->location }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            <button type="submit" class="btn btn-primary btn-sm" title="Send Lead">
+                                                <i class="fa-solid fa-arrow-up"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    @if(havePermission('enquiry.status'))
+                                    <a href="{{ route('enquiry.status', ['id' => $row->enquiry_Id]) }}" class="btn btn-dark btn-sm d-inline-block" title="View Status">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @endif
+
+                                    @if(havePermission('enquiry.updateStatus'))
+                                    <a href="#" class="btn btn-success btn-sm d-inline-block"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                        data-enquiry_id="{{ $row->enquiry_Id }}"
+                                        data-followup_date="{{ $row->followup_date }}"
+                                        data-status="{{ $row->lead_status }}"
+                                        data-notes="{{ $row->notes }}"
+                                        title="Followup Status">
+                                        <i class="fa-solid fa-user-plus"></i>
+                                    </a>
+                                    @endif
+
+                                    @if(havePermission('enquiry.edit'))
+                                    <a href="{{ route('enquiry.edit', $row->enquiry_Id) }}" class="btn btn-info btn-sm d-inline-block" title="Edit Enquiry">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @endif
+
+                                    @if(havePermission('registration.form') && $row->lead_status == 3)
+                                    <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary text-white btn-sm d-inline-block" title="Convert Lead Into Registration">
+                                        Convert
+                                    </a>
+                                    @endif
+
+                                    @if(havePermission('enquiry.destroy'))
+                                    <button class="btn btn-danger btn-sm delete-registration d-inline-block"
+                                        data-id="{{ $row->id }}"
+                                        data-enquiry_id="{{ $row->enquiry_Id }}"
+                                        title="Delete">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                    @endif
+                                    @else
+                                    <span class="badge bg-success d-inline-block">Converted</span>
+                                    @endif
+                                </div>
+                            </td>
+
 
                         </tr>
                         @endforeach

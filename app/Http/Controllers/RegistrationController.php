@@ -242,7 +242,6 @@ class RegistrationController extends Controller
             // Check and Update Enquiry Status
             if ($request->input('enquiry_id')) {
                 Enquiry::where('id', $request->input('enquiry_id'))->update([
-                    'lead_status' => 3,
                     'is_converted' => '1'
                 ]);
             }
@@ -407,11 +406,31 @@ class RegistrationController extends Controller
     }
 
     // // delete
+    // public function destroy_registration(Request $request)
+    // {
+    //     $data = Registration::where('id', $request->id)->first();
+    //     $data->delete();
+    //     return response()->json(['message' => 'data deleted successfully.']);
+    // }
+
+
     public function destroy_registration(Request $request)
     {
-        $data = Registration::where('id', $request->id)->first();
-        $data->delete();
-        return response()->json(['message' => 'data deleted successfully.']);
+        $registration = Registration::find($request->id);
+        if (!$registration) {
+            return response()->json(['success' => false, 'message' => 'Registration not found.'], 404);
+        }
+        $enquiry = Enquiry::where('mobile', $registration->phone)
+            ->orWhere('mobile', $request->mobile)
+            ->first();
+        if ($enquiry) {
+            $enquiry->update(['is_converted' => 0]);
+        }
+        $registration->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Registration deleted and enquiry updated.',
+        ]);
     }
 
 

@@ -7,6 +7,7 @@ use App\Models\Enquiry;
 use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Unit;
+use App\Models\Room;
 use App\Models\Package;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -21,14 +22,18 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $totalregistration = Registration::count();
-        $activePlayers = Registration::where('status', 0)->count();
+        $activePlayers = Registration::where('status', '0')->count();   // Active Players
+        $inactivePlayers = Registration::where('status', '1')->count(); // Inactive Players
 
         $totallead = Enquiry::count();
         $totalstock = Stock::count();
+        $totalroomtype = Room::count();
         $totalproduct = Product::count();
         $totalCategory = Category::count();
         $data = Product::latest()->get();
         $sdata = Enquiry::with(['leads'])->latest()->get();
+        $convertedLeads = Enquiry::where('is_converted', '1')->count();
+
         $units = Unit::where('status', '0')->orderBy('unit', 'asc')->get();
 
         // Default counts
@@ -68,7 +73,10 @@ class DashboardController extends Controller
             'data',
             'sdata',
             'units',
-            'activePlayers'
+            'inactivePlayers',
+            'activePlayers',
+            'totalroomtype',
+            'convertedLeads'
         ));
     }
 

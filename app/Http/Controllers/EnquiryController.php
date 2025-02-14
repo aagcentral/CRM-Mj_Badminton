@@ -21,7 +21,7 @@ class EnquiryController extends Controller
     public function enquiry_list(Request $request)
     {
         // Initialize the query builder for the Enquiry model
-        $query = Enquiry::with(['leads'])->latest();
+        $query = Enquiry::with(['leads', 'interestedlocation'])->latest();
 
         // Retrieve necessary data for dropdowns
         $leads = LeadSource::where('status', '0')->orderBy('leadsource', 'asc')->get();
@@ -216,6 +216,7 @@ class EnquiryController extends Controller
             'transport' => $request->transport,
             'assigned' => $request->assigned,
             'hostel' => $request->hostel,
+            // 'is_converted' => 1,
             'address' => $request->address,
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
@@ -389,18 +390,13 @@ class EnquiryController extends Controller
     public function moveLocation(Request $request, $id)
     {
         $request->validate([
-            'new_location' => 'required|exists:locations,location_id', // Ensure valid location
+            'locationID' => 'required|exists:locations,location_id', // Validate input
         ]);
 
-        $enquiry = Enquiry::find($id);
-        if (!$enquiry) {
-            return back()->with('fail', 'Enquiry not found!');
-        }
-
-        // Update location
-        $enquiry->interested_branch = $request->new_location;
+        $enquiry = Enquiry::withoutGlobalScope('locationID')->findOrFail($id);
+        $enquiry->locationID = $request->locationID;
         $enquiry->save();
 
-        return back()->withSuccess('Enquiry moved successfully!');
+        return redirect()->back()->with('success', 'Location updated successfully.');
     }
 }

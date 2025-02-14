@@ -46,7 +46,7 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{ Auth::user()->name }}</h6>
-              <p>{{ Auth::user()->Userlocations ? Auth::user()->Userlocations->location : 'No Location' }}</p>
+              <p>{{ Auth::user()->Userlocations ? Auth::user()->Userlocations->location : 'N/A' }}</p>
             </li>
             <li>
               <hr class="dropdown-divider">

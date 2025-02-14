@@ -322,10 +322,20 @@
           </a>
         </li><!-- End  Nav -->
         @endif
+        <!-- read me -->
+        <!-- notification -->
+
+
+
       </ul>
     </li><!-- End Forms Nav -->
     @endif
-
+    <!-- <li class="nav-item">
+      <a class="nav-link @if(Route::currentRouteName() != '') collapsed  @endif" href=" ">
+        <i class="fa-solid fa-bell"></i>
+        <span>README</span>
+      </a>
+    </li> -->
   </ul>
 
 </aside><!-- End Sidebar-->

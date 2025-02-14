@@ -76,6 +76,11 @@ class Enquiry extends Model
         return $this->belongsTo(Location::class, 'locationID');  // locationID is the foreign key in Enquiry
     }
 
+    public function interestedlocation()
+    {
+        return $this->belongsTo(Location::class, 'interested_branch', 'location_id');
+    }
+
 
     // * Boot method for the model.
     //  */
@@ -101,24 +106,42 @@ class Enquiry extends Model
     // }
 
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     // Automatically set 'locationID' when saving or updating
+    //     static::saving(function ($model) {
+    //         // Set locationID to current user's location or a fallback location ('L1')
+    //         $model->locationID = Auth::user()->locationID ?? 'L1';
+    //     });
+
+    //     static::updating(function ($model) {
+    //         // Ensure locationID is set on update as well
+    //         $model->locationID = Auth::user()->locationID ?? 'L1';
+    //     });
+
+    //     // Add global scope to filter by 'locationID'
+    //     static::addGlobalScope('locationID', function (Builder $builder) {
+    //         // Only apply the scope if the user is authenticated
+    //         if (Auth::check()) {
+    //             $builder->where('locationID', Auth::user()->locationID ?? 'L1');
+    //         }
+    //     });
+    // }
     protected static function boot()
     {
         parent::boot();
 
-        // Automatically set 'locationID' when saving or updating
+        // Automatically set 'locationID' when saving (only if it's not explicitly set)
         static::saving(function ($model) {
-            // Set locationID to current user's location or a fallback location ('L1')
-            $model->locationID = Auth::user()->locationID ?? 'L1';
-        });
-
-        static::updating(function ($model) {
-            // Ensure locationID is set on update as well
-            $model->locationID = Auth::user()->locationID ?? 'L1';
+            if (!$model->isDirty('locationID')) { // Only set locationID if it's not manually changed
+                $model->locationID = Auth::user()->locationID ?? 'L1';
+            }
         });
 
         // Add global scope to filter by 'locationID'
         static::addGlobalScope('locationID', function (Builder $builder) {
-            // Only apply the scope if the user is authenticated
             if (Auth::check()) {
                 $builder->where('locationID', Auth::user()->locationID ?? 'L1');
             }

@@ -97,7 +97,7 @@ Route::group(['middleware' => 'AuthLogin'], function () {
             Route::post('delete-enquiry', 'destroy_enquiry')->name('enquiry.destroy');
             Route::get('view-status/{id}', 'view_status')->name('enquiry.status');
             Route::post('enquiry/update-status', 'updateStatus')->name('enquiry.updateStatuss');
-            Route::post('/enquiry/move-location/{id}',  'moveLocation')->name('enquiry.moveLocation');
+            Route::put('/enquiry/{id}/move-location', 'moveLocation')->name('enquiry.moveLocation');
         });
 
         // category-list

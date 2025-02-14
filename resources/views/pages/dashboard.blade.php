@@ -91,10 +91,51 @@
         </div>
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
+                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="fa-regular fa-building"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Converted Leads</span>
+                    <span class="info-box-number"> {{ $convertedLeads }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
                 <span class="info-box-icon text-danger bg-danger bg-opacity-25"><i class="bi bi-person-check"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Total Registration</span>
                     <span class="info-box-number"> {{ $totalregistration }}</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="fa-solid fa-chalkboard-user"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Training Users</span>
+                    <span class="info-box-number"> {{ $trainingProgramCount }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon" style="background-color:rgba(123, 92, 196, 0.46); color: #7c5cc4;"><i class="fa-solid fa-users-line"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Membership</span>
+                    <span class="info-box-number"> {{ $totalproduct }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon text-danger bg-danger bg-opacity-25">
+                    <i class="fa-solid fa-gamepad"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Pay & Play Users</span>
+                    <span class="info-box-number">{{ $payAndPlayCount  }} </span>
                 </div>
             </div>
         </div>
@@ -107,37 +148,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon text-success bg-success bg-opacity-25"><i class="fa-solid fa-users-line"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Total Membership</span>
-                    <span class="info-box-number"> {{ $totalproduct }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="fa-solid fa-chalkboard-user"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Total Training</span>
-                    <span class="info-box-number"> {{ $trainingProgramCount }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 col-12">
-            <div class="info-box">
-                <span class="info-box-icon text-success bg-success bg-opacity-25">
-                    <i class="fa-solid fa-gamepad"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Total Pay & Play</span>
-                    <span class="info-box-number">{{ $payAndPlayCount  }} </span>
-                </div>
-            </div>
-        </div>
-
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon text-warning bg-warning bg-opacity-25"><i class="bi bi-cart "></i></span>
@@ -149,7 +159,7 @@
         </div>
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon text-danger bg-danger bg-opacity-25"><i class="bi bi-tags "></i></span>
+                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="bi bi-tags "></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Total Category</span>
                     <span class="info-box-number"> {{ $totalCategory }}</span>
@@ -158,7 +168,7 @@
         </div>
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon text-danger bg-danger bg-opacity-25"><i class="bi bi-box"></i></span>
+                <span class="info-box-icon text-success bg-success bg-opacity-25"><i class="fa-solid fa-users-viewfinder"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Total Active Players</span>
                     <span class="info-box-number"> {{ $activePlayers }}</span>
@@ -167,13 +177,23 @@
         </div>
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon text-danger bg-danger bg-opacity-25"> <i class="bi bi-people"></i></span>
+                <span class="info-box-icon text-danger bg-danger bg-opacity-25"><i class="fa-solid fa-users-slash"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Total Inctive Players</span>
-                    <span class="info-box-number"> {{ $totalregistration }}</span>
+                    <span class="info-box-number"> {{ $inactivePlayers }}</span>
                 </div>
             </div>
         </div>
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="fa-regular fa-building"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Room Type</span>
+                    <span class="info-box-number"> {{ $totalroomtype }}</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="row mt-3">
@@ -206,9 +226,9 @@
                 </div>
             </div>
         </div>
+
+
     </div>
-
-
 </div>
 @endsection
 <script>
