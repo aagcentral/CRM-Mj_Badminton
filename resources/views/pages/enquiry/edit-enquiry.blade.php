@@ -102,18 +102,7 @@ Edit Enquiry
                                                         <option value="5" @if($edit_enquiry->lead_status=='5') selected @endif>Recycle</option>
                                                     </select>
                                                 </div>
-                                                <label class="control-label col-sm-2"> Assigned to </label>
-                                                <div class="col-sm-4">
-                                                    <select name="assigned" class="form-select">
-                                                        <option value="" disabled selected>Select Users</option>
-                                                        @foreach ($users as $user)
-                                                        <option value="{{ $user->user_id }}"
-                                                            @if (old('user')==$user->user_id) selected @endif>
-                                                            {{ $user->name }}
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Enquiry Date <span class="text-danger">*</span></label>
@@ -137,7 +126,9 @@ Edit Enquiry
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div id="trainingProgramContainer" style="display: none;">
+                                            </div>
+                                            <div id="trainingProgramContainer" style="display: none;">
+                                                <div class="form-group">
                                                     <label class="control-label col-sm-2">Training Program Type </label>
                                                     <div class="col-sm-4">
                                                         <select name="training_program" class="form-select">
@@ -149,8 +140,29 @@ Edit Enquiry
                                                             @endforeach
                                                         </select>
                                                     </div>
+
+                                                    <label class="control-label col-sm-2">Transport</label>
+                                                    <div class="col-md-4">
+                                                        <select class="form-control" name="transport">
+                                                            <option value="" disabled selected>Select Transport</option>
+                                                            <option value="0" @if($edit_enquiry->transport=='0') selected @endif>No</option>
+                                                            <option value="1" @if($edit_enquiry->transport=='1') selected @endif>Yes</option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2">Hostel</label>
+                                                    <div class="col-md-4">
+                                                        <select class="form-control" name="hostel">
+                                                            <option value="" disabled selected>Select Hostel</option>
+                                                            <option value="0" @if($edit_enquiry->hostel=='0') selected @endif>No</option>
+                                                            <option value="1" @if($edit_enquiry->hostel=='1') selected @endif>Yes</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Session </label>
                                                 <div class="col-sm-4">
@@ -201,25 +213,7 @@ Edit Enquiry
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-sm-2">Transport</label>
-                                                <div class="col-md-4">
-                                                    <select class="form-control" name="transport">
-                                                        <option value="" disabled selected>Select Transport</option>
-                                                        <option value="0" @if($edit_enquiry->transport=='0') selected @endif>No</option>
-                                                        <option value="1" @if($edit_enquiry->transport=='1') selected @endif>Yes</option>
 
-                                                    </select>
-                                                </div>
-                                                <label class="control-label col-sm-2">Hostel</label>
-                                                <div class="col-md-4">
-                                                    <select class="form-control" name="hostel">
-                                                        <option value="" disabled selected>Select Hostel</option>
-                                                        <option value="0" @if($edit_enquiry->hostel=='0') selected @endif>No</option>
-                                                        <option value="1" @if($edit_enquiry->hostel=='1') selected @endif>Yes</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Address</label>
                                                 <div class="col-md-4">

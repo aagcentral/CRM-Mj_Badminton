@@ -81,6 +81,12 @@ class DashboardController extends Controller
     }
 
 
+
+    public function crmdocuments()
+    {
+        return view('pages.documentation');
+    }
+
     public function loguots(Request $request)
     {
         Auth::logout();

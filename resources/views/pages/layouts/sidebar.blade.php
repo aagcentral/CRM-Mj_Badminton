@@ -325,17 +325,17 @@
         <!-- read me -->
         <!-- notification -->
 
-
-
       </ul>
     </li><!-- End Forms Nav -->
     @endif
-    <!-- <li class="nav-item">
-      <a class="nav-link @if(Route::currentRouteName() != '') collapsed  @endif" href=" ">
+    @if(havePermission('document'))
+    <li class="nav-item">
+      <a class="nav-link @if(Route::currentRouteName() != 'document') collapsed  @endif" href="{{ route('document') }}">
         <i class="fa-solid fa-bell"></i>
         <span>README</span>
       </a>
-    </li> -->
+    </li>
+    @endif
   </ul>
 
 </aside><!-- End Sidebar-->

@@ -106,7 +106,7 @@ for ($i = 1; $i <= 12; $i++) {
                         </div>
                         <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
-                                <select id="leadStatus" name="lead_status" class="form-select form-control">
+                                <select id="leadStatus" name="hostel" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Hostel</option>
                                     <option value="0" @if(request()->get('hostel') === '0') selected @endif>No</option>
                                     <option value="1" @if(request()->get('hostel') === '1') selected @endif>Yes</option>
@@ -136,7 +136,7 @@ for ($i = 1; $i <= 12; $i++) {
                             </div>
                         </div>
                         <!-- Filter by Payment Status -->
-                        <!-- <div class="col-lg-3 col-sm-12">
+                        <div class="col-lg-3 col-sm-12">
                             <div class="form-group mb-3">
                                 <select id="leadStatus" name="lead_status" class="form-select form-control">
                                     <option value="" disabled selected>Filter by Lead Status</option>
@@ -148,7 +148,7 @@ for ($i = 1; $i <= 12; $i++) {
                                     <option value="5" @if(request()->get('lead_status') === '5') selected @endif>Recycle</option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
 
 
                         <div class="d-flex gap-2 justify-content-end">
@@ -185,27 +185,20 @@ for ($i = 1; $i <= 12; $i++) {
                             <th>{{ $loop->iteration }}</th>
                             <td>
                                 <strong>Name:</strong> {{ $row->name }}<br>
-                                <!-- <strong>Enquiry_Id:</strong> {{ $row->enquiry_Id }}<br> -->
-                                <!-- <strong>Email:</strong> {{ $row->email }}<br> -->
                                 <strong>Phone:</strong> {{ $row->mobile }}<br>
                                 <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
-                                <!-- <strong>Lead Source:</strong> {{ $row->leads!=null ? $row->leads->leadsource : '' }} <br> -->
+                                <strong>Transport:</strong> <span> {{ $row->transport == '0' ? 'No' : ($row->transport == '1' ? 'Yes' : 'N/A') }} </span><br>
+                                <strong>Hostel:</strong> <span> {{ $row->hostel == '0' ? 'No' : ($row->hostel == '1' ? 'Yes' : 'N/A') }} </span>
+                                <br>
                             </td>
-
-                            <!-- <td>
-                                <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
-                                <strong>Session:</strong> {{ $row->sesion!=null ? $row->sesion->session : '' }} <br>
-                                <strong>Time Slot:</strong> {{ $row->Time!=null ? $row->Time->time_slot : '' }}<br>
-                                <strong>Training Program:</strong> {{ $row->TrainedP!=null ? $row->TrainedP->add_program : '' }}
-                            </td> -->
 
                             <td>
                                 <strong>Enquiry Date:</strong> {{ \Carbon\Carbon::parse($row->enquiry_date)->format('d/m/y') }}<br>
                                 <strong>Followup Date:</strong> {{ \Carbon\Carbon::parse($row->followup_date)->format('d/m/y') }}<br>
 
                                 <strong>Lead Status:</strong>
-                                <span class="badge 
-                                {{ $row->lead_status == '0' ? 'bg-primary' : 
+                                <span class=" badge
+                                    {{ $row->lead_status == '0' ? 'bg-primary' : 
                                 ($row->lead_status == '1' ? 'bg-info' : 
                                 ($row->lead_status == '2' ? 'bg-warning' : 
                                 ($row->lead_status == '3' ? 'bg-success' : 
@@ -220,7 +213,7 @@ for ($i = 1; $i <= 12; $i++) {
                                 <br>
                                 <strong>Interested Branch: </strong>{{ $row->interestedlocation ? $row->interestedlocation->location : 'N/A' }}
                             </td>
-                            <td style="max-width: 150px; overflow: auto; white-space: normal;">
+                            <td style="max-width: 100px; overflow: auto; white-space: normal;">
                                 <div style="max-height: 100px; overflow-y: auto;">
                                     {{ $row->notes }}
                                 </div>
@@ -278,11 +271,9 @@ for ($i = 1; $i <= 12; $i++) {
                                     @endif
 
                                     @if(havePermission('enquiry.destroy'))
-                                    <button class="btn btn-danger btn-sm delete-registration d-inline-block"
-                                        data-id="{{ $row->id }}"
-                                        data-enquiry_id="{{ $row->enquiry_Id }}"
-                                        title="Delete">
-                                        <i class="fa-solid fa-trash"></i>
+                                    <!-- <button class="btn btn-default text-danger btn-sm px-2 delete-enquiry" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button> -->
+                                    <button class="btn btn-danger btn-sm delete-enquiry d-inline-block"
+                                        data-id="{{ $row->id }}" title="Delete"> <i class="fa-solid fa-trash"></i>
                                     </button>
                                     @endif
                                     @else

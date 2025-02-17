@@ -188,7 +188,7 @@ Registration
                                             <div class="form-group">
                                                 <label class="control-label col-sm-4">Address</label>
                                                 <div class="col-sm-8">
-                                                    <textarea type="text" class="form-control" rows="3" name="address" value="{{ old('address') }}"></textarea>
+                                                    <textarea class="form-control" rows="3" name="address">{{ old('address', $enquiry->address ?? '') }}</textarea>
                                                 </div>
 
                                             </div>
@@ -300,12 +300,13 @@ Registration
                                                 <label class="control-label col-sm-2">Hostel Allotment</label>
                                                 <div class="col-sm-10">
                                                     <select class="form-select form-control" name="room_allotment" id="room_allotment">
-                                                        <option value="" disabled selected>Select Allotment</option>
-                                                        <option value="0" {{ old('room_allotment') == '0' ? 'selected' : '' }}>Yes</option>
-                                                        <option value="1" {{ old('room_allotment') == '1' ? 'selected' : '' }}>No</option>
+                                                        <option value="" disabled>Select Allotment</option>
+                                                        <option value="0" {{ old('room_allotment', $enquiry->room_allotment ?? '') == '0' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="1" {{ old('room_allotment', $enquiry->room_allotment ?? '') == '1' ? 'selected' : '' }}>No</option>
                                                     </select>
                                                 </div>
                                             </div>
+
 
                                             <div class="" id="room_type_container" style="display: none;">
                                                 <div class="form-group">
@@ -479,7 +480,7 @@ Registration
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2">Notes </label>
                                                 <div class="col-sm-10">
-                                                    <textarea type="text" class="form-control" name="payment_notes" value="{{ old('payment_notes') }}"> </textarea>
+                                                    <textarea type="text" class="form-control" name="payment_notes">{{ old('payment_notes', $enquiry->payment_notes ?? '') }} </textarea>
                                                 </div>
                                             </div>
 

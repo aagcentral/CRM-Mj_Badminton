@@ -50,6 +50,7 @@ Route::group(['middleware' => 'AuthLogin'], function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('panel.dashboard');
     Route::get('/signout', [AuthController::class, 'logout'])->name('sign.out');
     Route::post('/update-location', [AuthController::class, 'update_location'])->name('update.user.location');
+    Route::get('documentation', [DashboardController::class, 'crmdocuments'])->name('document');
 
     Route::group(['prefix' => 'user'], function () {
         Route::get('', [UserController::class, 'index'])->name('user.list');

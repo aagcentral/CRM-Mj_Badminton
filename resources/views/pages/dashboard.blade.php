@@ -139,7 +139,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-12">
+        <!-- <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon text-info bg-info bg-opacity-25"><i class="bi bi-box"></i></span>
                 <div class="info-box-content">
@@ -147,7 +147,7 @@
                     <span class="info-box-number"> {{ $totalproduct }}</span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon text-warning bg-warning bg-opacity-25"><i class="bi bi-cart "></i></span>
@@ -157,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 col-12">
+        <!-- <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="bi bi-tags "></i></span>
                 <div class="info-box-content">
@@ -165,7 +165,7 @@
                     <span class="info-box-number"> {{ $totalCategory }}</span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon text-success bg-success bg-opacity-25"><i class="fa-solid fa-users-viewfinder"></i></span>

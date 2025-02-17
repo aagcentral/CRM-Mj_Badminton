@@ -97,19 +97,7 @@ Enquiry
                                                     <option value="5" @if (old('lead_status')==5) selected @endif>Recycle</option>
                                                 </select>
                                             </div>
-                                            <!-- <label class="control-label col-sm-2"> Assigned to </label>
-                                            <div class="col-sm-4">
-                                                <select name="assigned" class="form-select">
-                                                    <option value="" disabled selected>Select Category</option>
-                                                    @foreach ($users as $user)
-                                                    <option value="{{ $user->package_id }}"
-                                                        @if (old('user')==$user->package_id) selected @endif>
-                                                        {{ $user->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select> -->
-                                            <!-- <input type="text" class="form-control quantity" name="assigned" value="{{ old('assigned') }}" placeholder="Enter Name"> -->
-                                            <!-- </div> -->
+
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2">Enquiry Date <span class="text-danger">*</span></label>
@@ -123,7 +111,7 @@ Enquiry
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-sm-2">Category </label>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-10">
                                                 <select name="package" id="package" class="form-select">
                                                     <option value="" disabled selected>Select Category</option>
                                                     @foreach ($Packages as $Packag)
@@ -134,7 +122,9 @@ Enquiry
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div id="trainingProgramContainer" style="display: none;">
+                                        </div>
+                                        <div id="trainingProgramContainer" style="display: none;">
+                                            <div class="form-group">
                                                 <label class="control-label col-sm-2">Training Program Type </label>
                                                 <div class="col-sm-4">
                                                     <select name="training_program" class="form-select">
@@ -147,8 +137,31 @@ Enquiry
                                                         @endforeach
                                                     </select>
                                                 </div>
+
+
+                                                <label class="control-label col-sm-2">Transport</label>
+                                                <div class="col-md-4">
+                                                    <select class="form-control" name="transport">
+                                                        <option value="" disabled @if (old('transport')===null) selected @endif>Select Transport</option>
+                                                        <option value="0" @if (old('transport')=='0' ) selected @endif>No</option>
+                                                        <option value="1" @if (old('transport')=='1' ) selected @endif>Yes</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2">Hostel</label>
+                                                <div class="col-md-4">
+                                                    <select class="form-control" name="hostel">
+                                                        <option value="" disabled @if (old('hostel')===null) selected @endif>Select Hostel</option>
+                                                        <option value="0" @if (old('hostel')==='0' ) selected @endif>No</option>
+                                                        <option value="1" @if (old('hostel')==='1' ) selected @endif>Yes</option>
+                                                    </select>
+                                                </div>
+
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <label class="control-label col-sm-2">Session </label>
                                             <div class="col-sm-4">
@@ -203,24 +216,8 @@ Enquiry
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Transport</label>
-                                            <div class="col-md-4">
-                                                <select class="form-control" name="transport">
-                                                    <option value="" disabled selected>Select Transport</option>
-                                                    <option value="0" @if (old('transport')==0) selected @endif>No</option>
-                                                    <option value="1" @if (old('transport')==1) selected @endif>Yes</option>
-                                                </select>
-                                            </div>
-                                            <label class="control-label col-sm-2">Hostel</label>
-                                            <div class="col-md-4">
-                                                <select class="form-control" name="hostel">
-                                                    <option value="" disabled selected>Select Hostel</option>
-                                                    <option value="0" @if (old('hostel')==0) selected @endif>No</option>
-                                                    <option value="1" @if (old('hostel')==1) selected @endif>Yes</option>
-                                                </select>
-                                            </div>
-                                        </div>
+
+
                                         <div class="form-group">
                                             <label class="control-label col-sm-2">Address</label>
                                             <div class="col-md-4">
