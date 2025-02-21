@@ -236,6 +236,9 @@ Route::group(['middleware' => 'AuthLogin'], function () {
             Route::post('updateuserpackage', 'updateuser_package')->name('registration.updateuserpackage');
             // update status
             Route::post('updateuserstatus',  'updateuser_status')->name('registration.updateuserstatus');
+            // submit fee
+            Route::get('feesubmission/{registration_no}', 'fee_submission')->name('registration.fees');
+            Route::post('update-feesubmission', 'update_feesubmission')->name('registration.update.feesubmission');
         });
 
 

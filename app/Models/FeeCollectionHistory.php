@@ -2,22 +2,15 @@
 
 namespace App\Models;
 
-use Auth;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
-use Carbon\Carbon;
+use Auth;
 
-class PaymentDetails extends Model
+class FeeCollectionHistory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'payment_id',
         'registration_no',
-        'registration_fees',
         'transport_fees',
         'program_fee',
         'rooms_fees',
@@ -29,29 +22,15 @@ class PaymentDetails extends Model
         'payment_method',
         'payment_status',
         'payment_notes',
-        'discount',
         'total_amt',
         'submitted_amt',
         'pending_amt',
         'locationID',
         'date',
-        'status',
     ];
 
 
-    public function paymentmodule(): belongsTo
-    {
-        return $this->belongsTo(PaymentModule::class, 'payment_module', 'module_id');
-    }
 
-    public function registration()
-    {
-        return $this->belongsTo(Registration::class, 'registration_no', 'registration_no');
-    }
-
-
-    // * Boot method for the model.
-    //  */
     protected static function boot()
     {
         parent::boot();

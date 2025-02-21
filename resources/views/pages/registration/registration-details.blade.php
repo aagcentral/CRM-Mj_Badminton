@@ -101,7 +101,7 @@ Profile
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings" aria-selected="false" tabindex="-1" role="tab">Hostel Details</button>
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings" aria-selected="false" tabindex="-1" role="tab">Hostel & Transport Details</button>
                             </li>
 
                             <li class="nav-item" role="presentation">
@@ -167,7 +167,7 @@ Profile
                                 <div class="col-md-12 col-sm-12 m-auto">
                                     <div class="card">
                                         <div class="card-body">
-                                            <table id="example1" class="table dataTable table-hover">
+                                            <table id="categorytable" class="table dataTable table-hover">
                                                 <thead>
                                                     <tr class="">
                                                         <th>Category</th>
@@ -197,33 +197,29 @@ Profile
                             </div>
 
                             <div class="tab-pane fade pt-3" id="profile-settings" role="tabpanel">
-
-
-                                <div class="row mb-2">
-                                    <div class="col-lg-3 col-md-4 label ">Hostel Allotment</div>
-                                    <div class="col-lg-9 col-md-8">
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Hostel Allotment</div>
+                                    <div class="col-lg-3 col-md-8">
                                         @if($viewdata->room_allotment === '0') Yes
                                         @elseif($viewdata->room_allotment === '1') No
                                         @else N/A
                                         @endif
                                     </div>
-                                </div>
-
-
-                                <div class="row mb-2">
-                                    <div class="col-lg-3 col-md-4 label">Room Type</div>
-                                    <div class="col-lg-9 col-md-8">{{ $viewdata->rooms!=null ? $viewdata->rooms->room_type : 'N/A' }} </div>
-                                </div>
-                                <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Room Fee</div>
-                                    <div class="col-lg-9 col-md-8">
+                                    <div class="col-lg-3 col-md-8">
                                         {!! $viewpayment->rooms_fees ?? '<span class="text-danger">N/A</span>' !!}
                                     </div>
 
+
                                 </div>
-                                <div class="row mb-2">
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Room Type</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewdata->rooms!=null ? $viewdata->rooms->room_type : 'N/A' }}
+                                    </div>
                                     <div class="col-lg-3 col-md-4 label">Meal Subscription</div>
-                                    <div class="col-lg-9 col-md-8">
+                                    <div class="col-lg-3 col-md-8">
                                         @if($viewdata->meal_subscription === '0') Yes
                                         @elseif($viewdata->meal_subscription === '1') No
                                         @else N/A
@@ -231,32 +227,48 @@ Profile
 
                                     </div>
                                 </div>
-                                <div class="row mb-2">
+                                <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Meal Type</div>
-                                    <div class="col-lg-9 col-md-8">{{ $viewdata->meals!=null ? $viewdata->meals->meal_type : 'N/A' }} </div>
-                                </div>
-                                <div class="row mb-2">
+                                    <div class="col-lg-3 col-md-8">{{ $viewdata->meals!=null ? $viewdata->meals->meal_type : 'N/A' }} </div>
+
                                     <div class="col-lg-3 col-md-4 label">Meal Fee</div>
-                                    <div class="col-lg-9 col-md-8">
+                                    <div class="col-lg-3 col-md-8">
                                         {!! $viewpayment->meals_fees ?? '<span class="text-danger">N/A</span>' !!}
                                     </div>
 
                                 </div>
-                                <div class="row mb-2">
+                                <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Checking Date</div>
-                                    <div class="col-lg-9 col-md-8">
+                                    <div class="col-lg-3 col-md-8">
                                         {{ $viewdata->checking_date ?? 'N/A' }}
                                     </div>
-                                </div>
 
-                                <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Checkout Date</div>
-                                    <div class="col-lg-9 col-md-8">
+                                    <div class="col-lg-3 col-md-8">
 
                                         {{ $viewdata->checkout_date ?? 'N/A' }}
                                     </div>
                                 </div>
+                                <div class="row mb-2">
+                                    <div class="col-lg-3 col-md-4 label ">Transport Allotment</div>
+                                    <div class="col-lg-9 col-md-8">
+                                        @if($viewdata->transport === '0') No
+                                        @elseif($viewdata->transport === '1') Yes
+                                        @else N/A
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Start Date</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewdata->start_date ?? 'N/A' }}
+                                    </div>
 
+                                    <div class="col-lg-3 col-md-4 label">End Date</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewdata->end_date ?? 'N/A' }}
+                                    </div>
+                                </div>
                                 <div class="row mb-2">
                                     <div class="col-lg-3 col-md-4 label">Notes</div>
                                     <div class="col-lg-9 col-md-8">{{$viewdata->notes ?? 'N/A'}}</div>
@@ -307,6 +319,38 @@ Profile
                                         {{ $viewpayment?->program_fee ?? 'N/A' }}
                                     </div>
                                 </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Payment Date</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewdata->payment_date ?? 'N/A' }}
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 label">Transport Fee</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewpayment?->transport_fees ?? 'N/A' }}
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">Next Payment Date</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewdata->upcoming_date ?? 'N/A' }}
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 label">Hostel Fee</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewpayment?->rooms_fees ?? 'N/A' }}
+                                    </div>
+                                </div>
+
+
+                                <div class="row mb-3">
+                                    <div class="col-lg-3 col-md-4 label">UTR No</div>
+                                    <div class="col-lg-3 col-md-8">{{$viewpayment->utr_no ?? 'N/A' }} </div>
+                                    <div class="col-lg-3 col-md-4 label">Meal Fee</div>
+                                    <div class="col-lg-3 col-md-8">
+                                        {{ $viewpayment?->meals_fees ?? 'N/A' }}
+                                    </div>
+                                </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Payment Module</div>
                                     <div class="col-lg-3 col-md-8"> {{$viewpayment->paymentmodule!=null ? $viewpayment->paymentmodule->module : 'N/A' }}</div>
@@ -315,26 +359,6 @@ Profile
                                         {{ $viewpayment?->total_amt ?? 'N/A' }}
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-3 col-md-4 label">Payment Date</div>
-                                    <div class="col-lg-9 col-md-8">
-                                        {{ $viewdata->payment_date ?? 'N/A' }}
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-lg-3 col-md-4 label">Next Payment Date</div>
-                                    <div class="col-lg-9 col-md-8">
-                                        {{ $viewdata->upcoming_date ?? 'N/A' }}
-                                    </div>
-                                </div>
-
-
-                                <div class="row mb-3">
-                                    <div class="col-lg-3 col-md-4 label">UTR No</div>
-                                    <div class="col-lg-9 col-md-8">{{$viewpayment->utr_no ?? 'N/A' }} </div>
-                                </div>
-
                                 <div class="row mb-3">
                                     <div class="col-lg-3 col-md-4 label">Notes</div>
                                     <div class="col-lg-9 col-md-8">{{$viewpayment->payment_notes ?? 'N/A' }} </div>
@@ -345,13 +369,14 @@ Profile
                 </div>
             </div>
         </div>
+
         <div class="row mt-4">
 
             <div class="col-md-12 col-sm-12 m-auto">
                 <div class="card">
-                    <div class="card-header">
+                    <!-- <div class="card-header">
                         <h6 class="mt-2 text-dark">Player Payment Activity</h6>
-                    </div>
+                    </div> -->
                     <div class="card-body">
                         <table id="example1" class="table dataTable table-hover">
                             <thead>

@@ -234,7 +234,6 @@ for ($i = 1; $i <= 12; $i++) {
 
 
                         <td>
-
                             <div class="mt-4 text-center">
                                 <!-- active and inactive show hide buttons -->
                                 @if($row->status == 0)
@@ -285,17 +284,25 @@ for ($i = 1; $i <= 12; $i++) {
                                     <i class="fa-solid fa-recycle"></i>
                                 </a>
                                 @endif
-                                @endif
-                                <!-- End if status is 0  -->
-                                <!-- this button for active and inactive -->
-                                <a href="#" class="btn btn-sm small 
-                                {{ trim(strtolower($row->status)) == '0' ? 'btn-success' : 'btn-danger' }}"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#statusModal"
-                                    data-reg-id="{{ $row->registration_no }}"
-                                    data-status="{{ $row->status ?? '' }}" title="User Status">
-                                    {{ trim(strtolower($row->status)) == '0' ? 'Active' : 'Inactive' }}
-                                </a>
+                                @if(havePermission('registration.fees') &&
+                                (!havePermission('registration.updatePayment') || !isset($row->PaymentDetail) || $row->PaymentDetail->pending_amt <= 0))
+                                    <a href="{{ route('registration.fees', $row->registration_no) }}" class="btn btn-primary btn-sm small px-2" title="Submit Fee">
+                                    <i class="fa-solid fa-sack-dollar"></i>
+                                    </a>
+                                    @endif
+
+
+                                    @endif
+                                    <!-- End if status is 0  -->
+                                    <!-- this button for active and inactive -->
+                                    <a href="#" class="btn btn-sm small {{ trim(strtolower($row->status)) == '0' ? 'btn-success' : 'btn-danger' }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#statusModal"
+                                        data-reg-id="{{ $row->registration_no }}"
+                                        data-status="{{ $row->status ?? '' }}" title="User Status">
+                                        {{ trim(strtolower($row->status)) == '0' ? 'Active' : 'Inactive' }}
+                                    </a>
+
                             </div>
                         </td>
                     </tr>

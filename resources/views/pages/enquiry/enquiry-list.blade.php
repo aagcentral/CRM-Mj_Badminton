@@ -263,6 +263,12 @@ for ($i = 1; $i <= 12; $i++) {
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @endif
+                                    @if(havePermission('enquiry.destroy'))
+                                    <!-- <button class="btn btn-default text-danger btn-sm px-2 delete-enquiry" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button> -->
+                                    <button class="btn btn-danger btn-sm delete-enquiry d-inline-block"
+                                        data-id="{{ $row->id }}" title="Delete"> <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                    @endif
 
                                     @if(havePermission('registration.form') && $row->lead_status == 3)
                                     <a href="{{ route('registration.form', $row->id) }}" class="btn bg-primary text-white btn-sm d-inline-block" title="Convert Lead Into Registration">
@@ -270,12 +276,7 @@ for ($i = 1; $i <= 12; $i++) {
                                     </a>
                                     @endif
 
-                                    @if(havePermission('enquiry.destroy'))
-                                    <!-- <button class="btn btn-default text-danger btn-sm px-2 delete-enquiry" data-id="{{ $row->id }}"><i class="fa-solid fa-trash"></i> </button> -->
-                                    <button class="btn btn-danger btn-sm delete-enquiry d-inline-block"
-                                        data-id="{{ $row->id }}" title="Delete"> <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                    @endif
+
                                     @else
                                     <span class="badge bg-success d-inline-block">Converted</span>
                                     @endif

@@ -70,18 +70,19 @@ Enquiry
                                         <div class="form-group">
                                             <label class="control-label col-sm-2"> Name <span class="text-danger">*</span></label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control quantity" name="name" value="{{ old('name') }}" placeholder="Enter Name">
+                                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter Name">
                                             </div>
                                             <label class="control-label col-sm-2">Phone Number <span class="text-danger">*</span></label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control quantity" name="mobile" value="{{ old('mobile') }}" placeholder="Enter Phone No.">
+                                                <input type="text" class="form-control" name="mobile" value="{{ old('mobile') }}" placeholder="Enter Phone No." required
+                                                    pattern="[6-9]{1}[0-9]{9}" maxlength="10">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="control-label col-sm-2">Email </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control quantity" name="email" value="{{ old('email') }}" placeholder="Enter Email">
+                                                <input type="text" class="form-control" name="email" value="{{ old('email') }}" placeholder="Enter Email">
                                             </div>
                                         </div>
                                         <div class="form-group">

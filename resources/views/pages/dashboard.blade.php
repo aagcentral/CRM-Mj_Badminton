@@ -91,7 +91,7 @@
         </div>
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
-                <span class="info-box-icon text-primary bg-primary bg-opacity-25"><i class="fa-regular fa-building"></i></span>
+                <span class="info-box-icon text-info bg-info bg-opacity-25"><i class="fa-solid fa-users-gear"></i></span>
                 <div class="info-box-content">
                     <span class="info-box-text">Total Converted Leads</span>
                     <span class="info-box-number"> {{ $convertedLeads }}</span>

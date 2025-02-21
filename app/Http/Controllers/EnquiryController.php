@@ -51,13 +51,13 @@ class EnquiryController extends Controller
 
         // Filter by Follow-up Date (exact date)
         if ($request->has('followup_date') && !is_null($request->followup_date)) {
-            $followupDate = $request->followup_date;  // Get the selected follow-up date
+            $followupDate = $request->followup_date;
             $query->whereDate('followup_date', '=', $followupDate);
         }
         // Filter by Follow-up Date (Range)
         if ($request->has('from_date') && $request->has('to_date') && !is_null($request->from_date) && !is_null($request->to_date)) {
-            $fromDate = $request->from_date; // Start Date (e.g., 2024-01-25)
-            $toDate = $request->to_date;     // End Date (e.g., 2024-01-28)
+            $fromDate = $request->from_date;
+            $toDate = $request->to_date;
 
             $query->whereBetween('followup_date', [$fromDate, $toDate]);
         }
@@ -109,65 +109,7 @@ class EnquiryController extends Controller
         return $lastNumber;
     }
 
-
-
-    // Add
-    // public function add_enquiry(Request $request)
-    // {
-    //     // Validate the incoming request
-    //     $data = $request->validate([
-    //         'name' => 'required',
-    //         'mobile' => 'required|mobile|unique:enquiries,mobile',
-    //         'enquiry_date' => 'required',
-    //         'followup_date' => 'required',
-    //         'lead_status' => 'required',
-
-    //     ], [
-    //         'mobile.unique' => 'This Phone Number is already registered. Please use a different one.',
-    //     ]);
-    //     // Dynamically get the current user's locationID
-    //     $locationID = Auth::user()->locationID ?? 'Default';
-
-    //     // Generate the enquiry ID with the locationID, current date, and sequence number
-    //     $datePart = date('dmy');
-    //     $nextNumber = str_pad(($this->enquiry() + 1), 3, '0', STR_PAD_LEFT);
-    //     $enquiry_Id = 'ENQID' . strtoupper($locationID) . $datePart . $nextNumber;
-
-    //     // convert camel case
-    //     $name = ucwords(strtolower($request->name));
-
-    //     // Save the data
-    //     $save = Enquiry::create([
-    //         'enquiry_Id' =>  $enquiry_Id,
-    //         'name' => $name,
-    //         'email' => $request->email,
-    //         'mobile' => $request->mobile,
-    //         'lead_source' => $request->lead_source,
-    //         'package' => $request->package,
-    //         'training_program' => $request->training_program,
-    //         'session' => $request->session,
-    //         'time_slot' => $request->time_slot,
-    //         'enquiry_date' => $request->enquiry_date,
-    //         'followup_date' => $request->followup_date,
-    //         'lead_status' => $request->lead_status,
-    //         'interested_branch' => $request->interested_branch,
-    //         'address' => $request->address,
-    //         'notes' => $request->notes,
-    //         'date' => date('Y-m-d H:i:s'),
-    //         'status' =>  $request->status == "active" ? '0' : '1',
-    //         'locationID' => $locationID,
-    //     ]);
-
-    //     if ($save) {
-    //         // Track the lead status
-    //         $this->lead_status_tracker($enquiry_Id, $request->lead_status, $request->notes);
-    //         // Return success message
-    //         return back()->with('success', 'Enquiry  Added Successfully');
-    //     } else {
-    //         // Handle the case where saving the enquiry fails
-    //         return back()->with('fail', 'Something Went Wrong, Try again');
-    //     }
-    // }
+    //  add
     public function add_enquiry(Request $request)
     {
         // Validate the incoming request
@@ -175,7 +117,7 @@ class EnquiryController extends Controller
             'name' => 'required',
             'mobile' => [
                 'required',
-                'regex:/^[6-9]\d{9}$/', // Indian mobile number validation
+                'regex:/^[6-9]\d{9}$/',
                 'unique:enquiries,mobile'
             ],
             'enquiry_date' => 'required|date',
@@ -214,13 +156,11 @@ class EnquiryController extends Controller
             'lead_status' => $request->lead_status,
             'interested_branch' => $request->interested_branch,
             'transport' => $request->transport,
-            // 'assigned' => $request->assigned,
             'hostel' => $request->hostel,
             // 'is_converted' => 1,
             'address' => $request->address,
             'notes' => $request->notes,
             'date' => date('Y-m-d H:i:s'),
-            // 'status' =>  $request->status == "active" ? '0' : '1',
             'locationID' => $locationID,
         ]);
 
@@ -386,7 +326,7 @@ class EnquiryController extends Controller
 
 
 
-    // move
+    // share location
     public function moveLocation(Request $request, $id)
     {
         $request->validate([

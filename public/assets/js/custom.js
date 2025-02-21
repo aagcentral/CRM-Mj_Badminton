@@ -125,3 +125,76 @@ $(document).ready(function() {
     ]
   });
 });
+
+$(document).ready(function() {
+  $("#categorytable").DataTable({
+    responsive: true,
+    lengthChange: false,
+    autoWidth: false,
+    ordering: true,
+    paging: true,
+    searching: true,
+    info: true,
+    dom:
+      '<"row"<"col-12 d-flex flex-column flex-sm-row justify-content-between"lBf>>' +
+      '<"row"<"col-12"tr>>' +
+      '<"row"<"col-12 col-md-5"i><"col-12 col-md-7"p>>',
+    buttons: [
+      {
+        extend: "copy",
+        text: '<i class="fa fa-copy" style="color: #007bff;"></i>'
+      },
+      {
+        extend: "csv",
+        text: '<i class="fa fa-file-csv" style="color: #ff8800;"></i>'
+      },
+      {
+        extend: "excel",
+        text: '<i class="fa fa-file-excel" style="color: #28a745;"></i>'
+      },
+      {
+        extend: "pdf",
+        text: '<i class="fa fa-file-pdf" style="color: #dc3545;"></i>',
+        exportOptions: {
+          columns: ":not(.no-print)"
+        },
+        customize: function(doc) {
+          doc.content[1].table.body.forEach(row => {
+            row.forEach((cell, i) => {
+              if (
+                cell.styles &&
+                cell.styles.className &&
+                cell.styles.className.includes("no-print")
+              ) {
+                cell.visible = false;
+              }
+            });
+          });
+        }
+      },
+      {
+        extend: "print",
+        text: '<i class="fa fa-print" style="color: #17a2b8;"></i>',
+        exportOptions: {
+          columns: ":not(.no-print)"
+        },
+        customize: function(win) {
+          $(win.document.body)
+            .find("th.no-print, td.no-print")
+            .css("display", "none");
+        }
+      },
+      {
+        extend: "colvis",
+        text: '<i class="fa fa-eye" style="color: #6c757d;"></i>'
+      }
+    ],
+    columnDefs: [
+      {
+        targets: -1,
+        className: "no-print",
+        orderable: false
+      }
+    ]
+  });
+});

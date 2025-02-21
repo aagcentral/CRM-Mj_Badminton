@@ -13,6 +13,7 @@ use App\Models\Psession;
 use App\Models\PackageUpdateTrack;
 use App\Models\PaymentDetails;
 use App\Models\RegisterStatusTracker;
+use App\Models\FeeCollectionHistory;
 use App\Models\Meal;
 use App\Models\Room;
 use App\Models\User;
@@ -122,7 +123,7 @@ class RegistrationController extends Controller
     {
         // Validation
         $request->validate([
-            'enquiry_id' => 'required|exists:enquiries,id',
+            // 'enquiry_id' => 'required|exists:enquiries,id',
             'name' => 'required|string|max:255',
             'father' => 'required|string|max:255',
             'phone' => 'required|digits:10',
@@ -134,7 +135,8 @@ class RegistrationController extends Controller
             'payment_status' => 'required',
             'payment_method' => 'required',
             'registration_fees' => 'required|numeric|min:0',
-            'submitted_amt' => 'required|numeric|min:0',
+            'total_amt' => 'required|numeric|min:0',
+            'submitted_amt' => 'required|numeric|min:0|lte:total_amt',
             'image' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ], [
             'email.unique' => 'This email address is already registered. Please use a different one.',
@@ -145,10 +147,7 @@ class RegistrationController extends Controller
         try {
             DB::beginTransaction();
 
-            // Check and Update Enquiry Status
-            // if ($request->input('enquiry_id')) {
-            //     Enquiry::where('id', $request->input('enquiry_id'))->update(['lead_status' => 3]);
-            // }
+
             $locationID = Auth::user()->locationID ?? 'DEFAULT';
             // Lock the table to prevent duplicate registration numbers
             $lastNumber = Registration::where('locationID', $locationID)
@@ -201,7 +200,10 @@ class RegistrationController extends Controller
                 'session' => $request->input('session'),
                 'time_slot' => $request->input('time_slot'),
                 'lead_source' => $request->input('lead_source'),
-                'registration_fee' => $request->input('registration_fees'),
+                'transport' => $request->input('transport'),
+                'start_date' => $request->input('start_date'),
+                'end_date' => $request->input('end_date'),
+                // 'registration_fee' => $request->input('registration_fees'),
                 'room_allotment' => $request->input('room_allotment'),
                 'room_type' => $request->input('room_type'),
                 'meal_subscription' => $request->input('meal_subscription'),
@@ -220,6 +222,7 @@ class RegistrationController extends Controller
                 'payment_id' => $newPaymentID,
                 'registration_no' => $newRegistrationNo,
                 'registration_fees' => $request->input('registration_fees'),
+                'transport_fees' => $request->input('transport_fees'),
                 'program_fee' => $request->input('program_fee'),
                 'rooms_fees' => $request->input('rooms_fees'),
                 'meals_fees' => $request->input('meals_fees'),
@@ -245,6 +248,29 @@ class RegistrationController extends Controller
                     'is_converted' => '1'
                 ]);
             }
+            // Save fee Details histry
+            $trackfeesData = [
+                'registration_no' => $newRegistrationNo,
+                'transport_fees' => $request->input('transport_fees'),
+                'program_fee' => $request->input('program_fee'),
+                'rooms_fees' => $request->input('rooms_fees'),
+                'meals_fees' => $request->input('meals_fees'),
+                'utr_no' => $request->input('utr_no'),
+                'payment_module' => $request->input('payment_module'),
+                'payment_date' => $request->input('payment_date'),
+                'upcoming_date' => $request->input('upcoming_date'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_status' => $request->input('payment_status'),
+                'payment_notes' => $request->input('payment_notes'),
+                'total_amt' => $request->input('total_amt'),
+                'submitted_amt' => $request->input('submitted_amt'),
+                'pending_amt' => $request->input('pending_amt'),
+                'locationID' => $locationID,
+                'date' => date('Y-m-d'),
+
+            ];
+
+            FeeCollectionHistory::create($trackfeesData);
 
             // Save Package Details
             $packageData = [
@@ -434,9 +460,6 @@ class RegistrationController extends Controller
     }
 
 
-
-
-
     // <!*********************************************************************************************>
 
     public function prefill(Enquiry $enquiry)
@@ -596,6 +619,7 @@ class RegistrationController extends Controller
         ];
         RegisterStatusTracker::create($trackData);
 
+
         // Redirect back with success message
         return redirect()->back()->with('success', 'Payment updated successfully!');
     }
@@ -610,5 +634,120 @@ class RegistrationController extends Controller
             ->update(['status' => $request->status]);
 
         return redirect()->back()->with('success', 'User status updated successfully.');
+    }
+
+
+    // fee submit
+    public function fee_submission($registration_no)
+    {
+        $user = Auth::user();
+        $locationID = $user->locationID;
+        $submit_fee = Registration::where('registration_no', $registration_no)->where('locationID', $locationID)->first();
+        if (!$submit_fee) {
+            return redirect()->route('registration.list')->with('success', 'Location Update.');
+        }
+
+        $edit_userfees = PaymentDetails::where('registration_no', $registration_no)->first();
+        $pmodules = PaymentModule::where('status', '0')->orderBy('module', 'asc')->get();
+        return view('pages.registration.feesubmission', compact('pmodules', 'edit_userfees', 'submit_fee'));
+    }
+
+
+    // update fee
+
+    public function update_feesubmission(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            // 1. Improved validation
+            $validatedData = $request->validate([
+                'registration_no' => 'required|exists:registrations,registration_no',
+                'rooms_fees' => 'nullable|numeric|min:0',
+                'meals_fees' => 'nullable|numeric|min:0',
+                'program_fee' => 'nullable|numeric|min:0',
+                'transport_fees' => 'nullable|numeric|min:0',
+                'total_amt' => 'required|numeric|min:0',
+                'submitted_amt' => 'required|numeric|min:0|lte:total_amt',
+                'payment_method' => 'required',
+                'payment_status' => 'required',
+
+            ]);
+
+            $registration_no = $validatedData['registration_no'];
+            $payment = PaymentDetails::where('registration_no', $registration_no)->firstOrFail();
+
+            // 2. Update payment details
+            $payment->update([
+                'transport_fees' => $validatedData['transport_fees'],
+                'program_fee' => $validatedData['program_fee'],
+                'rooms_fees' => $validatedData['rooms_fees'],
+                'meals_fees' => $validatedData['meals_fees'],
+                'utr_no' => $validatedData['payment_method'] == '0' ? null : $request->input('utr_no'),
+                'payment_module' => $request->input('payment_module'),
+                'payment_date' => $request->input('payment_date'),
+                'upcoming_date' => $request->input('upcoming_date'),
+                'payment_method' => $validatedData['payment_method'],
+                'payment_status' => $validatedData['payment_status'],
+                'payment_notes' => $request->input('payment_notes'),
+                'total_amt' => $validatedData['total_amt'],
+                'submitted_amt' => $validatedData['submitted_amt'],
+                'pending_amt' => $request->input('pending_amt'),
+                'date' => now()->toDateString(),
+            ]);
+
+            // 3. Store Fee Collection History
+            FeeCollectionHistory::create(array_merge($validatedData, [
+                'registration_no' => $registration_no,
+                'transport_fees' => $request->input('transport_fees'),
+                'program_fee' => $request->input('program_fee'),
+                'rooms_fees' => $request->input('rooms_fees'),
+                'meals_fees' => $request->input('meals_fees'),
+                'utr_no' => $request->input('utr_no'),
+                'payment_module' => $request->input('payment_module'),
+                'payment_date' => $request->input('payment_date'),
+                'upcoming_date' => $request->input('upcoming_date'),
+                'payment_method' => $request->input('payment_method'),
+                'payment_status' => $request->input('payment_status'),
+                'payment_notes' => $request->input('payment_notes'),
+                'total_amt' => $request->input('total_amt'),
+                'submitted_amt' => $request->input('submitted_amt'),
+                'pending_amt' => $request->input('pending_amt'),
+                'date' => now()->toDateString(),
+            ]));
+
+            // 4. Store Status Tracker
+            RegisterStatusTracker::create([
+                'registration_no' => $registration_no,
+                'upcoming_date' => $request->input('upcoming_date'),
+                'payment_method' => $request->input('payment_method'),
+                'total_amt' => $request->input('total_amt'),
+                'submitted_amt' => $request->input('submitted_amt'),
+                'pending_amt' => $request->input('pending_amt'),
+                'payment_status' => $request->input('payment_status'),
+                'payment_notes' => $request->input('payment_notes'),
+            ]);
+
+            // 5. Save Package Details
+            $previousPackage = PackageUpdateTrack::where('registration_no', $registration_no)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            PackageUpdateTrack::create([
+                'registration_no' => $registration_no,
+                'package' => $previousPackage ? $previousPackage->package : $request->input('package'),
+                'training_program' => $previousPackage ? $previousPackage->training_program : $request->input('training_program'),
+                'session' => $previousPackage ? $previousPackage->session : $request->input('session'),
+                'time_slot' => $previousPackage ? $previousPackage->time_slot : $request->input('time_slot'),
+                'package_fee' => $payment->program_fee, // Always update this field
+                'package_notes' => $previousPackage ? $previousPackage->package_notes : $payment->payment_notes,
+                'date' => now()->toDateString(),
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Payment updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Something went wrong: ' . $e->getMessage()])->withInput();
+        }
     }
 }

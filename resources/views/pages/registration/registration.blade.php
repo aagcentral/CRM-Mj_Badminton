@@ -21,6 +21,16 @@ Registration
 
     }
 </style>
+<style>
+    .error {
+        border: 2px solid red;
+    }
+
+    #paid_amount_error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -172,7 +182,7 @@ Registration
                                                 <div class="col-sm-8">
                                                     <select class="form-control" name="city" id="city">
                                                         <option value="">Select City</option>
-                                                        <!-- {{-- The options for the city dropdown should be dynamically populated based on the selected state --}} -->
+
                                                     </select>
                                                 </div>
                                             </div>
@@ -286,7 +296,46 @@ Registration
 
                         </fieldset>
                         <fieldset>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="panel panel-default shadow">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title fw-bold">Transport Details</h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            <!-- Hostel Allotment Form -->
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2">Transport</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-select form-control" name="transport" id="transport">
+                                                        <option value="" selected disabled>Select Transport</option> <!-- Default empty option -->
+                                                        <option value="0" {{ old('transport', $enquiry->transport ?? null) === '0' ? 'selected' : '' }}>No</option>
+                                                        <option value="1" {{ old('transport', $enquiry->transport ?? null) === '1' ? 'selected' : '' }}>Yes</option>
+                                                    </select>
+                                                </div>
 
+
+                                                <label class="control-label col-sm-2">Transport Fee ₹</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" id="transport_fees" name="transport_fees" value="{{ old('transport_fees') }}" oninput="validateDecimal(this); calculateTotal()" pattern="^\d*(\.\d{0,2})?$">
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-2">Start Date</label>
+                                                <div class="col-sm-4">
+                                                    <input type="date" class="form-control" name="start_date" value="{{ old('start_date') }}">
+                                                </div>
+                                                <label class="control-label col-sm-2">End Date</label>
+                                                <div class="col-sm-4">
+                                                    <input type="date" class="form-control" name="end_date" value="{{ old('end_date') }}">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- ************ Start of hostel Details************** -->
                             <div class="row">
                                 <div class="col-lg-12">
@@ -455,7 +504,7 @@ Registration
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control" id="registration_fee" name="registration_fees" value="{{ old('registration_fees') }}" oninput="validateDecimal(this); calculateTotal()" pattern="^\d*(\.\d{0,2})?$">
                                                 </div>
-                                                <label class="control-label col-sm-2">Package Fee ₹</label>
+                                                <label class="control-label col-sm-2">Category Fee ₹</label>
                                                 <div class="col-sm-4">
                                                     <input type="text" class="form-control" id="program_fee" name="program_fee" value="{{ old('program_fee') }}" oninput="validateDecimal(this); calculateTotal()" pattern="^\d*(\.\d{0,2})?$">
                                                 </div>
@@ -844,14 +893,15 @@ Registration
         let programFee = parseFloat(document.getElementById('program_fee').value) || 0;
         let mealFee = parseFloat(document.getElementById('meal_fee').value) || 0;
         let roomFee = parseFloat(document.getElementById('room_fee').value) || 0;
+        let transportFee = parseFloat(document.getElementById('transport_fees').value) || 0; // Transport should be multiplied
 
-        let baseTotal = programFee + mealFee + roomFee; // Excludes registration fee initially
+        let baseTotal = programFee + mealFee + roomFee + transportFee; // Transport fee included in multiplication
 
         const paymentModule = document.getElementById("payment_module");
         const selectedModule = paymentModule.options[paymentModule.selectedIndex];
         const paymentInterval = selectedModule.getAttribute("data-interval");
 
-        let multiplier = 1; // Default multiplier for calculation
+        let multiplier = 1; // Default multiplier
 
         if (paymentInterval) {
             switch (paymentInterval.toLowerCase()) {
@@ -894,7 +944,7 @@ Registration
             }
         }
 
-        let totalAmount = baseTotal * multiplier + registrationFee; // Add registration fee only once
+        let totalAmount = (baseTotal * multiplier) + registrationFee; // Registration fee added only once
 
         document.getElementById('total_amount').value = totalAmount.toFixed(2);
         calculatePendingAmount(); // Update pending amount
@@ -914,10 +964,14 @@ Registration
         document.getElementById("program_fee").addEventListener("input", calculateTotal);
         document.getElementById("meal_fee").addEventListener("input", calculateTotal);
         document.getElementById("room_fee").addEventListener("input", calculateTotal);
+        document.getElementById("transport_fees").addEventListener("input", calculateTotal);
         document.getElementById("submitted_amt").addEventListener("input", calculatePendingAmount);
 
         calculateTotal();
     });
 </script>
+
+
+
 
 @endsection

@@ -328,14 +328,15 @@
       </ul>
     </li><!-- End Forms Nav -->
     @endif
-    @if(havePermission('document'))
+    <!-- @if(havePermission('document'))
     <li class="nav-item">
-      <a class="nav-link @if(Route::currentRouteName() != 'document') collapsed  @endif" href="{{ route('document') }}">
-        <i class="fa-solid fa-bell"></i>
-        <span>README</span>
-      </a>
+      <a class="nav-link @if(Route::currentRouteName() != 'document') collapsed @endif" href="{{ route('document') }}">
+        <i class="fa-solid fa-book"></i>  
+    <span>README</span>
+    </a>
     </li>
-    @endif
+    @endif -->
+
   </ul>
 
 </aside><!-- End Sidebar-->

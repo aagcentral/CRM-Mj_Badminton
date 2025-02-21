@@ -72,7 +72,7 @@ Update Category
         @endif
 
         <div class="col-lg-12">
-            <form class="form-horizontal row" action="{{ route('registration.updateuserpackage',$edit_userpackage->registration_no) }}" method="POST" enctype="multipart/form-data">
+            <form class="form-horizontal row" action="{{ route('registration.updateuserpackage',$edit_userpackage->registration_no) }}" method="POST">
                 @csrf
                 <input type="hidden" name="registration_no" value="{{ $edit_userpackage->registration_no }}" id="">
 

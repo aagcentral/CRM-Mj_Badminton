@@ -31,8 +31,10 @@ return new class extends Migration
             $table->string('session')->nullable();
             $table->string('time_slot')->nullable();
             $table->string('lead_source')->nullable();
-            $table->string('registration_fee')->nullable();
-            // $table->enum('room_allotment', ['0', '1'])->comment('0 -> Yes, 1 -> No');
+            // $table->string('registration_fee')->nullable();
+            $table->enum('transport', ['0', '1'])->comment('0 -> No, 1 -> Yes');
+            $table->string('start_date')->nullable();
+            $table->string('end_date')->nullable();
             $table->enum('room_allotment', ['0', '1'])->nullable()->comment('0 -> Yes, 1 -> No');
             $table->string('room_type')->nullable();
             $table->string('room_fees')->nullable();
