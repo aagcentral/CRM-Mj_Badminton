@@ -446,13 +446,16 @@ Registration
                                                 <label class="control-label col-sm-2">Payment Module</label>
                                                 <div class="col-sm-4">
                                                     <select name="payment_module" id="payment_module" class="form-select">
-                                                        <option value="" disabled selected>Select Payment Module</option>
+                                                        <option value="" disabled {{ old('payment_module') == '' ? 'selected' : '' }}>Select Payment Module</option>
                                                         @foreach ($pmodules as $pmodule)
-                                                        <option value="{{ $pmodule->module_id }}" data-interval="{{ $pmodule->module }}"> {{ $pmodule->module }}
+                                                        <option value="{{ $pmodule->module_id }}" data-interval="{{ $pmodule->module }}"
+                                                            {{ old('payment_module') == $pmodule->module_id ? 'selected' : '' }}>
+                                                            {{ $pmodule->module }}
                                                         </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
+
 
                                                 <label class="control-label col-sm-2">Payment Date</label>
                                                 <div class="col-sm-4">

@@ -181,11 +181,13 @@ Edit Enquiry
                                                         <option value="" disabled>Select Time Slot</option>
                                                         @foreach ($Timing as $Time)
                                                         <option value="{{ $Time->timing_id }}"
-                                                            @if ($edit_enquiry->time_slot == $sesion->timing_id) selected @endif> {{ $Time->time_slot }}
+                                                            @if (isset($edit_enquiry->time_slot) && $edit_enquiry->time_slot == $Time->timing_id) selected @endif>
+                                                            {{ $Time->time_slot }}
                                                         </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
+
                                             </div>
 
                                             <div class="form-group">

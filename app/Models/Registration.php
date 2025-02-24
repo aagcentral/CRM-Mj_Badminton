@@ -117,31 +117,13 @@ class Registration extends Model
         return $this->belongsTo(Enquiry::class, 'enquiry_id');
     }
 
-
+    public function feeCollectionHistory()
+    {
+        return $this->belongsTo(FeeCollectionHistory::class, 'registration_no', 'registration_no');
+    }
 
 
     // * Boot method for the model.
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     // Automatically set 'locationID' when saving or updating
-    //     static::saving(function ($model) {
-    //         $model->locationID = Auth::user()->locationID ?? null;
-    //     });
-
-    //     static::updating(function ($model) {
-    //         $model->locationID = Auth::user()->locationID ?? null;
-    //     });
-
-    //     // Add global scope to filter by 'locationID'
-    //     static::addGlobalScope('locationID', function (Builder $builder) {
-    //         if (Auth::check()) {
-    //             $builder->where('locationID', Auth::user()->locationID);
-    //         }
-    //     });
-    // }
 
 
     protected static function boot()
@@ -170,6 +152,13 @@ class Registration extends Model
         // Automatically apply a global scope to filter by `locationID`
         static::addGlobalScope('location', function ($builder) {
             $builder->where('locationID', Auth::user()->locationID ?? null);
+        });
+        // delete related table data
+        static::deleting(function ($registration) {
+
+            $registration->userPackageTracker()->forceDelete();
+            $registration->PaymentDetail()->forceDelete();
+            $registration->feeCollectionHistory()->forceDelete();
         });
     }
 }

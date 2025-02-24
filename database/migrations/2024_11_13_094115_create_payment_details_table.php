@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payment_details', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_id')->nullable();
-            $table->string('registration_no')->nullable();
+            $table->string('payment_id');
+            $table->string('registration_no');
             $table->string('registration_fees')->nullable();
             $table->string('transport_fees')->nullable();
             $table->string('program_fee')->nullable();

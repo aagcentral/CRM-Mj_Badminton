@@ -29,7 +29,10 @@ class FeeCollectionHistory extends Model
         'date',
     ];
 
-
+    public function registration()
+    {
+        return $this->belongsTo(Registration::class, 'registration_no', 'registration_no');
+    }
 
     protected static function boot()
     {
