@@ -28,9 +28,9 @@
 
                 <div class="card-header mb-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold text-dark mt-2">Role List</h5>
+                        <h5 class="fw-bold">Role List</h5>
                         @if(in_array('panel.add', $permissions))
-                        <button type="button" class="btn btn-primary rounded-pill" onclick="window.location.href='{{ route('panel.add') }}'">Add New Role</button>
+                        <button type="button" class="btn btn-info" onclick="window.location.href='{{ route('panel.add') }}'"><i class="fas fa-plus-circle"></i> Role</button>
                         @endif
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
-                                <th scope="col">Created at</th>
+                                <!-- <th scope="col">Created at</th> -->
                                 @if(in_array('panel.edit', $permissions) || in_array('panel.delete', $permissions))
                                 <th scope="col">Action</th>
                                 @endif
@@ -53,7 +53,7 @@
                             <tr>
                                 <th scope="col">{{ $loop->iteration }}</th>
                                 <th scope="col">{{ $row->name }}</th>
-                                <th scope="col">{{ $row->created_at }}</th>
+                                <!-- <th scope="col">{{ $row->created_at }}</th> -->
                                 <th scope="col">
                                     @if(in_array('panel.edit', $permissions))
                                     <a href="{{ route('panel.edit',$row->id) }}" class="badge bg-success">Edit & Permission</a>

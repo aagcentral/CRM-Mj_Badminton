@@ -6,14 +6,14 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="robots" content="noindex, nofollow">
 
-    <title> @yield('title')|MJBADMINTON</title>
+    <title> @yield('title') | AASC</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <!-- Favicons -->
-    <link href="{{ asset('assets/images/faviconc.png') }}" rel="icon">
+    <link href="{{ asset('assets/images/favicon.png') }}" rel="icon">
     <link href="{{ asset('assets/images/fav-apple.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->

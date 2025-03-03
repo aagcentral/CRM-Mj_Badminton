@@ -33,16 +33,13 @@ class Registration extends Model
         'session',
         'time_slot',
         'lead_source',
-        // 'registration_fee',
         'transport',
         'start_date',
         'end_date',
         'room_allotment',
         'room_type',
-        // 'room_fees',
         'meal_subscription',
         'meal_type',
-        // 'meal_fees',
         'checking_date',
         'checkout_date',
         'notes',
@@ -117,31 +114,10 @@ class Registration extends Model
         return $this->belongsTo(Enquiry::class, 'enquiry_id');
     }
 
-
-
-
-    // * Boot method for the model.
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     // Automatically set 'locationID' when saving or updating
-    //     static::saving(function ($model) {
-    //         $model->locationID = Auth::user()->locationID ?? null;
-    //     });
-
-    //     static::updating(function ($model) {
-    //         $model->locationID = Auth::user()->locationID ?? null;
-    //     });
-
-    //     // Add global scope to filter by 'locationID'
-    //     static::addGlobalScope('locationID', function (Builder $builder) {
-    //         if (Auth::check()) {
-    //             $builder->where('locationID', Auth::user()->locationID);
-    //         }
-    //     });
-    // }
+    public function feeCollectionHistory()
+    {
+        return $this->belongsTo(FeeCollectionHistory::class, 'registration_no', 'registration_no');
+    }
 
 
     protected static function boot()
@@ -170,6 +146,16 @@ class Registration extends Model
         // Automatically apply a global scope to filter by `locationID`
         static::addGlobalScope('location', function ($builder) {
             $builder->where('locationID', Auth::user()->locationID ?? null);
+        });
+
+
+
+
+        static::deleting(function ($registration) {
+
+            $registration->userPackageTracker()->forceDelete();
+            $registration->PaymentDetail()->forceDelete();
+            $registration->feeCollectionHistory()->forceDelete();
         });
     }
 }

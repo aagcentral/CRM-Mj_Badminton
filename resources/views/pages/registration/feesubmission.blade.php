@@ -266,6 +266,7 @@ Submit Fees
                     break;
                 case 'half-yearly':
                 case 'half yearly':
+                case 'halfyearly':
                 case 'every half year':
                 case 'half yearly payment':
                 case 'half yearly subscription':
@@ -384,6 +385,7 @@ Submit Fees
 
                 case 'half-yearly':
                 case 'half yearly':
+                case 'halfyearly':
                 case 'every half year':
                 case 'half yearly payment':
                 case 'half yearly subscription':

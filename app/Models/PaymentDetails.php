@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
 use Carbon\Carbon;
-
+ 
 class PaymentDetails extends Model
 {
     use HasFactory;

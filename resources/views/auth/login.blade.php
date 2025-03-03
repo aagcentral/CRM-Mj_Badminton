@@ -10,7 +10,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{ asset('assets/images/faviconc.png') }}" rel="icon">
+  <link href="{{ asset('assets/images/favicon.png') }}" rel="icon">
   <link href="{{ asset('assets/images/fav-apple.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -61,36 +61,36 @@
 
                 <div class="card-body">
                   <div class="text-center mt-3 mb-4">
-                    <img class="img-fluid" src="{{ asset('assets/images/logo.jpg') }}" alt="Logo" style="height:80px; width:200px;">
+                    <img class="img-fluid" src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="height:100px; width:200px;">
 
-                    <p class="card-title text-center p-0 m-0 small">Login to Your Account</p>
-                    <p class="text-center small p-0 m-0">Enter your username & password to login</p>
+                    <!-- <p class="card-title text-center p-0 m-0 small">Login to Your Account</p>
+                    <p class="text-center small p-0 m-0">Enter your username & password to login</p> -->
                   </div>
 
                   @include('auth.message')
-                  <form class="row g-2 needs-validation" action="{{ route('auth.login.post') }}" method="post">
+                  <form class="row g-4 needs-validation" action="{{ route('auth.login.post') }}" method="post">
                     @csrf
 
                     <div class="col-12">
-                      <label for="yourUsername" class="form-label">Email</label>
+                      <label for="yourUsername" class="form-label">Email <span>*<span></label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
+                        <input type="text" name="username" class="form-control" id="yourUsername" placeholder="Enter Demo Email" required>
                         <div class="invalid-feedback">Please enter your username.</div>
                       </div>
                     </div>
 
                     <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
+                      <label for="yourPassword" class="form-label">Password <span>*<span></label>
+                      <input type="password" name="password" class="form-control" id="yourPassword" placeholder="******" required>
                       <div class="invalid-feedback">Please enter your password!</div>
                     </div>
                     <div class="col-12 text-end">
-                      <a href="{{ route('password.direct-reset') }}" class="small text-primary">Forgot Password?</a>
+                      <a href="{{ route('password.direct-reset') }}" class="small text-primary">Forgot Password ?</a>
                     </div>
 
                     <div class="col-12 mb-5 mt-4">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
+                      <button class="btn btn-info w-100 text-white" type="submit" style="background-color:#04517d;">Continue</button>
                     </div>
                     <!-- <div class="col-12">
                       <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>

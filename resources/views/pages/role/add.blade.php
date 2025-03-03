@@ -10,8 +10,8 @@
             </div>
             <div class="col-md-6 col-sm-12">
                 <ol class="breadcrumb float-sm-right" style="font-family: sans-serif;">
-                    <li class="breadcrumb-item"><a href="{{route('settings.role.list')}}">Role</a></li>
-                    <li class="breadcrumb-item active">Role </li>
+                    <li class="breadcrumb-item"><a href="{{route('settings.role.list')}}">Role List</a></li>
+                    <li class="breadcrumb-item active">Add Role & Permissions</li>
                 </ol>
             </div>
         </div>

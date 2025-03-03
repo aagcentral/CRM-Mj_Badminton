@@ -30,9 +30,9 @@ User
 
                 <div class="card-header mb-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="fw-bold text-dark mt-2">User List With Location</h5>
+                        <h5 class="fw-bold   mt-2">Users</h5>
                         @if(havePermission('user.add'))
-                        <button type="button" class="btn btn-primary rounded-pill" onclick="window.location.href='{{ route('user.add') }}'">Add New User</button>
+                        <button type="button" class="btn btn-info" onclick="window.location.href='{{ route('user.add') }}'"> <i class="fas fa-plus-circle mr-2"></i> User</button>
                         @endif
                     </div>
                 </div>
@@ -61,10 +61,10 @@ User
                                 <th scope="col">
                                     @if ($row->role_id != 9) <!-- Check if the user is not a Super Admin -->
                                     @if(havePermission('user.edit'))
-                                    <a href="{{ route('user.edit', $row->id) }}" class="badge bg-info">Edit</a>
+                                    <a href="{{ route('user.edit', $row->id) }}" class="text-success"> <i class="fas fa-edit"></i></a>
                                     @endif
                                     @if(havePermission('user.delete'))
-                                    <a href="{{ route('user.delete', $row->id) }}" class="badge bg-danger ms-3">Delete</a>
+                                    <a href="{{ route('user.delete', $row->id) }}" class="text-danger ms-3"><i class="fa-solid fa-trash"></i></a>
                                     @endif
                                     @else
                                     <span class="text-muted">No actions available</span>

@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="#!" class="logo d-flex align-items-center">
         <!-- <img src="{{ url('') }}/assets/img/logo.png" alt=""> -->
-        <img class="img-fluid" src="{{ asset('assets/images/logo1.jpg') }}" alt="Logo" style="height:100px; width:200px;">
+        <img class="img-fluid" src="{{ asset('assets/images/logo1.png') }}" alt="Logo">
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
 

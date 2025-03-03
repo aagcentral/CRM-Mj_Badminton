@@ -67,15 +67,7 @@ Registration
         <div class="row">
             <div class="col-lg-10">
                 <!-- {{-- Main Header --}} -->
-                <div class="panel-heading mb-5">
-                    <h3 class="panel-title">
-                        Application for Registration to the
-                        <font color="blue">Mj Badminton Academy</font>
-                        for the
-                        <font color="blue">{{ date('Y') }}-{{ date('Y', strtotime('+1 year')) }} Academic Year
-                        </font>
-                    </h3>
-                </div>
+
                 <!-- {{-- ! Main Header --}} -->
 
                 <form class="form-horizontal row" action="{{route('registration.add')}}" method="POST" enctype="multipart/form-data">
@@ -742,7 +734,7 @@ Registration
         const validIntervals = [
             'monthly', 'month', 'every month', 'monthly payment', 'monthly subscription',
             'quarterly', 'quarter', 'every quarter', 'quarterly payment', 'quarterly subscription',
-            'half-yearly', 'half yearly', 'Half yearly', 'every half year', 'half yearly payment', 'half yearly subscription',
+            'half-yearly', 'half yearly', 'Half yearly', 'Halfyearly', 'every half year', 'half yearly payment', 'half yearly subscription',
             'annual', 'annually', 'yearly', 'every year', 'annual payment', 'annual subscription', 'yearly payment'
         ];
 
@@ -795,6 +787,7 @@ Registration
                         // Half-Yearly variations
                     case 'half-yearly':
                     case 'Half-yearly':
+                    case 'halfyearly':
                     case 'half yearly':
                     case 'Half Yearly':
                     case 'Half yearly':
@@ -839,53 +832,6 @@ Registration
     });
 </script>
 <!-- total amount -->
-<!-- <script>
-    function calculateTotal() {
-        // Get the values for all fees and treat null or empty as 0
-        let registrationFee = parseFloat(document.getElementById('registration_fee').value) || 0;
-        let programFee = parseFloat(document.getElementById('program_fee').value) || 0;
-        let mealFee = parseFloat(document.getElementById('meal_fee').value) || 0; // Handle meal_fee as 0 if null or empty
-        let roomFee = parseFloat(document.getElementById('room_fee').value) || 0; // Handle room_fee as 0 if null or empty
-
-        // Calculate total amount
-        let totalAmount = registrationFee + programFee + mealFee + roomFee;
-
-        // Set the total amount in the input field
-        document.getElementById('total_amount').value = totalAmount.toFixed(2);
-
-        // Recalculate pending amount every time total changes
-        calculatePendingAmount();
-    }
-
-    function calculatePendingAmount() {
-        const totalAmount = parseFloat(document.getElementById('total_amount').value) || 0; // Ensure total_amount is correctly populated
-        const paidAmount = parseFloat(document.getElementById('submitted_amt').value) || 0; // Get the paid amount
-
-        // Calculate pending amount (total - paid)
-        const pendingAmount = totalAmount - paidAmount;
-
-        // Set the value of the pending amount field
-        document.getElementById('pending_amt').value = pendingAmount >= 0 ? pendingAmount.toFixed(2) : 0;
-    }
-
-    // Function to validate decimal input
-    function validateDecimal(input) {
-        let value = input.value;
-        let regex = /^\d*(\.\d{0,2})?$/;
-
-        if (!regex.test(value)) {
-            input.value = value.slice(0, -1); // Remove invalid character
-        }
-    }
-
-    // Initialize pending amount and total amount when the page loads
-    window.onload = function() {
-        calculateTotal(); // Initialize total amount when page loads
-        calculatePendingAmount(); // Initialize pending amount based on any pre-filled values
-    };
-</script> -->
-
-
 
 <script>
     function calculateTotal() {
@@ -923,6 +869,7 @@ Registration
 
                 case 'half-yearly':
                 case 'half yearly':
+                case 'halfyearly':
                 case 'every half year':
                 case 'half yearly payment':
                 case 'half yearly subscription':

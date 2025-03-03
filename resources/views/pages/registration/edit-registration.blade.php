@@ -74,17 +74,6 @@ Edit Registration
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-10">
-                <!-- {{-- Main Header --}} -->
-                <div class="panel-heading mb-5">
-                    <h3 class="panel-title">
-                        Application for Registration to the
-                        <font color="blue">Mj Badminton Academy</font>
-                        for the
-                        <font color="blue">{{ date('Y') }}-{{ date('Y', strtotime('+1 year')) }} Academic Year
-                        </font>
-                    </h3>
-                </div>
-                <!-- {{-- ! Main Header --}} -->
 
                 <form class="form-horizontal row" action="{{ route('registration.update',$edit_registration->registration_no) }}" method="POST" enctype="multipart/form-data">
                     @csrf

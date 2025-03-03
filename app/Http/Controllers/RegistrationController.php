@@ -145,34 +145,39 @@ class RegistrationController extends Controller
         ]);
 
         try {
-            DB::beginTransaction();
-
+            DB::beginTransaction(); // Start transaction
 
             $locationID = Auth::user()->locationID ?? 'DEFAULT';
-            // Lock the table to prevent duplicate registration numbers
-            $lastNumber = Registration::where('locationID', $locationID)
-                ->lockForUpdate() // Prevent race conditions
-                ->orderBy('id', 'desc')
-                ->value('registration_no');
+            $datePart = date('dmy'); // Format: DDMMYY
 
-            // Extract the numeric part of the last registration number
+            // Get the last registration number for this location and date
+            $lastRegistration = DB::table('registrations')
+                ->where('locationID', $locationID)
+                ->where('registration_no', 'LIKE', "{$locationID}-{$datePart}-%")
+                ->lockForUpdate() // Prevent duplicate number issues
+                ->orderByDesc('id')
+                ->first();
+
+            // Extract last number and increment
             $nextNumber = 1;
-            if ($lastNumber) {
-                if (preg_match('/MJRNO-(\d+)$/', $lastNumber, $matches)) {
-                    $nextNumber = intval($matches[1]) + 1;
-                }
+            if ($lastRegistration && preg_match('/-(\d+)$/', $lastRegistration->registration_no, $matches)) {
+                $nextNumber = intval($matches[1]) + 1;
             }
 
-            // Generate the new unique registration number
-            $newRegistrationNo = 'MJRNO-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            // Generate the new registration number (L1-240225-001)
+            $newRegistrationNo = "{$locationID}-{$datePart}-" . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
-            // Ensure no duplicate entry exists
-            while (Registration::where('registration_no', $newRegistrationNo)->exists()) {
-                $nextNumber++;
-                $newRegistrationNo = 'MJRNO-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            // Ensure the new registration number is unique
+            while (DB::table('registrations')
+                ->where('registration_no', $newRegistrationNo)
+                ->exists()
+            ) {
+                $nextNumber++; // Increment and check again
+                $newRegistrationNo = "{$locationID}-{$datePart}-" . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
             }
+
             // Generate Unique Payment ID
-            $newPaymentID = 'MJPID' . date('dmy') . uniqid();
+            $newPaymentID = 'DPID' . date('dmy') . uniqid();
 
             // Handle Image Upload
             $filename = null;
@@ -203,7 +208,6 @@ class RegistrationController extends Controller
                 'transport' => $request->input('transport'),
                 'start_date' => $request->input('start_date'),
                 'end_date' => $request->input('end_date'),
-                // 'registration_fee' => $request->input('registration_fees'),
                 'room_allotment' => $request->input('room_allotment'),
                 'room_type' => $request->input('room_type'),
                 'meal_subscription' => $request->input('meal_subscription'),
@@ -432,32 +436,33 @@ class RegistrationController extends Controller
     }
 
     // // delete
-    // public function destroy_registration(Request $request)
-    // {
-    //     $data = Registration::where('id', $request->id)->first();
-    //     $data->delete();
-    //     return response()->json(['message' => 'data deleted successfully.']);
-    // }
-
-
     public function destroy_registration(Request $request)
     {
-        $registration = Registration::find($request->id);
-        if (!$registration) {
-            return response()->json(['success' => false, 'message' => 'Registration not found.'], 404);
-        }
-        $enquiry = Enquiry::where('mobile', $registration->phone)
-            ->orWhere('mobile', $request->mobile)
-            ->first();
-        if ($enquiry) {
-            $enquiry->update(['is_converted' => 0]);
-        }
-        $registration->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Registration deleted and enquiry updated.',
-        ]);
+        $data = Registration::where('id', $request->id)->first();
+        $data->delete();
+        return response()->json(['message' => 'data deleted successfully.']);
     }
+
+
+
+    // public function destroy_registration(Request $request)
+    // {
+    //     $registration = Registration::find($request->id);
+    //     if (!$registration) {
+    //         return response()->json(['success' => false, 'message' => 'Registration not found.'], 404);
+    //     }
+    //     $enquiry = Enquiry::where('mobile', $registration->phone)
+    //         ->orWhere('mobile', $request->mobile)
+    //         ->first();
+    //     if ($enquiry) {
+    //         $enquiry->update(['is_converted' => 0]);
+    //     }
+    //     $registration->delete();
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Registration deleted and enquiry updated.',
+    //     ]);
+    // }
 
 
     // <!*********************************************************************************************>

@@ -163,7 +163,7 @@ class EnquiryController extends Controller
             'date' => date('Y-m-d H:i:s'),
             'locationID' => $locationID,
         ]);
-
+         
         if ($save) {
             // Track the lead status
             $this->lead_status_tracker($enquiry_Id, $request->lead_status, $request->notes);
