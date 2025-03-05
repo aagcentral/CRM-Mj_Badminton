@@ -178,10 +178,12 @@ Edit Enquiry
                                                 <label class="control-label col-sm-2">Time Slot </label>
                                                 <div class="col-sm-4">
                                                     <select name="time_slot" class="form-select">
-                                                        <option value="" disabled>Select Time Slot</option>
+                                                        <option value="" disabled {{ isset($edit_enquiry->time_slot) ? '' : 'selected' }}>
+                                                            Select Time Slot
+                                                        </option>
                                                         @foreach ($Timing as $Time)
                                                         <option value="{{ $Time->timing_id }}"
-                                                            @if (isset($edit_enquiry->time_slot) && $edit_enquiry->time_slot == $Time->timing_id) selected @endif>
+                                                            {{ isset($edit_enquiry->time_slot) && $edit_enquiry->time_slot == $Time->timing_id ? 'selected' : '' }}>
                                                             {{ $Time->time_slot }}
                                                         </option>
                                                         @endforeach

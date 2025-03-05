@@ -187,6 +187,10 @@ for ($i = 1; $i <= 12; $i++) {
                                 <strong>Name:</strong> {{ $row->name }}<br>
                                 <strong>Phone:</strong> {{ $row->mobile }}<br>
                                 <strong>Category:</strong> {{ $row->Package!=null ? $row->Package->package : '' }} <br>
+                                <strong>Training Program:</strong> {{ $row->TrainedP!=null ? $row->TrainedP->add_program : '' }} <br>
+                                <strong>Time Slot :</strong> {{ $row->Time!=null ? $row->Time->time_slot : '' }} <br>
+                                <strong>Session:</strong> {{ $row->sesion!=null ? $row->sesion->session : '' }} <br>
+                                <strong>Lead Source:</strong> {{ $row->leads!=null ? $row->leads->leadsource : '' }} <br>
                                 <strong>Transport:</strong> <span> {{ $row->transport == '0' ? 'No' : ($row->transport == '1' ? 'Yes' : 'N/A') }} </span><br>
                                 <strong>Hostel:</strong> <span> {{ $row->hostel == '0' ? 'No' : ($row->hostel == '1' ? 'Yes' : 'N/A') }} </span>
                                 <br>
@@ -211,7 +215,9 @@ for ($i = 1; $i <= 12; $i++) {
                                 ($row->lead_status == '4' ? 'Dead' : 'Recycle')))) }}
                                 </span>
                                 <br>
-                                <strong>Interested Branch: </strong>{{ $row->interestedlocation ? $row->interestedlocation->location : 'N/A' }}
+                                <strong>Interested Branch: </strong>{{ $row->interestedlocation ? $row->interestedlocation->location : 'N/A' }}<br>
+                                <strong>Transport:</strong> <span> {{ $row->transport == '0' ? 'No' : ($row->transport == '1' ? 'Yes' : 'N/A') }} </span><br>
+                                <strong>Hostel:</strong> <span> {{ $row->hostel == '0' ? 'No' : ($row->hostel == '1' ? 'Yes' : 'N/A') }} </span>
                             </td>
                             <td style="max-width: 100px; overflow: auto; white-space: normal;">
                                 <div style="max-height: 100px; overflow-y: auto;">

@@ -22,23 +22,52 @@ class Psession extends Model
 
     // * Boot method for the model.
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     // Automatically set 'locationID' when saving or updating
+    //     static::saving(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     static::updating(function ($model) {
+    //         $model->locationID = Auth::user()->locationID ?? null;
+    //     });
+
+    //     // Add global scope to filter by 'locationID'
+    //     static::addGlobalScope('locationID', function (Builder $builder) {
+    //         if (Auth::check()) {
+    //             $builder->where('locationID', Auth::user()->locationID);
+    //         }
+    //     });
+    // }
+
     protected static function boot()
     {
         parent::boot();
 
         // Automatically set 'locationID' when saving or updating
         static::saving(function ($model) {
-            $model->locationID = Auth::user()->locationID ?? null;
+            if (!$model->locationID) {
+                $model->locationID = Auth::user()->locationID ?? null;
+            }
         });
 
         static::updating(function ($model) {
-            $model->locationID = Auth::user()->locationID ?? null;
+            if (!$model->locationID) {
+                $model->locationID = Auth::user()->locationID ?? null;
+            }
         });
 
-        // Add global scope to filter by 'locationID'
+        // Add global scope to filter by 'locationID' unless it is null or 0
         static::addGlobalScope('locationID', function (Builder $builder) {
             if (Auth::check()) {
-                $builder->where('locationID', Auth::user()->locationID);
+                $builder->where(function ($query) {
+                    $query->where('locationID', Auth::user()->locationID)
+                        ->orWhereNull('locationID') // Allow records with no location restriction
+                        ->orWhere('locationID', 0); // Allow global records
+                });
             }
         });
     }
